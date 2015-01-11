@@ -1,11 +1,13 @@
 #include "imu.h"
 #include "mpu6050.h"
 
-static axis_int16_t gyro_raws;
 static axis_float_t gyro_rates;
 static axis_float_t gyro_angles;
+static axis_float_t accel_raws;
+static axis_float_t accel_angles;
 static axis_float_t rates;
 static uint32_t gyro_update_timer = micros();
+static uint32_t accel_update_timer = millis();
 
 void imu_init() {
   Wire.begin();
@@ -29,14 +31,29 @@ void update_gyro() {
   gyro_angles.y += rates.y * (float)(micros() - gyro_update_timer) / 1000000;
 }
 
+void update_accel() {
+  mpu6050_read_accel(&accel_raws);
+
+  // accel_angles.x = (atan2(accel_raws.x, accel_raws.z)) * RAD_TO_DEG;
+  // accel_angles.y = (atan2(accel_raws.y, accel_raws.z)) * RAD_TO_DEG;
+
+  accel_angles.x = atan2(accel_raws.y, sqrt(
+    accel_raws.x * accel_raws.x + accel_raws.z * accel_raws.z
+  )) * RAD_TO_DEG;
+
+  accel_angles.y = atan2(accel_raws.x, sqrt(
+    accel_raws.y * accel_raws.y + accel_raws.z * accel_raws.z
+  )) * RAD_TO_DEG;
+}
+
 bool imu_read() {
   bool updated = false;
 
-  // if ((millis() - accel_update_timer) > 20) {    // ~50 hz
-  //   update_accel();
-  //   accel_update_timer = millis();
-  //   updated = true;
-  // }
+  if ((millis() - accel_update_timer) > 20) {    // ~50 hz
+    update_accel();
+    accel_update_timer = millis();
+    updated = true;
+  }
 
   if ((micros() - gyro_update_timer) > 1300) {   // ~800 Hz
     update_gyro();
@@ -56,3 +73,5 @@ bool imu_read() {
 
 axis_float_t imu_rates() { return rates; }
 axis_float_t imu_gyro_angles() { return gyro_angles; }
+axis_float_t imu_accel_raws() { return accel_raws; }
+axis_float_t imu_accel_angles() { return accel_angles; }

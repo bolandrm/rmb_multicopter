@@ -19,5 +19,7 @@ void imu_init();
 bool imu_read();
 axis_float_t imu_rates();
 axis_float_t imu_gyro_angles();
+axis_float_t imu_accel_raws();
+axis_float_t imu_accel_angles();
 
 #endif

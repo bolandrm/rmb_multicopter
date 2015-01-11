@@ -22,6 +22,15 @@ void loop() {
     Serial.print("\t gyro_y_ang: "); Serial.print(imu_gyro_angles().y);
     Serial.println();
 
+    Serial.print("accel_x_raw: "); Serial.print(imu_accel_raws().x);
+    Serial.print("\t accel_y_raw: "); Serial.print(imu_accel_raws().y);
+    Serial.print("\t accel_z_raw: "); Serial.print(imu_accel_raws().z);
+    Serial.println();
+
+    Serial.print("accel_x_angle: "); Serial.print(imu_accel_angles().x);
+    Serial.print("\t accel_y_angle: "); Serial.print(imu_accel_angles().y);
+    Serial.println();
+
     Serial.println();
 
     debug_timer = millis();

@@ -29,6 +29,16 @@ void mpu6050_read_gyro(axis_float_t *gyro_rates) {
   gyro_rates->z = gyro_z / MPU6050_GYRO_1000D_SENS;
 }
 
+void mpu6050_read_accel(axis_float_t *accel_raws) {
+  int16_t accel_x = mpu6050_read_word(MPUREG_ACCEL_XOUT_H);
+  int16_t accel_y = mpu6050_read_word(MPUREG_ACCEL_YOUT_H);
+  int16_t accel_z = mpu6050_read_word(MPUREG_ACCEL_ZOUT_H);
+
+  accel_raws->x = accel_x / MPU6050_ACCEL_4G_SENS;
+  accel_raws->y = accel_y / MPU6050_ACCEL_4G_SENS;
+  accel_raws->z = accel_z / MPU6050_ACCEL_4G_SENS;
+}
+
 void mpu6050_init() {
   mpu6050_write_reg(MPUREG_PWR_MGMT_1, BIT_H_RESET);
   delay(100);  // Startup time delay

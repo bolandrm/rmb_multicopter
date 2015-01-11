@@ -7,6 +7,7 @@
 
 #define MPU6050_I2C_ADDRESS 0x68
 #define MPU6050_GYRO_1000D_SENS 32.8
+#define MPU6050_ACCEL_4G_SENS 8192.0
 
 // MPU 6000 registers
 #define MPUREG_WHOAMI         0x75
@@ -67,5 +68,6 @@
 
 void mpu6050_init();
 void mpu6050_read_gyro(axis_float_t *gyro_rates);
+void mpu6050_read_accel(axis_float_t *accel_raws);
 
 #endif
