@@ -1,8 +1,23 @@
-void init_sensors();
-void read_sensors();
+#include <stdint.h>
+
+typedef struct {
+  int16_t x, y, z;
+} gyro_raw_t;
+
+typedef struct {
+  float x, y, z;
+} gyro_rate_t;
+
+void imu_init();
+bool imu_read();
+gyro_rate_t imu_gyro_rate();
 
 #define MPU6050_I2C_ADDRESS 0x68
 #define MPU6050_GYRO_1000D_SENS 32.8
+
+#define GYRO_X_OFFSET 1.86
+#define GYRO_Y_OFFSET 1.49
+#define GYRO_Z_OFFSET (-1.16)
 
 // MPU 6000 registers
 #define MPUREG_WHOAMI         0x75

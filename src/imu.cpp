@@ -1,6 +1,10 @@
 #include "imu.h"
 #include "i2c_helpers.h"
 
+static gyro_raw_t gyro_raw;
+static gyro_rate_t gyro_rate;
+static uint32_t gyro_update_timer = micros();
+
 void mpu6050_write_reg(int addr, uint8_t data) {
 	i2c_update_register(MPU6050_I2C_ADDRESS, addr, data);
   delay(1);
@@ -20,7 +24,7 @@ bool mpu6050_test_connection() {
   return mpu6050_read_byte(MPUREG_WHOAMI) == 0x68;
 }
 
-void init_sensors() {
+void imu_init() {
   Wire.begin();
   TWBR = 10;  // setup i2c to run at 444 kHz
 
@@ -47,13 +51,42 @@ void init_sensors() {
   }
 }
 
-void read_sensors() {
-  int16_t gyro_x_in = mpu6050_read_word(MPUREG_GYRO_XOUT_H);
-  int16_t gyro_y_in = mpu6050_read_word(MPUREG_GYRO_YOUT_H);
-  int16_t gyro_z_in = mpu6050_read_word(MPUREG_GYRO_ZOUT_H);
-  Serial.print("gyro_x: "); Serial.print(gyro_x_in/MPU6050_GYRO_1000D_SENS);
-  Serial.print("\t gyro_y: "); Serial.print(gyro_y_in/MPU6050_GYRO_1000D_SENS);
-  Serial.print("\t gyro_z: "); Serial.print(gyro_z_in/MPU6050_GYRO_1000D_SENS);
-  Serial.println();
-  delay(100);
+void update_gyro() {
+  gyro_raw.x = mpu6050_read_word(MPUREG_GYRO_XOUT_H);
+  gyro_raw.y = mpu6050_read_word(MPUREG_GYRO_YOUT_H);
+  gyro_raw.z = mpu6050_read_word(MPUREG_GYRO_ZOUT_H);
+
+  gyro_rate.x = gyro_raw.x / MPU6050_GYRO_1000D_SENS + GYRO_X_OFFSET;
+  gyro_rate.y = gyro_raw.y / MPU6050_GYRO_1000D_SENS + GYRO_Y_OFFSET;
+  gyro_rate.z = gyro_raw.z / MPU6050_GYRO_1000D_SENS + GYRO_Z_OFFSET;
+}
+
+bool imu_read() {
+  bool updated = false;
+
+  // if ((millis() - accel_update_timer) > 20) {    // ~50 hz
+  //   update_accel();
+  //   accel_update_timer = millis();
+  //   updated = true;
+  // }
+
+  if ((micros() - gyro_update_timer) > 1300) {   // ~800 Hz
+    update_gyro();
+    gyro_update_timer = micros();
+    updated = true;
+  }
+
+  if (updated) {
+    //combine();
+
+    //x_angle = comp_angle_x - 180;
+    //y_angle = comp_angle_y - 180;
+  }
+
+  return updated;
+}
+
+
+gyro_rate_t imu_gyro_rate() {
+  return gyro_rate;
 }
