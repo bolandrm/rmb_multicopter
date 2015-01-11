@@ -14,7 +14,7 @@ void imu_init() {
 }
 
 void update_gyro() {
-  mpu6050_read_gyro(gyro_rates);
+  mpu6050_read_gyro(&gyro_rates);
 
   gyro_rates.x = gyro_rates.x + GYRO_X_OFFSET;
   gyro_rates.y = gyro_rates.y + GYRO_Y_OFFSET;
