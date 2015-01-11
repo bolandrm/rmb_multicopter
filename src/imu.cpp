@@ -1,28 +1,11 @@
 #include "imu.h"
-#include "i2c_helpers.h"
+#include "mpu6050.h"
 
-static gyro_raw_t gyro_raw;
-static gyro_rate_t gyro_rate;
+static axis_int16_t gyro_raws;
+static axis_float_t gyro_rates;
+static axis_float_t gyro_angles;
+static axis_float_t rates;
 static uint32_t gyro_update_timer = micros();
-
-void mpu6050_write_reg(int addr, uint8_t data) {
-	i2c_update_register(MPU6050_I2C_ADDRESS, addr, data);
-  delay(1);
-}
-
-uint8_t mpu6050_read_byte(int addr) {
-  i2c_send_byte(MPU6050_I2C_ADDRESS, addr);
-  return i2c_read_byte(MPU6050_I2C_ADDRESS);
-}
-
-uint16_t mpu6050_read_word(int addr) {
-  i2c_send_byte(MPU6050_I2C_ADDRESS, addr);
-  return i2c_read_word(MPU6050_I2C_ADDRESS);
-}
-
-bool mpu6050_test_connection() {
-  return mpu6050_read_byte(MPUREG_WHOAMI) == 0x68;
-}
 
 void imu_init() {
   Wire.begin();
@@ -52,13 +35,21 @@ void imu_init() {
 }
 
 void update_gyro() {
-  gyro_raw.x = mpu6050_read_word(MPUREG_GYRO_XOUT_H);
-  gyro_raw.y = mpu6050_read_word(MPUREG_GYRO_YOUT_H);
-  gyro_raw.z = mpu6050_read_word(MPUREG_GYRO_ZOUT_H);
+  gyro_raws.x = mpu6050_read_word(MPUREG_GYRO_XOUT_H);
+  gyro_raws.y = mpu6050_read_word(MPUREG_GYRO_YOUT_H);
+  gyro_raws.z = mpu6050_read_word(MPUREG_GYRO_ZOUT_H);
 
-  gyro_rate.x = gyro_raw.x / MPU6050_GYRO_1000D_SENS + GYRO_X_OFFSET;
-  gyro_rate.y = gyro_raw.y / MPU6050_GYRO_1000D_SENS + GYRO_Y_OFFSET;
-  gyro_rate.z = gyro_raw.z / MPU6050_GYRO_1000D_SENS + GYRO_Z_OFFSET;
+  gyro_rates.x = gyro_raws.x / MPU6050_GYRO_1000D_SENS + GYRO_X_OFFSET;
+  gyro_rates.y = gyro_raws.y / MPU6050_GYRO_1000D_SENS + GYRO_Y_OFFSET;
+  gyro_rates.z = gyro_raws.z / MPU6050_GYRO_1000D_SENS + GYRO_Z_OFFSET;
+
+  rates.x = gyro_rates.x;
+  rates.y = gyro_rates.y;
+  rates.z = gyro_rates.z;
+
+  //Integration of gyro rates to get the angles
+  //gyro_angle.x += x_rate * (float)(micros() - gyro_update_timer) / 1000000;
+  //gyro_angle.y += y_rate * (float)(micros() - gyro_update_timer) / 1000000;
 }
 
 bool imu_read() {
@@ -86,7 +77,6 @@ bool imu_read() {
   return updated;
 }
 
-
-gyro_rate_t imu_gyro_rate() {
-  return gyro_rate;
+axis_float_t imu_gyro_rates() {
+  return gyro_rates;
 }

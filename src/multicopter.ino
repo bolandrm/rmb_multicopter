@@ -13,9 +13,9 @@ void loop() {
   while(!imu_read());
 
   if (millis() - debug_timer > 500) {
-    Serial.print("gyro_x: "); Serial.print(imu_gyro_rate().x);
-    Serial.print("\t gyro_y: "); Serial.print(imu_gyro_rate().y);
-    Serial.print("\t gyro_z: "); Serial.print(imu_gyro_rate().z);
+    Serial.print("gyro_x: "); Serial.print(imu_gyro_rates().x);
+    Serial.print("\t gyro_y: "); Serial.print(imu_gyro_rates().y);
+    Serial.print("\t gyro_z: "); Serial.print(imu_gyro_rates().z);
     Serial.println();
 
     debug_timer = millis();
