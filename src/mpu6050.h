@@ -1,10 +1,15 @@
+#ifndef MPU6050_H
+#define MPU6050_H
+
 #include <stdint.h>
 #include "i2c_helpers.h"
+#include "imu.h"
 
 void mpu6050_write_reg(int addr, uint8_t data);
 uint8_t mpu6050_read_byte(int addr);
 uint16_t mpu6050_read_word(int addr);
-bool mpu6050_test_connection();
+void mpu6050_init();
+void mpu6050_read_gyro(axis_float_t gyro_rates);
 
 #define MPU6050_I2C_ADDRESS 0x68
 #define MPU6050_GYRO_1000D_SENS 32.8
@@ -65,3 +70,5 @@ bool mpu6050_test_connection();
 #define BIT_RAW_RDY_EN              0x01
 #define BIT_I2C_IF_DIS              0x10
 #define BIT_INT_STATUS_DATA         0x01
+
+#endif

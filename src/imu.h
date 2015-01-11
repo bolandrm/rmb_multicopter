@@ -1,3 +1,6 @@
+#ifndef IMU_H
+#define IMU_H
+
 #include <stdint.h>
 
 #define GYRO_X_OFFSET 1.86
@@ -14,4 +17,7 @@ typedef struct {
 
 void imu_init();
 bool imu_read();
-axis_float_t imu_gyro_rates();
+axis_float_t imu_rates();
+axis_float_t imu_gyro_angles();
+
+#endif
