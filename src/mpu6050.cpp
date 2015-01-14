@@ -51,7 +51,7 @@ void mpu6050_init() {
   mpu6050_write_reg(MPUREG_SMPLRT_DIV, 0x00);     // Sample rate = 1kHz
 
   // FS & DLPF   FS=1000º/s, DLPF = 42Hz (low pass filter)
-  mpu6050_write_reg(MPUREG_CONFIG, BITS_DLPF_CFG_42HZ);
+  mpu6050_write_reg(MPUREG_CONFIG, BITS_DLPF_CFG_256HZ_NOLPF2);
   mpu6050_write_reg(MPUREG_GYRO_CONFIG, BITS_FS_1000DPS);  // Gyro scale 1000º/s
   mpu6050_write_reg(MPUREG_ACCEL_CONFIG, 0x08);   // Accel scale +-4g
 
