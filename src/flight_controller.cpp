@@ -42,7 +42,7 @@ void fc_process() {
 void fc_emergency_stop() {
   emergency_stopped = true;
   motors_command_all_off();
-  while(1);
+  for(;;);
 }
 
 void compute_pids() {

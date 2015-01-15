@@ -59,6 +59,6 @@ void mpu6050_init() {
     Serial.println("Connected to MPU6050!");
   } else {
     Serial.println("Unable to connect to MPU6050.");
-    for(;;) {}
+    for(;;);
   }
 }
