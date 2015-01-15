@@ -3,16 +3,19 @@
 #include "imu.h"
 #include "pids.h"
 #include "motors.h"
+#include "serial_commands.h"
+
+void fc_safety_check();
+void compute_pids();
+void compute_motor_outputs();
+bool min_throttle();
+int16_t fc_throttle();
 
 uint16_t gyro_freeze_counter = 0;
 float last_gyro_value = 0.0;
 bool emergency_stopped = false;
 uint8_t safety_mode = UNARMED;
 uint8_t flight_mode = RATE;
-
-void fc_safety_check();
-void compute_pids();
-void compute_motor_outputs();
 
 void fc_init() {
   pids_init();
@@ -27,9 +30,9 @@ void fc_process() {
   fc_safety_check();
 
   compute_pids();
+  compute_motor_outputs();
 
-  if (safety_mode == ARMED) {
-    compute_motor_outputs();
+  if (safety_mode == ARMED && min_throttle()) {
     motors_command();
   } else {
     motors_command_all_off();
@@ -68,13 +71,21 @@ void fc_safety_check() {
 }
 
 void compute_motor_outputs() {
-  // double m1_r_out = rc->get(RC_THROTTLE) + pid(PID_RATE_X).output;
-  // double m2_l_out = rc->get(RC_THROTTLE) - pid(PID_RATE_X).output;
-  // double m3_f_out = rc->get(RC_THROTTLE) - pid(PID_RATE_Y).output;
-  // double m4_b_out = rc->get(RC_THROTTLE) + pid(PID_RATE_Y).output;
+  double m1_r_out = fc_throttle() + pid(PID_RATE_X).output;
+  double m2_l_out = fc_throttle() - pid(PID_RATE_X).output;
+  double m3_f_out = fc_throttle() - pid(PID_RATE_Y).output;
+  double m4_b_out = fc_throttle() + pid(PID_RATE_Y).output;
 
-  // motors_set_output(M1, (int16_t)(m1_r_out + 0.5));
-  // motors_set_output(M2, (int16_t)(m2_l_out + 0.5));
-  // motors_set_output(M3, (int16_t)(m3_f_out + 0.5));
-  // motors_set_output(M4, (int16_t)(m4_b_out + 0.5));
+  motors_set_output(M1, (int16_t)(m1_r_out + 0.5));
+  motors_set_output(M2, (int16_t)(m2_l_out + 0.5));
+  motors_set_output(M3, (int16_t)(m3_f_out + 0.5));
+  motors_set_output(M4, (int16_t)(m4_b_out + 0.5));
+}
+
+int16_t fc_throttle() {
+  return serial_commands_throttle();
+}
+
+bool min_throttle() {
+  return fc_throttle() >= 1100;
 }

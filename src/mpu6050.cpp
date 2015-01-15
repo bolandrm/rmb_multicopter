@@ -1,7 +1,7 @@
 #include "mpu6050.h"
 
 void mpu6050_write_reg(int addr, uint8_t data) {
-	i2c_update_register(MPU6050_I2C_ADDRESS, addr, data);
+  i2c_update_register(MPU6050_I2C_ADDRESS, addr, data);
   delay(1);
 }
 

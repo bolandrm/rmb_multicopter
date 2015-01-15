@@ -53,6 +53,6 @@ void serial_update_pids(byte incomingByte) {
   pid(PID_RATE_X).ki = ki;
 }
 
-int16_t serial_update_throttle() {
+int16_t serial_commands_throttle() {
   return throttle;
 }
