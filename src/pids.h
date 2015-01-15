@@ -16,6 +16,8 @@ typedef struct {
   float input;
   float integrator;
   float output;
+  float p_term;
+  float i_term;
 } pid_t;
 
 void pids_init();

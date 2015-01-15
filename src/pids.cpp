@@ -14,21 +14,25 @@ void pids_init() {
   pids[PID_RATE_Y].ki = 0.5;
 
   for (int i = 0; i < NUM_PIDS; i++) {
-    pids[i].integrator = 0;
+    pids[i].integrator = 0.0;
+    pids[i].input = 0.0;
     pids[i].last_compute_time = micros();
   }
 }
 
 void pid_compute(int8_t pid_number) {
-  pid_t pid = pids[pid_number];
+  pid_t *pid = &pids[pid_number];
 
-  float dt = (float) (micros() - pid.last_compute_time) / 1000000.0f;
-  pid.last_compute_time = micros();
+  float dt = (float) (micros() - pid->last_compute_time) / 1000000.0f;
+  pid->last_compute_time = micros();
 
-  float error = pid.input - pid.setpoint;
-  pid.integrator += pid.ki * error * dt;
+  float error = pid->input - pid->setpoint;
+  pid->integrator += pid->ki * error * dt;
 
-  pid.output = pid.kp * error + pid.ki;
+  pid->p_term = pid->kp * error;
+  pid->i_term = pid->integrator;
+
+  pid->output = pid->p_term + pid->i_term;
 }
 
 void pids_reset_i() {

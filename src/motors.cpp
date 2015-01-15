@@ -11,12 +11,16 @@
 #define M3_OUTPUT_REG OCR1B
 #define M4_OUTPUT_REG OCR2A
 
-uint16_t outputs[4];
+uint16_t outputs[NUM_MOTORS];
 
 void zero_outputs() {
   for (int i = 0; i < NUM_MOTORS; i++) {
     outputs[i] = MOTOR_SAFE_OFF;
   }
+}
+
+int16_t motor_level(int8_t motor_number) {
+  outputs[motor_number];
 }
 
 void adjust_for_bounds() {

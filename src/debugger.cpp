@@ -3,22 +3,38 @@
 #include "imu.h"
 #include "pids.h"
 #include "flight_controller.h"
+#include "motors.h"
 
 int32_t debug_timer = millis();
 int32_t loop_timer = micros();
 int32_t loop_duration;
 
 void text_debug() {
-  Serial.print("gyro_x: "); Serial.print(imu_rates().x);
-  Serial.print("\t gyro_y: "); Serial.print(imu_rates().y);
-  Serial.print("\t gyro_z: "); Serial.print(imu_rates().z);
-  Serial.println();
-
   Serial.print("pid_x_kp: "); Serial.print(pid(PID_RATE_X)->kp);
   Serial.print("\t pid_x_ki: "); Serial.print(pid(PID_RATE_X)->ki);
   Serial.println();
 
+  Serial.print("gyro_x: "); Serial.print(imu_rates().x);
+  Serial.print("\t pid_x_out: "); Serial.print(pid(PID_RATE_X)->output);
+  Serial.print("\t pid_x_p: "); Serial.print(pid(PID_RATE_X)->p_term);
+  Serial.print("\t pid_x_i: "); Serial.print(pid(PID_RATE_X)->i_term);
+  Serial.println();
+
+  Serial.print("gyro_y: "); Serial.print(imu_rates().y);
+  Serial.print("\t pid_y_out: "); Serial.print(pid(PID_RATE_Y)->output);
+  Serial.print("\t pid_y_p: "); Serial.print(pid(PID_RATE_Y)->p_term);
+  Serial.print("\t pid_y_i: "); Serial.print(pid(PID_RATE_Y)->i_term);
+  Serial.println();
+
+  Serial.print("gyro_z: "); Serial.print(imu_rates().z);
+  Serial.println();
+
   Serial.print("throttle: "); Serial.print(fc_throttle());
+  Serial.print("\tm1: "); Serial.print(motor_level(M1));
+  Serial.print("\tm2: "); Serial.print(motor_level(M2));
+  Serial.print("\tm3: "); Serial.print(motor_level(M3));
+  Serial.print("\tm4: "); Serial.print(motor_level(M4));
+
   Serial.println();
 
   //Serial.print("gyro_x_ang: "); Serial.print(imu_gyro_angles().x);

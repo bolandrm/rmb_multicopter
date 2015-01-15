@@ -50,6 +50,10 @@ void fc_emergency_stop() {
 }
 
 void compute_pids() {
+  pid(PID_RATE_X)->setpoint = 0.0;
+  pid(PID_RATE_Y)->setpoint = 0.0;
+  pid(PID_RATE_X)->setpoint = imu_rates().x;
+  pid(PID_RATE_Y)->setpoint = imu_rates().y;
   pid_compute(PID_RATE_X);
   pid_compute(PID_RATE_Y);
 }
@@ -75,10 +79,10 @@ void fc_safety_check() {
 }
 
 void compute_motor_outputs() {
-  double m1_r_out = fc_throttle() + pid(PID_RATE_X)->output;
-  double m2_l_out = fc_throttle() - pid(PID_RATE_X)->output;
-  double m3_f_out = fc_throttle() - pid(PID_RATE_Y)->output;
-  double m4_b_out = fc_throttle() + pid(PID_RATE_Y)->output;
+  float m1_r_out = fc_throttle() + pid(PID_RATE_X)->output;
+  float m2_l_out = fc_throttle() - pid(PID_RATE_X)->output;
+  float m3_f_out = fc_throttle() - pid(PID_RATE_Y)->output;
+  float m4_b_out = fc_throttle() + pid(PID_RATE_Y)->output;
 
   motors_set_output(M1, (int16_t)(m1_r_out + 0.5));
   motors_set_output(M2, (int16_t)(m2_l_out + 0.5));
