@@ -30,3 +30,9 @@ void pid_compute(int8_t pid_number) {
 
   pid.output = pid.kp * error + pid.ki;
 }
+
+void pids_reset_i() {
+  for (int i = 0; i < NUM_PIDS; i++) {
+    pids[i].integrator = 0;
+  }
+}

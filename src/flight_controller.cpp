@@ -16,6 +16,7 @@ float last_gyro_value = 0.0;
 bool emergency_stopped = false;
 uint8_t safety_mode = UNARMED;
 uint8_t flight_mode = RATE;
+bool on_ground = true;
 
 void fc_init() {
   pids_init();
@@ -29,12 +30,15 @@ void fc_arm() {
 void fc_process() {
   fc_safety_check();
 
+  if (on_ground) pids_reset_i();
   compute_pids();
   compute_motor_outputs();
 
   if (safety_mode == ARMED && min_throttle()) {
+    on_ground = false;
     motors_command();
   } else {
+    on_ground = true;
     motors_command_all_off();
   }
 }
