@@ -1,3 +1,6 @@
+#ifndef FLIGHT_CONTROLLER_H
+#define FLIGHT_CONTROLLER_H
+
 void fc_init();
 
 #define RATE 0
@@ -5,3 +8,5 @@ void fc_init();
 
 #define ARMED 1
 #define UNARMED 0
+
+#endif

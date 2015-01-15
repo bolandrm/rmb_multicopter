@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "flight_controller.h"
 #include "imu.h"
+#include "pids.h"
 
 uint16_t gyro_freeze_counter = 0;
 float last_gyro_value = 0.0;
@@ -12,6 +13,7 @@ uint8_t flight_mode = RATE;
 void safety_check();
 
 void fc_init() {
+  pids_init();
 }
 
 void compute_pids() {
