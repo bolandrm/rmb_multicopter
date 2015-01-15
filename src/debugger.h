@@ -1,3 +1,6 @@
+#ifndef DEBUGGER_H
+#define DEBUGGER_H
+
 #define DEBUG true
 #define CHART_DEBUG false
 
@@ -10,3 +13,5 @@
 #endif
 
 void debugger_print();
+
+#endif
