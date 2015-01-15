@@ -19,7 +19,7 @@ typedef struct {
 } pid_t;
 
 void pids_init();
-pid_t pid(int8_t);
+pid_t *pid(int8_t);
 void pid_compute(int8_t);
 void pids_reset_i();
 

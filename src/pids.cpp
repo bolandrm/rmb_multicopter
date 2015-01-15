@@ -2,8 +2,8 @@
 
 pid_t pids[NUM_PIDS];
 
-pid_t pid(int8_t pid_number) {
-  return pids[pid_number];
+pid_t *pid(int8_t pid_number) {
+  return &pids[pid_number];
 }
 
 void pids_init() {

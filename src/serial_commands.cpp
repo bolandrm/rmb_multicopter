@@ -26,8 +26,8 @@ void serial_update_throttle(byte incomingByte) {
 void serial_update_pids(byte incomingByte) {
   double kp, ki;
 
-  kp = pid(PID_RATE_X).kp;
-  ki = pid(PID_RATE_X).ki;
+  kp = pid(PID_RATE_X)->kp;
+  ki = pid(PID_RATE_X)->ki;
 
   if (incomingByte == 'a') {
     if (kp <= 0.05) kp = 0;
@@ -49,8 +49,10 @@ void serial_update_pids(byte incomingByte) {
     // else kd += 0.05;
   }
 
-  pid(PID_RATE_X).kp = kp;
-  pid(PID_RATE_X).ki = ki;
+  pid(PID_RATE_X)->kp = kp;
+  pid(PID_RATE_X)->ki = ki;
+  pid(PID_RATE_Y)->kp = kp;
+  pid(PID_RATE_Y)->ki = ki;
 }
 
 int16_t serial_commands_throttle() {

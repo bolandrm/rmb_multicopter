@@ -1,6 +1,8 @@
 #include "debugger.h"
 #include <Arduino.h>
 #include "imu.h"
+#include "pids.h"
+#include "flight_controller.h"
 
 int32_t debug_timer = millis();
 int32_t loop_timer = micros();
@@ -12,22 +14,29 @@ void text_debug() {
   Serial.print("\t gyro_z: "); Serial.print(imu_rates().z);
   Serial.println();
 
-  Serial.print("gyro_x_ang: "); Serial.print(imu_gyro_angles().x);
-  Serial.print("\t gyro_y_ang: "); Serial.print(imu_gyro_angles().y);
+  Serial.print("pid_x_kp: "); Serial.print(pid(PID_RATE_X)->kp);
+  Serial.print("\t pid_x_ki: "); Serial.print(pid(PID_RATE_X)->ki);
   Serial.println();
 
-  Serial.print("accel_x_raw: "); Serial.print(imu_accel_raws().x);
-  Serial.print("\t accel_y_raw: "); Serial.print(imu_accel_raws().y);
-  Serial.print("\t accel_z_raw: "); Serial.print(imu_accel_raws().z);
+  Serial.print("throttle: "); Serial.print(fc_throttle());
   Serial.println();
 
-  Serial.print("accel_x_angle: "); Serial.print(imu_accel_angles().x);
-  Serial.print("\t accel_y_angle: "); Serial.print(imu_accel_angles().y);
-  Serial.println();
+  //Serial.print("gyro_x_ang: "); Serial.print(imu_gyro_angles().x);
+  //Serial.print("\t gyro_y_ang: "); Serial.print(imu_gyro_angles().y);
+  //Serial.println();
 
-  Serial.print("x_angle: "); Serial.print(imu_angles().x);
-  Serial.print("\t y_angle: "); Serial.print(imu_angles().y);
-  Serial.println();
+  //Serial.print("accel_x_raw: "); Serial.print(imu_accel_raws().x);
+  //Serial.print("\t accel_y_raw: "); Serial.print(imu_accel_raws().y);
+  //Serial.print("\t accel_z_raw: "); Serial.print(imu_accel_raws().z);
+  //Serial.println();
+
+  //Serial.print("accel_x_angle: "); Serial.print(imu_accel_angles().x);
+  //Serial.print("\t accel_y_angle: "); Serial.print(imu_accel_angles().y);
+  //Serial.println();
+
+  //Serial.print("x_angle: "); Serial.print(imu_angles().x);
+  //Serial.print("\t y_angle: "); Serial.print(imu_angles().y);
+  //Serial.println();
 
   Serial.print("loop time: "); Serial.print(loop_duration);
   Serial.println();
