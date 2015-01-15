@@ -1,4 +1,5 @@
 #include "motors.h"
+#include "flight_controller.h"
 
 #define M1_PIN 3
 #define M2_PIN 9
@@ -39,12 +40,22 @@ void adjust_for_bounds() {
   }
 }
 
+void motors_safety_check() {
+  for(int i = 0; i < NUM_MOTORS; i++) {
+    if (outputs[i] > INDOOR_SAFE_MOTOR_SPEED) {
+      Serial.println("motors too high");
+      fc_emergency_stop();
+    }
+  }
+}
+
 void motors_set_output(int8_t motor_number, int16_t output) {
   outputs[motor_number] = output;
 }
 
 void motors_command() {
   adjust_for_bounds();
+  motors_safety_check();
 
   #ifdef ALLOW_MOTORS
     M1_OUTPUT_REG = outputs[M1] / 16;

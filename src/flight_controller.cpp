@@ -10,7 +10,7 @@ bool emergency_stopped = false;
 uint8_t safety_mode = UNARMED;
 uint8_t flight_mode = RATE;
 
-void safety_check();
+void fc_safety_check();
 void compute_pids();
 
 void fc_init() {
@@ -23,7 +23,7 @@ void fc_arm() {
 }
 
 void fc_process() {
-  safety_check();
+  fc_safety_check();
 
   compute_pids();
 
@@ -46,7 +46,7 @@ void compute_pids() {
   pid_compute(PID_RATE_Y);
 }
 
-void safety_check() {
+void fc_safety_check() {
   // watchdog to prevent stale imu values
   if (imu_rates().x == last_gyro_value) {
     gyro_freeze_counter++;
@@ -65,11 +65,4 @@ void safety_check() {
   //  emergency_stop();
   //}
 
-  // MOVE TO MOTOR FILE
-  //for(int i = 0; i < NUM_MOTORS; i++) {
-  //  if (motors.outputs[i] > INDOOR_SAFE_MOTOR_SPEED) {
-  //    Serial.println("motors too high");
-  //    emergency_stop();
-  //  }
-  //}
 }
