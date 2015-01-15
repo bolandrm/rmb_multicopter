@@ -2,6 +2,7 @@
 #include "flight_controller.h"
 #include "imu.h"
 #include "pids.h"
+#include "motors.h"
 
 uint16_t gyro_freeze_counter = 0;
 float last_gyro_value = 0.0;
@@ -9,42 +10,40 @@ bool emergency_stopped = false;
 uint8_t safety_mode = UNARMED;
 uint8_t flight_mode = RATE;
 
-
 void safety_check();
+void compute_pids();
 
 void fc_init() {
   pids_init();
+  motors_init();
 }
 
-void compute_pids() {
-}
-
-void adjust_for_bounds() {
-}
-
-void arm() {
+void fc_arm() {
   safety_mode = ARMED;
 }
 
 void fc_process() {
   safety_check();
 
-  // adjust_pid_tuning();
   compute_pids();
 
   if (safety_mode == ARMED) {
     //compute_motor_outputs();
-    adjust_for_bounds();
-    //motors_command_all();
+    motors_command();
   } else {
-    //motors_command_all_off();
+    motors_command_all_off();
   }
 }
 
-void emergency_stop() {
+void fc_emergency_stop() {
   emergency_stopped = true;
-  // motors.command_all_off();
+  motors_command_all_off();
   while(1);
+}
+
+void compute_pids() {
+  pid_compute(PID_RATE_X);
+  pid_compute(PID_RATE_Y);
 }
 
 void safety_check() {
@@ -53,7 +52,7 @@ void safety_check() {
     gyro_freeze_counter++;
     if (gyro_freeze_counter == 500) {
       Serial.println("gyro freeze");
-      emergency_stop();
+      fc_emergency_stop();
     }
   } else {
     gyro_freeze_counter = 0;

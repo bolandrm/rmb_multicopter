@@ -7,6 +7,7 @@
 void setup() {
   Serial.begin(SERIAL_PORT_SPEED);
   imu_init();
+  fc_init();
 }
 
 void loop() {
