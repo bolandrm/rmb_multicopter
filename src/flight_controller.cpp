@@ -23,10 +23,6 @@ void fc_init() {
   motors_init();
 }
 
-void fc_arm() {
-  safety_mode = ARMED;
-}
-
 void fc_process() {
   fc_safety_check();
 
@@ -34,7 +30,7 @@ void fc_process() {
   compute_pids();
   compute_motor_outputs();
 
-  if (safety_mode == ARMED && min_throttle()) {
+  if (fc_armed() && min_throttle()) {
     on_ground = false;
     motors_command();
   } else {
@@ -96,4 +92,12 @@ int16_t fc_throttle() {
 
 bool min_throttle() {
   return fc_throttle() >= 1100;
+}
+
+void fc_arm() {
+  safety_mode = ARMED;
+}
+
+bool fc_armed() {
+  return safety_mode == ARMED;
 }

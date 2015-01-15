@@ -1,5 +1,6 @@
 #include "serial_commands.h"
 #include "pids.h"
+#include "flight_controller.h"
 
 void serial_update_pids(byte);
 void serial_update_throttle(byte);
@@ -20,6 +21,8 @@ void serial_update_throttle(byte incomingByte) {
     throttle -= 50;
   } else if (incomingByte == 'o') {
     throttle = 600;
+  } else if (incomingByte == 'u') {
+    fc_arm();
   }
 }
 

@@ -12,5 +12,6 @@ void fc_arm();
 void fc_process();
 void fc_emergency_stop();
 int16_t fc_throttle();
+bool fc_armed();
 
 #endif

@@ -34,6 +34,11 @@ void text_debug() {
   Serial.print("\tm2: "); Serial.print(motor_level(M2));
   Serial.print("\tm3: "); Serial.print(motor_level(M3));
   Serial.print("\tm4: "); Serial.print(motor_level(M4));
+  if (fc_armed()) {
+    Serial.print("\t ARMED");
+  } else {
+    Serial.print("\t UNARMED");
+  }
 
   Serial.println();
 

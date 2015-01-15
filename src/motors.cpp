@@ -20,7 +20,7 @@ void zero_outputs() {
 }
 
 int16_t motor_level(int8_t motor_number) {
-  outputs[motor_number];
+  return outputs[motor_number];
 }
 
 void adjust_for_bounds() {
