@@ -12,6 +12,7 @@ uint8_t flight_mode = RATE;
 
 void fc_safety_check();
 void compute_pids();
+void compute_motor_outputs();
 
 void fc_init() {
   pids_init();
@@ -28,7 +29,7 @@ void fc_process() {
   compute_pids();
 
   if (safety_mode == ARMED) {
-    //compute_motor_outputs();
+    compute_motor_outputs();
     motors_command();
   } else {
     motors_command_all_off();
@@ -64,5 +65,16 @@ void fc_safety_check() {
   //  Serial.println("angles too high");
   //  emergency_stop();
   //}
+}
 
+void compute_motor_outputs() {
+  // double m1_r_out = rc->get(RC_THROTTLE) + pid(PID_RATE_X).output;
+  // double m2_l_out = rc->get(RC_THROTTLE) - pid(PID_RATE_X).output;
+  // double m3_f_out = rc->get(RC_THROTTLE) - pid(PID_RATE_Y).output;
+  // double m4_b_out = rc->get(RC_THROTTLE) + pid(PID_RATE_Y).output;
+
+  // motors_set_output(M1, (int16_t)(m1_r_out + 0.5));
+  // motors_set_output(M2, (int16_t)(m2_l_out + 0.5));
+  // motors_set_output(M3, (int16_t)(m3_f_out + 0.5));
+  // motors_set_output(M4, (int16_t)(m4_b_out + 0.5));
 }
