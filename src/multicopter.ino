@@ -2,6 +2,7 @@
 
 #include "imu.h"
 #include "debugger.h"
+#include "flight_controller.h"
 
 void setup() {
   Serial.begin(SERIAL_PORT_SPEED);
