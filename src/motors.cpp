@@ -12,6 +12,7 @@
 #define M4_OUTPUT_REG OCR2A
 
 uint16_t outputs[NUM_MOTORS];
+void _motors_command();
 
 void zero_outputs() {
   for (int i = 0; i < NUM_MOTORS; i++) {
@@ -60,7 +61,10 @@ void motors_set_output(int8_t motor_number, int16_t output) {
 void motors_command() {
   adjust_for_bounds();
   motors_safety_check();
+  _motors_command();
+}
 
+void _motors_command() {
   #ifdef ALLOW_MOTORS
     M1_OUTPUT_REG = outputs[M1] / 16;
     M2_OUTPUT_REG = outputs[M2] * 2;
@@ -76,7 +80,7 @@ void motors_command() {
 
 void motors_command_all_off() {
   zero_outputs();
-  motors_command();
+  _motors_command(); // skip checks, just turn them off
 }
 
 void motors_init() {
