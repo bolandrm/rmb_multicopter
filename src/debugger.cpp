@@ -4,6 +4,7 @@
 #include "pids.h"
 #include "flight_controller.h"
 #include "motors.h"
+#include "serial_commands.h"
 
 int32_t debug_timer = millis();
 int32_t loop_timer = micros();
@@ -24,6 +25,7 @@ void text_debug() {
   Serial.print("\t pid_y_out: "); Serial.print(pid(PID_RATE_Y)->output);
   Serial.print("\t pid_y_p: "); Serial.print(pid(PID_RATE_Y)->p_term);
   Serial.print("\t pid_y_i: "); Serial.print(pid(PID_RATE_Y)->i_term);
+  Serial.print("\t target: "); Serial.print(serial_commands_target_control());
   Serial.println();
 
   Serial.print("gyro_z: "); Serial.print(imu_rates().z);

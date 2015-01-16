@@ -46,8 +46,8 @@ void fc_emergency_stop() {
 }
 
 void compute_pids() {
-  pid(PID_RATE_X)->setpoint = 0.0;
-  pid(PID_RATE_Y)->setpoint = 0.0;
+  pid(PID_RATE_X)->input = 0.0;
+  pid(PID_RATE_Y)->input = serial_commands_target_control();
   pid(PID_RATE_X)->setpoint = imu_rates().x;
   pid(PID_RATE_Y)->setpoint = imu_rates().y;
   pid_compute(PID_RATE_X);

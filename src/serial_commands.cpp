@@ -4,14 +4,22 @@
 
 void serial_update_pids(byte);
 void serial_update_throttle(byte);
+void serial_update_control(byte);
 int16_t throttle = 600;
+float target_control = 0.0;
+int32_t control_timer = 0;
 
 void serial_commands_process() {
+  if (millis() - control_timer > 1000) {
+    target_control = 0.0;
+  }
+
   if (Serial.available() <= 0) return;
   byte incomingByte = Serial.read();
 
   serial_update_pids(incomingByte);
   serial_update_throttle(incomingByte);
+  serial_update_control(incomingByte);
 }
 
 void serial_update_throttle(byte incomingByte) {
@@ -58,6 +66,20 @@ void serial_update_pids(byte incomingByte) {
   pid(PID_RATE_Y)->ki = ki;
 }
 
+void serial_update_control(byte incomingByte) {
+  if (incomingByte == ',') {
+    target_control = 30.0;
+    control_timer = millis();
+  } else if (incomingByte == '.') {
+    target_control = -30.0;
+    control_timer = millis();
+  }
+}
+
 int16_t serial_commands_throttle() {
   return throttle;
+}
+
+float serial_commands_target_control() {
+  return target_control;
 }
