@@ -31,6 +31,12 @@ void text_debug() {
   Serial.print("gyro_z: "); Serial.print(imu_rates().z);
   Serial.println();
 
+  Serial.print("rc_x: "); Serial.print(fc_rc()->get(RC_ROLL));
+  Serial.print("\t rc_y: "); Serial.print(fc_rc()->get(RC_PITCH));
+  Serial.print("\t rc_z: "); Serial.print(fc_rc()->get(RC_YAW));
+  Serial.print("\t rc_throttle: "); Serial.print(fc_rc()->get(RC_THROTTLE));
+  Serial.println();
+
   Serial.print("throttle: "); Serial.print(fc_throttle());
   Serial.print("\tm1: "); Serial.print(motor_level(M1));
   Serial.print("\tm2: "); Serial.print(motor_level(M2));

@@ -4,6 +4,7 @@
 #include "pids.h"
 #include "motors.h"
 #include "serial_commands.h"
+#include "rc_interrupts.h"
 
 void fc_safety_check();
 void compute_pids();
@@ -17,14 +18,17 @@ bool emergency_stopped = false;
 uint8_t safety_mode = UNARMED;
 uint8_t flight_mode = RATE;
 bool on_ground = true;
+RemoteControl rc;
 
 void fc_init() {
   pids_init();
   motors_init();
+  bind_rc_interrupts();
 }
 
 void fc_process() {
   fc_safety_check();
+  rc.read_values();
 
   if (on_ground) pids_reset_i();
   compute_pids();
@@ -100,4 +104,8 @@ void fc_arm() {
 
 bool fc_armed() {
   return safety_mode == ARMED;
+}
+
+RemoteControl *fc_rc() {
+  return &rc;
 }
