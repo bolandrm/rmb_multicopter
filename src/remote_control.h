@@ -51,28 +51,15 @@
 #define RC_POT_A    RC_CH5
 #define RC_POT_B    RC_CH6
 
-class RemoteControl {
-  public:
-    RemoteControl();
+#define  RC_CH1_INPUT  A0
+#define  RC_CH2_INPUT  A1
+#define  RC_CH3_INPUT  A2
+#define  RC_CH4_INPUT  A3
+#define  RC_CH5_INPUT  7
+#define  RC_CH6_INPUT  8
 
-    void read_values();
-    int16_t get(int);
-
-    static void calc_input(int, int);
-
-  private:
-    void process_channel_value(int channel);
-
-    static uint32_t last_update_time;
-    static uint32_t last_read_time;
-    static int16_t rc_in_min[6];
-    static int16_t rc_in_max[6];
-    static int16_t rc_out_min[6];
-    static int16_t rc_out_max[6];
-    static uint32_t rc_start[6];
-    static volatile uint16_t rc_shared[6];
-    static uint16_t rc_values[6];
-    uint16_t rc_out_values[6];
-};
+void rc_init();
+void rc_read_values();
+int16_t rc_get(int channel);
 
 #endif

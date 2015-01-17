@@ -1,8 +1,6 @@
 #ifndef FLIGHT_CONTROLLER_H
 #define FLIGHT_CONTROLLER_H
 
-#include "remote_control.h"
-
 #define RATE 0
 #define STABILIZE 1
 
@@ -15,6 +13,5 @@ void fc_process();
 void fc_emergency_stop();
 int16_t fc_throttle();
 bool fc_armed();
-RemoteControl *fc_rc();
 
 #endif

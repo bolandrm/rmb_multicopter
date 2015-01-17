@@ -5,6 +5,7 @@
 #include "flight_controller.h"
 #include "motors.h"
 #include "serial_commands.h"
+#include "remote_control.h"
 
 int32_t debug_timer = millis();
 int32_t loop_timer = micros();
@@ -31,10 +32,10 @@ void text_debug() {
   Serial.print("gyro_z: "); Serial.print(imu_rates().z);
   Serial.println();
 
-  Serial.print("rc_x: "); Serial.print(fc_rc()->get(RC_ROLL));
-  Serial.print("\t rc_y: "); Serial.print(fc_rc()->get(RC_PITCH));
-  Serial.print("\t rc_z: "); Serial.print(fc_rc()->get(RC_YAW));
-  Serial.print("\t rc_throttle: "); Serial.print(fc_rc()->get(RC_THROTTLE));
+  Serial.print("rc_x: "); Serial.print(rc_get(RC_ROLL));
+  Serial.print("\t rc_y: "); Serial.print(rc_get(RC_PITCH));
+  Serial.print("\t rc_z: "); Serial.print(rc_get(RC_YAW));
+  Serial.print("\t rc_throttle: "); Serial.print(rc_get(RC_THROTTLE));
   Serial.println();
 
   Serial.print("throttle: "); Serial.print(fc_throttle());
