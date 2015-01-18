@@ -73,9 +73,25 @@ void chart_debug() {
   Serial.print("\r");
 }
 
+void logger_debug() {
+//  Serial.print(imu_rates().x);
+//  Serial.print("\t"); Serial.print(imu_rates().y);
+//  Serial.print("\t"); Serial.print(imu_rates().z);
+//
+  String output = "";
+  output += imu_rates().x;
+  output += "\t";
+  output += imu_rates().y;
+  output += "\t";
+  output += imu_rates().z;
+  Serial.println(output);
+}
+
 void print_debug() {
   if (CHART_DEBUG) {
     chart_debug();
+  } else if (LOGGER_DEBUG) {
+    logger_debug();
   } else {
     text_debug();
   }

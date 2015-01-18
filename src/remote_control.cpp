@@ -46,10 +46,10 @@ void process_channel_value(int channel) {
   value = constrain(value, rc_in_min[channel], rc_in_max[channel]);
   value = map(value, rc_in_min[channel], rc_in_max[channel], rc_out_min[channel], rc_out_max[channel]);
 
-  if ((channel == RC_CH1 || channel == RC_CH2 || channel == RC_CH4)
-       && ((value > 0 && value < 5) || (value < 0 && value > -5)) ) {
-    value = 0;
-  }
+  // if ((channel == RC_CH1 || channel == RC_CH2 || channel == RC_CH4)
+  //      && ((value > 0 && value < 5) || (value < 0 && value > -5)) ) {
+  //   value = 0;
+  // }
 
   if (channel == RC_CH4) {
     value = -value; // invert yaw
