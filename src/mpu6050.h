@@ -6,6 +6,7 @@
 #include "imu.h"
 
 #define MPU6050_I2C_ADDRESS 0x68
+#define MPU6050_GYRO_500D_SENS 65.5
 #define MPU6050_GYRO_1000D_SENS 32.8
 #define MPU6050_ACCEL_4G_SENS 8192.0
 
