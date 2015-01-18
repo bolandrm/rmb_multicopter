@@ -51,8 +51,8 @@ void process_channel_value(int channel) {
     value = 0;
   }
 
-  if (channel == RC_CH1 || channel == RC_CH2) {
-    value = -value; // invert roll & pitch
+  if (channel == RC_CH4) {
+    value = -value; // invert yaw
   }
 
   if (channel == RC_CH3 && value < 1070 && value > 750) {

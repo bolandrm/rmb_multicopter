@@ -20,26 +20,25 @@ void text_debug() {
   Serial.print("\t pid_x_out: "); Serial.print(pid(PID_RATE_X)->output);
   Serial.print("\t pid_x_p: "); Serial.print(pid(PID_RATE_X)->p_term);
   Serial.print("\t pid_x_i: "); Serial.print(pid(PID_RATE_X)->i_term);
+  Serial.print("\t rc_x: "); Serial.print(rc_get(RC_ROLL));
   Serial.println();
 
   Serial.print("gyro_y: "); Serial.print(imu_rates().y);
   Serial.print("\t pid_y_out: "); Serial.print(pid(PID_RATE_Y)->output);
   Serial.print("\t pid_y_p: "); Serial.print(pid(PID_RATE_Y)->p_term);
   Serial.print("\t pid_y_i: "); Serial.print(pid(PID_RATE_Y)->i_term);
-  Serial.print("\t target: "); Serial.print(serial_commands_target_control());
+  Serial.print("\t rc_y: "); Serial.print(rc_get(RC_PITCH));
   Serial.println();
 
   Serial.print("gyro_z: "); Serial.print(imu_rates().z);
-  Serial.println();
-
-  Serial.print("rc_x: "); Serial.print(rc_get(RC_ROLL));
-  Serial.print("\t rc_y: "); Serial.print(rc_get(RC_PITCH));
+  Serial.print("\t pid_z_out: "); Serial.print(pid(PID_RATE_Z)->output);
+  Serial.print("\t pid_z_p: "); Serial.print(pid(PID_RATE_Z)->p_term);
+  Serial.print("\t pid_z_i: "); Serial.print(pid(PID_RATE_Z)->i_term);
   Serial.print("\t rc_z: "); Serial.print(rc_get(RC_YAW));
-  Serial.print("\t rc_throttle: "); Serial.print(rc_get(RC_THROTTLE));
   Serial.println();
 
-  Serial.print("throttle: "); Serial.print(fc_throttle());
-  Serial.print("\tm1: "); Serial.print(motor_level(M1));
+  Serial.print("rc_throttle: "); Serial.print(rc_get(RC_THROTTLE));
+  Serial.print("\t m1: "); Serial.print(motor_level(M1));
   Serial.print("\tm2: "); Serial.print(motor_level(M2));
   Serial.print("\tm3: "); Serial.print(motor_level(M3));
   Serial.print("\tm4: "); Serial.print(motor_level(M4));

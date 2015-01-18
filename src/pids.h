@@ -3,10 +3,11 @@
 
 #include <Arduino.h>
 
-#define NUM_PIDS 2
+#define NUM_PIDS 3
 
 #define PID_RATE_X 0
 #define PID_RATE_Y 1
+#define PID_RATE_Z 2
 
 typedef struct {
   float kp;

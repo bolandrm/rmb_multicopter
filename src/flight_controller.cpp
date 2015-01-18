@@ -4,17 +4,21 @@
 #include "pids.h"
 #include "motors.h"
 #include "serial_commands.h"
+#include "remote_control.h"
 
 void fc_safety_check();
 void compute_pids();
 void compute_motor_outputs();
 bool min_throttle();
-int16_t fc_throttle();
 
 uint16_t gyro_freeze_counter = 0;
 float last_gyro_value = 0.0;
 bool emergency_stopped = false;
-uint8_t safety_mode = UNARMED;
+
+// TEMP
+//uint8_t safety_mode = UNARMED;
+uint8_t safety_mode = ARMED;
+
 uint8_t flight_mode = RATE;
 bool on_ground = true;
 
@@ -46,12 +50,15 @@ void fc_emergency_stop() {
 }
 
 void compute_pids() {
-  pid(PID_RATE_X)->input = 0.0;
-  pid(PID_RATE_Y)->input = serial_commands_target_control();
+  pid(PID_RATE_X)->input = rc_get(RC_ROLL);
+  pid(PID_RATE_Y)->input = rc_get(RC_PITCH);
+  pid(PID_RATE_Z)->input = rc_get(RC_YAW);
   pid(PID_RATE_X)->setpoint = imu_rates().x;
   pid(PID_RATE_Y)->setpoint = imu_rates().y;
+  pid(PID_RATE_Z)->setpoint = imu_rates().z;
   pid_compute(PID_RATE_X);
   pid_compute(PID_RATE_Y);
+  pid_compute(PID_RATE_Z);
 }
 
 void fc_safety_check() {
@@ -75,10 +82,10 @@ void fc_safety_check() {
 }
 
 void compute_motor_outputs() {
-  float m1_r_out = fc_throttle() + pid(PID_RATE_X)->output;
-  float m2_l_out = fc_throttle() - pid(PID_RATE_X)->output;
-  float m3_f_out = fc_throttle() - pid(PID_RATE_Y)->output;
-  float m4_b_out = fc_throttle() + pid(PID_RATE_Y)->output;
+  float m1_r_out = rc_get(RC_THROTTLE) - pid(PID_RATE_X)->output - pid(PID_RATE_Z)->output;
+  float m2_l_out = rc_get(RC_THROTTLE) + pid(PID_RATE_X)->output - pid(PID_RATE_Z)->output;
+  float m3_f_out = rc_get(RC_THROTTLE) - pid(PID_RATE_Y)->output + pid(PID_RATE_Z)->output;
+  float m4_b_out = rc_get(RC_THROTTLE) + pid(PID_RATE_Y)->output + pid(PID_RATE_Z)->output;
 
   motors_set_output(M1, (int16_t)(m1_r_out + 0.5));
   motors_set_output(M2, (int16_t)(m2_l_out + 0.5));
@@ -86,12 +93,8 @@ void compute_motor_outputs() {
   motors_set_output(M4, (int16_t)(m4_b_out + 0.5));
 }
 
-int16_t fc_throttle() {
-  return serial_commands_throttle();
-}
-
 bool min_throttle() {
-  return fc_throttle() >= 1100;
+  return rc_get(RC_THROTTLE) >= 1070;
 }
 
 void fc_arm() {
