@@ -3,11 +3,9 @@
 
 #include <stdint.h>
 
-#define GYRO_X_OFFSET 1.86
-#define GYRO_Y_OFFSET 1.49
-#define GYRO_Z_OFFSET (-1.16)
-
-#define GYRO_ALPHA 0.8
+#define GYRO_X_OFFSET 1.57
+#define GYRO_Y_OFFSET 1.665
+#define GYRO_Z_OFFSET (-0.8887)
 
 #define GYRO_PART 0.994
 #define ACC_PART (1.0 - GYRO_PART)
