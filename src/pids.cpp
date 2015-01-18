@@ -7,12 +7,12 @@ pid_t *pid(int8_t pid_number) {
 }
 
 void pids_init() {
-  pids[PID_RATE_X].kp = 1.15;
-  pids[PID_RATE_X].ki = 0.36;
-  pids[PID_RATE_Y].kp = 1.15;
-  pids[PID_RATE_Y].ki = 0.36;
-  pids[PID_RATE_Z].kp = 3.0;
-  pids[PID_RATE_Z].ki = 0.1;
+  pids[PID_RATE_X].kp = 3.15;
+  pids[PID_RATE_X].ki = 0.0;
+  pids[PID_RATE_Y].kp = 3.15;
+  pids[PID_RATE_Y].ki = 0.0;
+  pids[PID_RATE_Z].kp = 5.0;
+  pids[PID_RATE_Z].ki = 0.0;
 
   for (int i = 0; i < NUM_PIDS; i++) {
     pids[i].integrator = 0.0;
