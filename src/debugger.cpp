@@ -16,6 +16,14 @@ void text_debug() {
   Serial.print("\t pid_x_ki: "); Serial.print(pid(PID_RATE_X)->ki);
   Serial.println();
 
+  Serial.print("angle_x: "); Serial.print(imu_angles().x);
+  Serial.print("\t angle_y: "); Serial.print(imu_angles().y);
+  //Serial.print("\t pid_x_out: "); Serial.print(pid(PID_RATE_X)->output);
+  //Serial.print("\t pid_x_p: "); Serial.print(pid(PID_RATE_X)->p_term);
+  //Serial.print("\t pid_x_i: "); Serial.print(pid(PID_RATE_X)->i_term);
+  //Serial.print("\t rc_x: "); Serial.print(rc_get(RC_ROLL));
+  Serial.println();
+
   Serial.print("gyro_x: "); Serial.print(imu_rates().x);
   Serial.print("\t pid_x_out: "); Serial.print(pid(PID_RATE_X)->output);
   Serial.print("\t pid_x_p: "); Serial.print(pid(PID_RATE_X)->p_term);
@@ -57,13 +65,13 @@ void text_debug() {
 }
 
 void chart_debug() {
-  //Serial.print(imu_gyro_angles().x);
-  Serial.print(imu_rates().x);
+  Serial.print(imu_gyro_angles().y);
+  //Serial.print(imu_rates().x);
   Serial.print(" ");
-  //Serial.print(imu_accel_angles().x);
-  Serial.print(imu_gyro_rates().x);
+  Serial.print(imu_accel_angles().y);
+  //Serial.print(imu_gyro_rates().x);
   Serial.print(" ");
-  Serial.print(imu_angles().x);
+  Serial.print(imu_angles().y);
   Serial.print(" ");
   Serial.print(1);
   Serial.print(" ");

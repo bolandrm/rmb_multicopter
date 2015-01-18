@@ -1,5 +1,6 @@
 #include "imu.h"
 #include "mpu6050.h"
+#include "MedianFilter.h"
 
 static axis_float_t gyro_rates;
 static axis_float_t gyro_angles;
@@ -10,6 +11,9 @@ static axis_float_t angles;
 static uint32_t gyro_update_timer = micros();
 static uint32_t accel_update_timer = millis();
 static uint32_t combination_update_timer = micros();
+static MedianFilter accel_x_filter(11, 0.0);
+static MedianFilter accel_y_filter(11, 0.0);
+static MedianFilter accel_z_filter(11, 0.0);
 
 void imu_init() {
   Wire.begin();
@@ -24,31 +28,36 @@ void update_gyro() {
   rates.y = gyro_rates.y + GYRO_Y_OFFSET;
   rates.z = gyro_rates.z + GYRO_Z_OFFSET;
 
-  //Integration of gyro rates to get the angles
-  // gyro_angles.x += rates.x * (float)(micros() - gyro_update_timer) / 1000000;
-  // gyro_angles.y += rates.y * (float)(micros() - gyro_update_timer) / 1000000;
+  // Integration of gyro rates to get the angles
+  // for debugging only
+  gyro_angles.x += rates.x * (float)(micros() - gyro_update_timer) / 1000000;
+  gyro_angles.y += rates.y * (float)(micros() - gyro_update_timer) / 1000000;
 }
 
 void update_accel() {
   mpu6050_read_accel(&accel_raws);
 
-  // This is the old method
-  // accel_angles.x = (atan2(accel_raws.x, accel_raws.z)) * RAD_TO_DEG;
-  // accel_angles.y = (atan2(accel_raws.y, accel_raws.z)) * RAD_TO_DEG;
-
-  accel_angles.x = atan2(accel_raws.y, sqrt(
-    accel_raws.x * accel_raws.x + accel_raws.z * accel_raws.z
-  )) * RAD_TO_DEG;
-
-  accel_angles.y = atan2(accel_raws.x, sqrt(
-    accel_raws.y * accel_raws.y + accel_raws.z * accel_raws.z
-  )) * RAD_TO_DEG;
+  accel_raws.x = accel_x_filter.in(accel_raws.x);
+  accel_raws.y = accel_y_filter.in(accel_raws.y);
+  accel_raws.z = accel_z_filter.in(accel_raws.z);
 }
 
 void combine() {
   //Angle calculation through Complementary filter
 
   float dt = (float)(micros() - combination_update_timer) / 1000000.0;
+
+  accel_angles.x = (atan2(accel_raws.x, accel_raws.z)) * RAD_TO_DEG;
+  accel_angles.y = (atan2(accel_raws.y, accel_raws.z)) * RAD_TO_DEG;
+
+  // This is a bit slower
+  // accel_angles.x = atan2(accel_raws.y, sqrt(
+  //   accel_raws.x * accel_raws.x + accel_raws.z * accel_raws.z
+  // )) * RAD_TO_DEG;
+
+  // accel_angles.y = atan2(accel_raws.x, sqrt(
+  //   accel_raws.y * accel_raws.y + accel_raws.z * accel_raws.z
+  // )) * RAD_TO_DEG;
 
   angles.x = GYRO_PART * (angles.x + (rates.x * dt)) + ACC_PART * accel_angles.x;
   angles.y = GYRO_PART * (angles.y + (rates.y * dt)) + ACC_PART * accel_angles.y;
@@ -59,21 +68,22 @@ void combine() {
 bool imu_read() {
   bool updated = false;
 
-  // if ((millis() - accel_update_timer) > 20) {    // ~50 hz
-  //   update_accel();
-  //   accel_update_timer = millis();
-  //   updated = true;
-  // }
-
   if ((micros() - gyro_update_timer) > 2000) {   // ~500 Hz
     update_gyro();
     gyro_update_timer = micros();
+
+    update_accel();
+    accel_update_timer = millis();
     updated = true;
   }
 
-  // if (updated) {
-  //   combine();
-  // }
+  //if ((millis() - accel_update_timer) > 2000) {    // ~100 hz
+    updated = true;
+  //}
+
+  if (updated == true) {
+    combine();
+  }
 
   return updated;
 }

@@ -30,12 +30,13 @@ void mpu6050_read_gyro(axis_float_t *gyro_rates) {
 }
 
 void mpu6050_read_accel(axis_float_t *accel_raws) {
-  int16_t accel_x = mpu6050_read_word(MPUREG_ACCEL_XOUT_H);
-  int16_t accel_y = mpu6050_read_word(MPUREG_ACCEL_YOUT_H);
+  // it appears that x and y are swapped for the accel (??)
+  int16_t accel_y = mpu6050_read_word(MPUREG_ACCEL_XOUT_H);
+  int16_t accel_x = mpu6050_read_word(MPUREG_ACCEL_YOUT_H);
   int16_t accel_z = mpu6050_read_word(MPUREG_ACCEL_ZOUT_H);
 
   accel_raws->x = accel_x / MPU6050_ACCEL_4G_SENS;
-  accel_raws->y = accel_y / MPU6050_ACCEL_4G_SENS;
+  accel_raws->y = -1 * accel_y / MPU6050_ACCEL_4G_SENS;
   accel_raws->z = accel_z / MPU6050_ACCEL_4G_SENS;
 }
 
