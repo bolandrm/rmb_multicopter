@@ -13,6 +13,10 @@ void pids_init() {
   pids[PID_RATE_Y].ki = 0.0;
   pids[PID_RATE_Z].kp = 5.0;
   pids[PID_RATE_Z].ki = 0.0;
+  pids[PID_ANGLE_X].kp = 1.0;
+  pids[PID_ANGLE_X].ki = 0.0;
+  pids[PID_ANGLE_Y].kp = 1.0;
+  pids[PID_ANGLE_Y].ki = 0.0;
 
   for (int i = 0; i < NUM_PIDS; i++) {
     pids[i].integrator = 0.0;

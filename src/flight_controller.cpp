@@ -15,11 +15,10 @@ uint16_t gyro_freeze_counter = 0;
 float last_gyro_value = 0.0;
 bool emergency_stopped = false;
 
-// TEMP
-//uint8_t safety_mode = UNARMED;
+// TEMP uint8_t safety_mode = UNARMED;
 uint8_t safety_mode = ARMED;
 
-uint8_t flight_mode = RATE;
+uint8_t flight_mode = STABILIZE;
 bool on_ground = true;
 
 void fc_init() {
@@ -50,12 +49,28 @@ void fc_emergency_stop() {
 }
 
 void compute_pids() {
-  pid(PID_RATE_X)->input = rc_get(RC_ROLL);
-  pid(PID_RATE_Y)->input = rc_get(RC_PITCH);
-  pid(PID_RATE_Z)->input = rc_get(RC_YAW);
   pid(PID_RATE_X)->setpoint = imu_rates().x;
   pid(PID_RATE_Y)->setpoint = imu_rates().y;
+  pid(PID_ANGLE_X)->setpoint = imu_angles().x;
+  pid(PID_ANGLE_Y)->setpoint = imu_angles().y;
   pid(PID_RATE_Z)->setpoint = imu_rates().z;
+
+  if (flight_mode == STABILIZE) {
+    pid(PID_ANGLE_X)->input = rc_get(RC_ROLL);
+    pid(PID_ANGLE_Y)->input = rc_get(RC_PITCH);
+
+    pid_compute(PID_ANGLE_X);
+    pid_compute(PID_ANGLE_Y);
+
+    pid(PID_RATE_X)->input = pid(PID_ANGLE_X)->output;
+    pid(PID_RATE_Y)->input = pid(PID_ANGLE_Y)->output;
+  } else {
+    pid(PID_RATE_X)->input = rc_get(RC_ROLL);
+    pid(PID_RATE_Y)->input = rc_get(RC_PITCH);
+  }
+
+  pid(PID_RATE_Z)->input = rc_get(RC_YAW);
+
   pid_compute(PID_RATE_X);
   pid_compute(PID_RATE_Y);
   pid_compute(PID_RATE_Z);
@@ -74,11 +89,11 @@ void fc_safety_check() {
     last_gyro_value = imu_rates().x;
   }
 
-  //if (imu->x_angle > 45.0 || imu->x_angle < -45.0
-  //     || imu->y_angle > 45.0 || imu->y_angle < -45.0) {
-  //  Serial.println("angles too high");
-  //  emergency_stop();
-  //}
+  if (imu_angles().x > 45.0 || imu_angles().x < -45.0
+       || imu_angles().y > 45.0 || imu_angles().y < -45.0) {
+    Serial.println("angles too high");
+    fc_emergency_stop();
+  }
 }
 
 void compute_motor_outputs() {
