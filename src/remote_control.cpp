@@ -43,21 +43,30 @@ void rc_read_values() {
 
 void process_channel_value(int channel) {
   int16_t value = rc_values[channel];
-  value = constrain(value, rc_in_min[channel], rc_in_max[channel]);
-  value = map(value, rc_in_min[channel], rc_in_max[channel], rc_out_min[channel], rc_out_max[channel]);
 
-  // if ((channel == RC_CH1 || channel == RC_CH2 || channel == RC_CH4)
-  //      && ((value > 0 && value < 5) || (value < 0 && value > -5)) ) {
-  //   value = 0;
-  // }
+  if (channel == RC_CH3) {
 
-  if (channel == RC_CH4) {
-    value = -value; // invert yaw
+    if (value < 1070) {
+      value = 0;
+    } else if (value > 1070) {
+      value = constrain(value, rc_in_min[channel], rc_in_max[channel]);
+      value = map(value, rc_in_min[channel], rc_in_max[channel], rc_out_min[channel], rc_out_max[channel]);
+    }
+
+  } else {
+    value = constrain(value, rc_in_min[channel], rc_in_max[channel]);
+    value = map(value, rc_in_min[channel], rc_in_max[channel], rc_out_min[channel], rc_out_max[channel]);
+
+    // if ((channel == RC_CH1 || channel == RC_CH2 || channel == RC_CH4)
+    //      && ((value > 0 && value < 5) || (value < 0 && value > -5)) ) {
+    //   value = 0;
+    // }
+
+    if (channel == RC_CH4) {
+      value = -value; // invert yaw
+    }
   }
 
-  if (channel == RC_CH3 && value < 1070 && value > 750) {
-    value = 1070;
-  }
 
   rc_out_values[channel] = value;
 }

@@ -72,8 +72,8 @@ void _motors_command() {
     // M2_OUTPUT_REG = 0;
     M3_OUTPUT_REG = outputs[M3] * 2;
     M4_OUTPUT_REG = outputs[M4] / 16;
-    //M3_OUTPUT_REG = 0;
-    //M4_OUTPUT_REG = 0;
+    // M3_OUTPUT_REG = 0;
+    // M4_OUTPUT_REG = 0;
   #else
     M1_OUTPUT_REG = 0;
     M2_OUTPUT_REG = 0;

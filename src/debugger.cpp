@@ -12,8 +12,11 @@ int32_t loop_timer = micros();
 int32_t loop_duration;
 
 void text_debug() {
-  Serial.print("pid_x_kp: "); Serial.print(pid(PID_RATE_X)->kp);
-  Serial.print("\t pid_x_ki: "); Serial.print(pid(PID_RATE_X)->ki);
+  Serial.print("pid_rate_kp: "); Serial.print(pid(PID_RATE_X)->kp);
+  Serial.print("\t pid_rate_ki: "); Serial.print(pid(PID_RATE_X)->ki);
+  Serial.print("\t pid_rate_yaw_kp: "); Serial.print(pid(PID_RATE_Z)->kp);
+  Serial.print("\t pid_angle_kp: "); Serial.print(pid(PID_ANGLE_X)->kp);
+  Serial.print("\t pid_angle_ki: "); Serial.print(pid(PID_ANGLE_X)->ki);
   Serial.println();
 
   Serial.print("angle_x: "); Serial.print(imu_angles().x);
