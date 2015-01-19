@@ -58,7 +58,7 @@ void text_debug() {
 
   Serial.println();
 
-  Serial.print("loop time: "); Serial.print(loop_duration);
+  Serial.print("loop time: "); Serial.print(1000000 / loop_duration);
   Serial.println();
 
   Serial.println();
@@ -87,11 +87,22 @@ void logger_debug() {
 //  Serial.print("\t"); Serial.print(imu_rates().z);
 //
   String output = "";
-  output += imu_rates().x;
+  // output += imu_rates().x;
+  // output += "\t";
+  // output += imu_rates().y;
+  // output += "\t";
+  // output += imu_rates().z;
+  output += imu_accel_raws().x;
   output += "\t";
-  output += imu_rates().y;
+  output += imu_accel_raws().y;
   output += "\t";
-  output += imu_rates().z;
+  output += imu_accel_raws().z;
+  output += "\t";
+  output += imu_accel_filtered().x;
+  output += "\t";
+  output += imu_accel_filtered().y;
+  output += "\t";
+  output += imu_accel_filtered().z;
   Serial.println(output);
 }
 

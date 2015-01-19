@@ -7,6 +7,10 @@
 #define GYRO_Y_OFFSET 1.665
 #define GYRO_Z_OFFSET (-0.8887)
 
+#define ACCEL_X_OFFSET (0.01)
+#define ACCEL_Y_OFFSET (0.03)
+#define ACCEL_Z_OFFSET (0.05)
+
 #define GYRO_PART 0.994
 #define ACC_PART (1.0 - GYRO_PART)
 
@@ -25,6 +29,7 @@ axis_float_t imu_angles();
 axis_float_t imu_gyro_angles();
 axis_float_t imu_gyro_rates();
 axis_float_t imu_accel_raws();
+axis_float_t imu_accel_filtered();
 axis_float_t imu_accel_angles();
 
 #endif

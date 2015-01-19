@@ -5,6 +5,7 @@
 static axis_float_t gyro_rates;
 static axis_float_t gyro_angles;
 static axis_float_t accel_raws;
+static axis_float_t accel_filtered;
 static axis_float_t accel_angles;
 static axis_float_t rates;
 static axis_float_t angles;
@@ -30,16 +31,16 @@ void update_gyro() {
 
   // Integration of gyro rates to get the angles
   // for debugging only
-  gyro_angles.x += rates.x * (float)(micros() - gyro_update_timer) / 1000000;
-  gyro_angles.y += rates.y * (float)(micros() - gyro_update_timer) / 1000000;
+  // gyro_angles.x += rates.x * (float)(micros() - gyro_update_timer) / 1000000;
+  // gyro_angles.y += rates.y * (float)(micros() - gyro_update_timer) / 1000000;
 }
 
 void update_accel() {
   mpu6050_read_accel(&accel_raws);
 
-  accel_raws.x = accel_x_filter.in(accel_raws.x);
-  accel_raws.y = accel_y_filter.in(accel_raws.y);
-  accel_raws.z = accel_z_filter.in(accel_raws.z);
+  accel_filtered.x = accel_x_filter.in(accel_raws.x + ACCEL_X_OFFSET);
+  accel_filtered.y = accel_y_filter.in(accel_raws.y + ACCEL_Y_OFFSET);
+  accel_filtered.z = accel_z_filter.in(accel_raws.z + ACCEL_Z_OFFSET);
 }
 
 void combine() {
@@ -47,8 +48,8 @@ void combine() {
 
   float dt = (float)(micros() - combination_update_timer) / 1000000.0;
 
-  accel_angles.x = (atan2(accel_raws.x, accel_raws.z)) * RAD_TO_DEG;
-  accel_angles.y = (atan2(accel_raws.y, accel_raws.z)) * RAD_TO_DEG;
+  accel_angles.x = (atan2(accel_filtered.x, accel_filtered.z)) * RAD_TO_DEG;
+  accel_angles.y = (atan2(accel_filtered.y, accel_filtered.z)) * RAD_TO_DEG;
 
   // This is a bit slower
   // accel_angles.x = atan2(accel_raws.y, sqrt(
@@ -78,7 +79,7 @@ bool imu_read() {
   }
 
   //if ((millis() - accel_update_timer) > 2000) {    // ~100 hz
-    updated = true;
+    //updated = true;
   //}
 
   if (updated == true) {
@@ -93,4 +94,5 @@ axis_float_t imu_angles() { return angles; }
 axis_float_t imu_gyro_angles() { return gyro_angles; }
 axis_float_t imu_gyro_rates() { return gyro_rates; }
 axis_float_t imu_accel_raws() { return accel_raws; }
+axis_float_t imu_accel_filtered() { return accel_filtered; }
 axis_float_t imu_accel_angles() { return accel_angles; }
