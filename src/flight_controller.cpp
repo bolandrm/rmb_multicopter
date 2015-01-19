@@ -14,10 +14,8 @@ bool min_throttle();
 uint16_t gyro_freeze_counter = 0;
 float last_gyro_value = 0.0;
 bool emergency_stopped = false;
-
 // TEMP uint8_t safety_mode = UNARMED;
 uint8_t safety_mode = ARMED;
-
 uint8_t flight_mode = STABILIZE;
 bool on_ground = true;
 
