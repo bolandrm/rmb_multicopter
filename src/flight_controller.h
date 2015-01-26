@@ -12,5 +12,6 @@ void fc_arm();
 void fc_process();
 void fc_emergency_stop();
 bool fc_armed();
+int8_t fc_mode();
 
 #endif

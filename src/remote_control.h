@@ -9,33 +9,39 @@
 
 #define  RC_CH1_IN_MIN   1154
 #define  RC_CH1_IN_MAX   1898
-#define  RC_CH1_OUT_MIN  -30
-#define  RC_CH1_OUT_MAX  30
+#define  RC_CH1_OUT_MIN  -22
+#define  RC_CH1_OUT_MAX  22
+#define  RC_CH1_OFFSET   0
 
 #define  RC_CH2_IN_MIN   1192
 #define  RC_CH2_IN_MAX   1824
-#define  RC_CH2_OUT_MIN  -30
-#define  RC_CH2_OUT_MAX  30
+#define  RC_CH2_OUT_MIN  -22
+#define  RC_CH2_OUT_MAX  22
+#define  RC_CH2_OFFSET   -1
 
 #define  RC_CH3_IN_MIN   1172
 #define  RC_CH3_IN_MAX   1812
 #define  RC_CH3_OUT_MIN  1070
 #define  RC_CH3_OUT_MAX  1600 // 1864 is max motor input
+#define  RC_CH3_OFFSET   0
 
 #define  RC_CH4_IN_MIN   1171
 #define  RC_CH4_IN_MAX   1871
 #define  RC_CH4_OUT_MIN  -100
 #define  RC_CH4_OUT_MAX  100
+#define  RC_CH4_OFFSET   0
 
 #define  RC_CH5_IN_MIN   996
 #define  RC_CH5_IN_MAX   2000
 #define  RC_CH5_OUT_MIN  0
 #define  RC_CH5_OUT_MAX  100
+#define  RC_CH5_OFFSET   0
 
 #define  RC_CH6_IN_MIN   996
 #define  RC_CH6_IN_MAX   2000
 #define  RC_CH6_OUT_MIN  0
 #define  RC_CH6_OUT_MAX  100
+#define  RC_CH6_OFFSET   0
 
 #define  RC_CH1  0
 #define  RC_CH2  1

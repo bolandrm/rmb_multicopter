@@ -9,6 +9,8 @@ int16_t rc_out_min[] = { RC_CH1_OUT_MIN, RC_CH2_OUT_MIN, RC_CH3_OUT_MIN,
                          RC_CH4_OUT_MIN, RC_CH5_OUT_MIN, RC_CH6_OUT_MIN };
 int16_t rc_out_max[] = { RC_CH1_OUT_MAX, RC_CH2_OUT_MAX, RC_CH3_OUT_MAX,
                          RC_CH4_OUT_MAX, RC_CH5_OUT_MAX, RC_CH6_OUT_MAX };
+int16_t rc_offset[] = { RC_CH1_OFFSET, RC_CH2_OFFSET, RC_CH3_OFFSET,
+                        RC_CH4_OFFSET, RC_CH5_OFFSET, RC_CH6_OFFSET };
 
 uint32_t last_update_time = 0;
 uint32_t last_read_time = 0;
@@ -45,28 +47,27 @@ void process_channel_value(int channel) {
   int16_t value = rc_values[channel];
 
   if (channel == RC_CH3) {
-
     if (value < 1070) {
       value = 0;
     } else if (value > 1070) {
       value = constrain(value, rc_in_min[channel], rc_in_max[channel]);
       value = map(value, rc_in_min[channel], rc_in_max[channel], rc_out_min[channel], rc_out_max[channel]);
     }
-
   } else {
     value = constrain(value, rc_in_min[channel], rc_in_max[channel]);
     value = map(value, rc_in_min[channel], rc_in_max[channel], rc_out_min[channel], rc_out_max[channel]);
 
-    // if ((channel == RC_CH1 || channel == RC_CH2 || channel == RC_CH4)
-    //      && ((value > 0 && value < 5) || (value < 0 && value > -5)) ) {
-    //   value = 0;
-    // }
+    if ((channel == RC_CH1 || channel == RC_CH2 || channel == RC_CH4)
+         && ((value > 0 && value < 2) || (value < 0 && value > -2)) ) {
+      value = 0;
+    }
 
     if (channel == RC_CH4) {
       value = -value; // invert yaw
     }
   }
 
+  value += rc_offset[channel];
 
   rc_out_values[channel] = value;
 }

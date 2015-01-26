@@ -66,10 +66,10 @@ void motors_command() {
 
 void _motors_command() {
   #ifdef ALLOW_MOTORS
-    M1_OUTPUT_REG = outputs[M1] / 16;
-    M2_OUTPUT_REG = outputs[M2] * 2;
-    // M1_OUTPUT_REG = 0;
-    // M2_OUTPUT_REG = 0;
+    // M1_OUTPUT_REG = outputs[M1] / 16;
+    // M2_OUTPUT_REG = outputs[M2] * 2;
+    M1_OUTPUT_REG = 0;
+    M2_OUTPUT_REG = 0;
     M3_OUTPUT_REG = outputs[M3] * 2;
     M4_OUTPUT_REG = outputs[M4] / 16;
     // M3_OUTPUT_REG = 0;

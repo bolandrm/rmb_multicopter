@@ -14,13 +14,22 @@
 typedef struct {
   float kp;
   float ki;
+  float kd;
+
+  float i_max;
+  float d_max;
+
   uint32_t last_compute_time;
+
   float setpoint;
   float input;
   float integrator;
   float output;
+  float last_error;
+
   float p_term;
   float i_term;
+  float d_term;
 } pid_t;
 
 void pids_init();

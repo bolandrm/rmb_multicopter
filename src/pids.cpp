@@ -7,16 +7,40 @@ pid_t *pid(int8_t pid_number) {
 }
 
 void pids_init() {
-  pids[PID_RATE_X].kp = 3.05;
+  //pids[PID_RATE_X].kp = 2.95;
+  //pids[PID_RATE_X].ki = 0.0;
+  //pids[PID_RATE_Y].kp = 2.95;
+  //pids[PID_RATE_Y].ki = 0.0;
+  //pids[PID_RATE_Z].kp = 5.0;
+  //pids[PID_RATE_Z].ki = 0.0;
+  //pids[PID_ANGLE_X].kp = 1.75;
+  //pids[PID_ANGLE_X].ki = 0.40;
+  //pids[PID_ANGLE_Y].kp = 1.75;
+  //pids[PID_ANGLE_Y].ki = 0.40;
+  pids[PID_RATE_X].kp = 2.55;
   pids[PID_RATE_X].ki = 0.0;
-  pids[PID_RATE_Y].kp = 3.05;
+  pids[PID_RATE_X].kd = 0.0;
+
+  pids[PID_RATE_X].i_max = 50.0;
+  pids[PID_RATE_X].d_max = 50.0;
+
+  pids[PID_RATE_Y].kp = 2.55;
   pids[PID_RATE_Y].ki = 0.0;
-  pids[PID_RATE_Z].kp = 5.0;
+  pids[PID_RATE_Y].kd = 0.0;
+
+  pids[PID_RATE_Y].i_max = 50.0;
+  pids[PID_RATE_Y].d_max = 50.0;
+
+  // pids[PID_RATE_Z].kp = 2.7;
+  // pids[PID_RATE_Z].ki = 1.0;
+  pids[PID_RATE_Z].kp = 0.0;
   pids[PID_RATE_Z].ki = 0.0;
-  pids[PID_ANGLE_X].kp = 1.75;
-  pids[PID_ANGLE_X].ki = 0.26;
-  pids[PID_ANGLE_Y].kp = 1.75;
-  pids[PID_ANGLE_Y].ki = 0.26;
+
+  pids[PID_ANGLE_X].kp = 4.5;
+  pids[PID_ANGLE_X].ki = 0.0;
+
+  pids[PID_ANGLE_Y].kp = 4.5;
+  pids[PID_ANGLE_Y].ki = 0.0;
 
   for (int i = 0; i < NUM_PIDS; i++) {
     pids[i].integrator = 0.0;
@@ -34,10 +58,20 @@ void pid_compute(int8_t pid_number) {
   float error = pid->input - pid->setpoint;
   pid->integrator += pid->ki * error * dt;
 
+  float d_error = ((error - pid->last_error) / dt) / 100;
+
+  if (pid->i_max > 0.0 && pid->integrator > pid->i_max)
+    pid->integrator = pid->i_max;
+
   pid->p_term = pid->kp * error;
   pid->i_term = pid->integrator;
+  pid->d_term = pid->kd * d_error;
 
-  pid->output = pid->p_term + pid->i_term;
+  if (pid->d_max > 0.0 && pid->d_term > pid->d_max)
+    pid->d_term = pid->d_max;
+
+  pid->last_error = error;
+  pid->output = pid->p_term + pid->i_term + pid->d_term;
 }
 
 void pids_reset_i() {

@@ -16,12 +16,16 @@ float last_gyro_value = 0.0;
 bool emergency_stopped = false;
 // TEMP uint8_t safety_mode = UNARMED;
 uint8_t safety_mode = ARMED;
-uint8_t flight_mode = STABILIZE;
+uint8_t flight_mode = RATE;
 bool on_ground = true;
 
 void fc_init() {
   pids_init();
   motors_init();
+}
+
+int8_t fc_mode() {
+  return flight_mode;
 }
 
 void fc_process() {
