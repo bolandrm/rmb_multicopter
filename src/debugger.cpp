@@ -35,13 +35,13 @@ void text_debug() {
   // Serial.print("\t rc_y: "); Serial.print(rc_get(RC_PITCH));
   // Serial.println();
 
-  // Serial.print("gyro_x: "); Serial.print(imu_rates().x);
-  // Serial.print("\t pid_x_out: "); Serial.print(pid(PID_RATE_X)->output);
-  // Serial.print("\t pid_x_p: "); Serial.print(pid(PID_RATE_X)->p_term);
-  // Serial.print("\t pid_x_i: "); Serial.print(pid(PID_RATE_X)->i_term);
-  // Serial.print("\t pid_x_i: "); Serial.print(pid(PID_RATE_X)->d_term);
-  // Serial.print("\t rc_x: "); Serial.print(rc_get(RC_ROLL));
-  // Serial.println();
+  Serial.print("gyro_x: "); Serial.print(imu_rates().x);
+  Serial.print("\t pid_x_out: "); Serial.print(pid(PID_RATE_X)->output);
+  Serial.print("\t pid_x_p: "); Serial.print(pid(PID_RATE_X)->p_term);
+  Serial.print("\t pid_x_i: "); Serial.print(pid(PID_RATE_X)->i_term);
+  Serial.print("\t pid_x_i: "); Serial.print(pid(PID_RATE_X)->d_term);
+  Serial.print("\t rc_x: "); Serial.print(rc_get(RC_ROLL));
+  Serial.println();
 
   Serial.print("gyro_y: "); Serial.print(imu_rates().y);
   Serial.print("\t pid_y_out: "); Serial.print(pid(PID_RATE_Y)->output);
@@ -100,22 +100,22 @@ void logger_debug() {
 //  Serial.print("\t"); Serial.print(imu_rates().z);
 //
   String output = "";
-  // output += imu_rates().x;
+  output += imu_rates().x;
+  output += "\t";
+  output += imu_rates().y;
+  output += "\t";
+  output += imu_rates().z;
+  // output += imu_accel_raws().x;
   // output += "\t";
-  // output += imu_rates().y;
+  // output += imu_accel_raws().y;
   // output += "\t";
-  // output += imu_rates().z;
-  output += imu_accel_raws().x;
-  output += "\t";
-  output += imu_accel_raws().y;
-  output += "\t";
-  output += imu_accel_raws().z;
-  output += "\t";
-  output += imu_accel_filtered().x;
-  output += "\t";
-  output += imu_accel_filtered().y;
-  output += "\t";
-  output += imu_accel_filtered().z;
+  // output += imu_accel_raws().z;
+  // output += "\t";
+  // output += imu_accel_filtered().x;
+  // output += "\t";
+  // output += imu_accel_filtered().y;
+  // output += "\t";
+  // output += imu_accel_filtered().z;
   Serial.println(output);
 }
 

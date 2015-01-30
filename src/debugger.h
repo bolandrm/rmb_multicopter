@@ -2,7 +2,7 @@
 #define DEBUGGER_H
 
 #define DEBUG true
-#define LOGGER_DEBUG false
+#define LOGGER_DEBUG true
 #define CHART_DEBUG false
 
 #if CHART_DEBUG
