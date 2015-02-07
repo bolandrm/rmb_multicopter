@@ -91,7 +91,7 @@ void chart_debug() {
   Serial.print(1);
   Serial.print(" ");
   Serial.print(1);
-  Serial.print("\r");
+  Serial.println();
 }
 
 void logger_debug() {

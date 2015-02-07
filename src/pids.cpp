@@ -7,36 +7,24 @@ pid_t *pid(int8_t pid_number) {
 }
 
 void pids_init() {
-  //pids[PID_RATE_X].kp = 2.95;
-  //pids[PID_RATE_X].ki = 0.0;
-  //pids[PID_RATE_Y].kp = 2.95;
-  //pids[PID_RATE_Y].ki = 0.0;
-  //pids[PID_RATE_Z].kp = 5.0;
-  //pids[PID_RATE_Z].ki = 0.0;
-  //pids[PID_ANGLE_X].kp = 1.75;
-  //pids[PID_ANGLE_X].ki = 0.40;
-  //pids[PID_ANGLE_Y].kp = 1.75;
-  //pids[PID_ANGLE_Y].ki = 0.40;
-  pids[PID_RATE_X].kp = 2.55;
-  pids[PID_RATE_X].ki = 0.0;
+  pids[PID_RATE_X].kp = 2.0;
+  pids[PID_RATE_X].ki = 1.0;
   pids[PID_RATE_X].kd = 0.0;
 
-  pids[PID_RATE_X].i_max = 50.0;
+  pids[PID_RATE_X].i_max = 20.0;
   pids[PID_RATE_X].d_max = 50.0;
 
-  pids[PID_RATE_Y].kp = 2.55;
-  pids[PID_RATE_Y].ki = 0.0;
+  pids[PID_RATE_Y].kp = 2.0;
+  pids[PID_RATE_Y].ki = 1.0;
   pids[PID_RATE_Y].kd = 0.0;
 
-  pids[PID_RATE_Y].i_max = 50.0;
+  pids[PID_RATE_Y].i_max = 20.0;
   pids[PID_RATE_Y].d_max = 50.0;
 
-  // pids[PID_RATE_Z].kp = 2.7;
-  // pids[PID_RATE_Z].ki = 1.0;
-  pids[PID_RATE_Z].kp = 0.0;
-  pids[PID_RATE_Z].ki = 0.0;
+  pids[PID_RATE_Z].kp = 1.0;
+  pids[PID_RATE_Z].ki = 1.0;
 
-  pids[PID_ANGLE_X].kp = 4.5;
+  pids[PID_ANGLE_X].kp = 0.0;
   pids[PID_ANGLE_X].ki = 0.0;
 
   pids[PID_ANGLE_Y].kp = 4.5;

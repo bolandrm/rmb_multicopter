@@ -1,0 +1,19 @@
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background-color: #DDD;
+  text-align: right;
+  padding-top: 10px;
+  padding-right: 20px;
+}
+
+body {
+  padding-top: 75px;
+}
+
+.canvasjs-chart-credit {
+  display: none !important;
+}

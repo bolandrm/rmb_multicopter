@@ -31,8 +31,8 @@ void update_gyro() {
 
   // Integration of gyro rates to get the angles
   // for debugging only
-  // gyro_angles.x += rates.x * (float)(micros() - gyro_update_timer) / 1000000;
-  // gyro_angles.y += rates.y * (float)(micros() - gyro_update_timer) / 1000000;
+  gyro_angles.x += rates.x * (float)(micros() - gyro_update_timer) / 1000000;
+  gyro_angles.y += rates.y * (float)(micros() - gyro_update_timer) / 1000000;
 }
 
 void update_accel() {

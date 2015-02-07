@@ -66,14 +66,29 @@ void motors_command() {
 
 void _motors_command() {
   #ifdef ALLOW_MOTORS
-    M1_OUTPUT_REG = outputs[M1] / 16;
-    M2_OUTPUT_REG = outputs[M2] * 2;
-    // M1_OUTPUT_REG = 0;
-    // M2_OUTPUT_REG = 0;
-    M3_OUTPUT_REG = outputs[M3] * 2;
-    M4_OUTPUT_REG = outputs[M4] / 16;
-    // M3_OUTPUT_REG = 0;
-    // M4_OUTPUT_REG = 0;
+    #ifdef M1_ON
+      M1_OUTPUT_REG = outputs[M1] / 16;
+    #else
+      M1_OUTPUT_REG = 0;
+    #endif
+
+    #ifdef M2_ON
+      M2_OUTPUT_REG = outputs[M2] * 2;
+    #else
+      M2_OUTPUT_REG = 0;
+    #endif
+
+    #ifdef M3_ON
+      M3_OUTPUT_REG = outputs[M3] * 2;
+    #else
+      M3_OUTPUT_REG = 0;
+    #endif
+
+    #ifdef M4_ON
+      M4_OUTPUT_REG = outputs[M4] / 16;
+    #else
+      M4_OUTPUT_REG = 0;
+    #endif
   #else
     M1_OUTPUT_REG = 0;
     M2_OUTPUT_REG = 0;
