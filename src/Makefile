@@ -1,14 +1,17 @@
 ARDUINO_DIR   = /Applications/Arduino.app/Contents/Resources/Java
 USER_LIB_PATH = ./../libraries
 OBJDIR        = ./.build-$(BOARD_TAG)
-ARDUINO_LIBS  = Wire PinChangeInt MedianFilter
 
-#BOARD_TAG         = mega2560
-BOARD_TAG         = pro5v328
+BOARD_TAG    = teensy31
+ARDUINO_LIBS = Wire
+
 MONITOR_BAUDRATE  = 115200
-#MONITOR_PORT      = /dev/tty.usbmodem*
+MONITOR_PORT      = /dev/tty.usbmodem*
 #MONITOR_PORT      = /dev/tty.usbserial
-MONITOR_PORT      = /dev/cu.SLAB_USBtoUART
-AVRDDUDE          = /usr/local/bin/avrdude
+#MONITOR_PORT      = /dev/cu.SLAB_USBtoUART
 
-include ~/hardware/Arduino-Makefile/Arduino.mk
+include ~/hardware/Arduino-Makefile/Teensy.mk
+
+up:
+	make
+	~/hardware/teensy-loader-cli/teensy_loader_cli -v -mmcu=mk20dx256 .build-teensy31/src.hex
