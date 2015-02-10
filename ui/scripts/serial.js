@@ -16,9 +16,13 @@ $(function() {
   }
 
   var handleData = function(info) {
-    var value = ab2str(info.data);
-    pushToLineChart(value.split(" "));
-    console.log(value);
+    readBuffer += ab2str(info.data);
+
+    if (readBuffer.match(/\n/)) {
+      pushToLineChart(readBuffer.split(" "));
+      console.log(readBuffer);
+      readBuffer = "";
+    }
   };
 
   var openSelectedPort = function() {

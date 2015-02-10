@@ -48,17 +48,10 @@ void combine() {
 
   float dt = (float)(micros() - combination_update_timer) / 1000000.0;
 
-  accel_angles.x = (atan2(accel_filtered.x, accel_filtered.z)) * RAD_TO_DEG;
-  accel_angles.y = (atan2(accel_filtered.y, accel_filtered.z)) * RAD_TO_DEG;
-
-  // This is a bit slower
-  // accel_angles.x = atan2(accel_raws.y, sqrt(
-  //   accel_raws.x * accel_raws.x + accel_raws.z * accel_raws.z
-  // )) * RAD_TO_DEG;
-
-  // accel_angles.y = atan2(accel_raws.x, sqrt(
-  //   accel_raws.y * accel_raws.y + accel_raws.z * accel_raws.z
-  // )) * RAD_TO_DEG;
+  accel_angles.x = atan2(accel_filtered.y, accel_filtered.z) * RAD_TO_DEG;
+  accel_angles.y = atan2(-1 * accel_filtered.x,
+    sqrt(accel_filtered.y * accel_filtered.y + accel_filtered.z * accel_filtered.z)
+  ) * RAD_TO_DEG;
 
   angles.x = GYRO_PART * (angles.x + (rates.x * dt)) + ACC_PART * accel_angles.x;
   angles.y = GYRO_PART * (angles.y + (rates.y * dt)) + ACC_PART * accel_angles.y;

@@ -4,6 +4,7 @@ $(function() {
 
   var data1 = _.map(Array(500), function(n, i){ return {x: i, y: 0}; });
   var data2 = _.map(Array(500), function(n, i){ return {x: i, y: 0}; });
+  var data3 = _.map(Array(500), function(n, i){ return {x: i, y: 0}; });
 
   var chart = new CanvasJS.Chart("line-chart", {
     toolTip: {
@@ -34,6 +35,11 @@ $(function() {
         showInLegend: true,
         type: "line",
         dataPoints: data2
+      },
+      {
+        showInLegend: true,
+        type: "line",
+        dataPoints: data3
       }
     ]
   });
@@ -57,9 +63,15 @@ $(function() {
       y: parseFloat(data[1])
     });
 
+    data3.push({
+      x: timestamp,
+      y: parseFloat(data[2])
+    });
+
     if (data1.length > numberPoints) {
       data1.shift();
       data2.shift();
+      data3.shift();
     }
 
     chart.render();

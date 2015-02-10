@@ -78,13 +78,14 @@ void text_debug() {
 }
 
 void chart_debug() {
-  Serial.print(imu_gyro_angles().y);
-  //Serial.print(imu_rates().x);
+  //Serial.print(imu_gyro_angles().y);
+  Serial.print(imu_gyro_angles().x);
   Serial.print(" ");
-  Serial.print(imu_accel_angles().y);
-  //Serial.print(imu_gyro_rates().x);
+  //Serial.print(imu_accel_angles().y);
+  Serial.print(imu_accel_angles().x);
   Serial.print(" ");
-  Serial.print(imu_angles().y);
+  //Serial.print(imu_angles().y);
+  Serial.print(imu_angles().x);
   Serial.print(" ");
   Serial.print(1);
   Serial.print(" ");
