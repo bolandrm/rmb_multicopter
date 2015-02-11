@@ -3,7 +3,7 @@
 
 #define DEBUG true
 #define LOGGER_DEBUG false
-#define CHART_DEBUG true
+#define CHART_DEBUG false
 
 #if CHART_DEBUG
   #define DEBUG_RATE_MILLIS 50

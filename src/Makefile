@@ -14,4 +14,4 @@ include ~/hardware/Arduino-Makefile/Teensy.mk
 
 up:
 	make
-	~/hardware/teensy-loader-cli/teensy_loader_cli -v -mmcu=mk20dx256 .build-teensy31/src.hex
+	~/hardware/teensy-loader-cli/teensy_loader_cli -w -v -mmcu=mk20dx256 .build-teensy31/src.hex

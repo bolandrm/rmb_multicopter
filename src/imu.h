@@ -28,7 +28,8 @@ axis_float_t imu_rates();
 axis_float_t imu_angles();
 axis_float_t imu_gyro_angles();
 axis_float_t imu_gyro_rates();
-axis_float_t imu_accel_raws();
+axis_int16_t imu_gyro_raws();
+axis_int16_t imu_accel_raws();
 axis_float_t imu_accel_filtered();
 axis_float_t imu_accel_angles();
 
