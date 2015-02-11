@@ -3,7 +3,7 @@ USER_LIB_PATH = ./../libraries
 OBJDIR        = ./.build-$(BOARD_TAG)
 
 BOARD_TAG    = teensy31
-ARDUINO_LIBS = Wire
+ARDUINO_LIBS = Wire MedianFilter
 
 MONITOR_BAUDRATE  = 115200
 MONITOR_PORT      = /dev/tty.usbmodem*

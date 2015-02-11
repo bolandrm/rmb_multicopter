@@ -19,11 +19,16 @@ typedef struct {
 } axis_int16_t;
 
 typedef struct {
+  int16_t x, y, z;
+} axis_int32_t;
+
+typedef struct {
   float x, y, z;
 } axis_float_t;
 
 void imu_init();
-bool imu_read();
+void imu_read_raw_values();
+
 axis_float_t imu_rates();
 axis_float_t imu_angles();
 axis_float_t imu_gyro_angles();
