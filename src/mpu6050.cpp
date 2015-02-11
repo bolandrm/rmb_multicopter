@@ -1,21 +1,21 @@
 #include "mpu6050.h"
 
-void mpu6050_write_reg(uint16_t addr, uint8_t data) {
+static void mpu6050_write_reg(uint16_t addr, uint8_t data) {
   i2c_update_register(MPU6050_I2C_ADDRESS, addr, data);
   delay(1);
 }
 
-uint8_t mpu6050_read_byte(uint16_t addr) {
+static uint8_t mpu6050_read_byte(uint16_t addr) {
   i2c_send_byte(MPU6050_I2C_ADDRESS, addr);
   return i2c_read_byte(MPU6050_I2C_ADDRESS);
 }
 
-uint16_t mpu6050_read_word(uint16_t addr) {
+static uint16_t mpu6050_read_word(uint16_t addr) {
   i2c_send_byte(MPU6050_I2C_ADDRESS, addr);
   return i2c_read_word(MPU6050_I2C_ADDRESS);
 }
 
-bool mpu6050_test_connection() {
+static bool mpu6050_test_connection() {
   return mpu6050_read_byte(MPUREG_WHOAMI) == 0x68;
 }
 
