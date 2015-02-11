@@ -19,8 +19,7 @@ static MedianFilter accel_y_filter(11, 0);
 static MedianFilter accel_z_filter(11, 0);
 
 void imu_init() {
-  Wire.begin();
-  TWBR = 10;  // setup i2c to run at 444 kHz
+  Wire.begin(I2C_MASTER, 0, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_400);
   mpu6050_init();
 }
 

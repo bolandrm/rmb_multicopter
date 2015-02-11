@@ -1,7 +1,7 @@
 #ifndef I2C_HELPERS
 #define I2C_HELPERS
 
-#include <Wire.h>
+#include <i2c_t3.h>
 #include <Arduino.h>
 
 void i2c_update_register(uint16_t device_address, uint8_t data_address, uint8_t data_value);
