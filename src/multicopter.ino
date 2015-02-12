@@ -1,6 +1,6 @@
 #define SERIAL_PORT_SPEED 115200
 
-#define TASK_250HZ 2
+#define TASK_500HZ 2
 #define TASK_250HZ 4
 #define TASK_50HZ  20
 
@@ -32,6 +32,9 @@ void loop() {
     }
 
     if (schedule_counter % TASK_250HZ == 0) {
+    }
+
+    if (schedule_counter % TASK_500HZ == 0) {
       imu_process_values();
     }
 

@@ -48,6 +48,9 @@ void text_debug() {
   Serial.print("\t angle_y: "); Serial.print(imu_angles().y);
   Serial.println();
 
+  Serial.print("combination dt: "); Serial.print(imu_combination_dt());
+  Serial.println();
+
   // Serial.print("\t pid_x_out: "); Serial.print(pid(PID_RATE_X)->output);
   // Serial.print("\t pid_x_p: "); Serial.print(pid(PID_RATE_X)->p_term);
   // Serial.print("\t pid_x_i: "); Serial.print(pid(PID_RATE_X)->i_term);
