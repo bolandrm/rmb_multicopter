@@ -1,5 +1,6 @@
 #define SERIAL_PORT_SPEED 115200
 
+#define TASK_250HZ 2
 #define TASK_250HZ 4
 #define TASK_50HZ  20
 
@@ -13,8 +14,6 @@ int32_t schedule_timer = micros();
 int16_t schedule_counter = 0;
 
 void setup() {
-  Serial.println("starting up");
-
   Serial.begin(SERIAL_PORT_SPEED);
   imu_init();
 //  fc_init();

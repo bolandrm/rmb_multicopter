@@ -3,13 +3,13 @@
 
 #include <stdint.h>
 
-#define GYRO_X_OFFSET 0
-#define GYRO_Y_OFFSET 0
-#define GYRO_Z_OFFSET 0
+#define GYRO_X_OFFSET 0.0
+#define GYRO_Y_OFFSET 0.0
+#define GYRO_Z_OFFSET 0.0
 
-#define ACCEL_X_OFFSET 0
-#define ACCEL_Y_OFFSET 0
-#define ACCEL_Z_OFFSET 0
+#define ACCEL_X_OFFSET 0.0
+#define ACCEL_Y_OFFSET 0.0
+#define ACCEL_Z_OFFSET 0.0
 
 #define GYRO_PART 0.994
 #define ACC_PART (1.0 - GYRO_PART)
@@ -33,7 +33,6 @@ void imu_process_values();
 axis_float_t imu_rates();
 axis_float_t imu_angles();
 axis_float_t imu_gyro_angles();
-axis_float_t imu_gyro_rates();
 axis_int16_t imu_gyro_raws();
 axis_int16_t imu_accel_raws();
 axis_float_t imu_accel_filtered();

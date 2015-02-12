@@ -19,28 +19,34 @@ void text_debug() {
   // Serial.print("\t pid_angle_kd: "); Serial.print(pid(PID_ANGLE_X)->kd);
   // Serial.println();
 
-  // Serial.print("angle_x: "); Serial.print(imu_angles().x);
   // Serial.print("\t pid_x_out: "); Serial.print(pid(PID_ANGLE_X)->output);
   // Serial.print("\t pid_x_p: "); Serial.print(pid(PID_ANGLE_X)->p_term);
   // Serial.print("\t pid_x_i: "); Serial.print(pid(PID_ANGLE_X)->i_term);
   // Serial.print("\t rc_x: "); Serial.print(rc_get(RC_ROLL));
   // Serial.println();
 
-  // Serial.print("angle_y: "); Serial.print(imu_angles().y);
   // Serial.print("\t pid_y_out: "); Serial.print(pid(PID_ANGLE_Y)->output);
   // Serial.print("\t pid_y_p: "); Serial.print(pid(PID_ANGLE_Y)->p_term);
   // Serial.print("\t pid_y_i: "); Serial.print(pid(PID_ANGLE_Y)->i_term);
   // Serial.print("\t rc_y: "); Serial.print(rc_get(RC_PITCH));
   // Serial.println();
 
-  Serial.print("gyro_x: "); Serial.print(imu_gyro_raws().x);
-  Serial.print("\t gyro_y: "); Serial.print(imu_gyro_raws().y);
-  Serial.print("\t gyro_z: "); Serial.print(imu_gyro_raws().z);
-  Serial.println();
-
   Serial.print("gyro_x: "); Serial.print(imu_rates().x);
   Serial.print("\t gyro_y: "); Serial.print(imu_rates().y);
   Serial.print("\t gyro_z: "); Serial.print(imu_rates().z);
+  Serial.println();
+
+  Serial.print("gyro_angles_x: "); Serial.print(imu_gyro_angles().x);
+  Serial.print("\t gyro_angles_y: "); Serial.print(imu_gyro_angles().y);
+  Serial.println();
+
+  Serial.print("accel_angle_x: "); Serial.print(imu_accel_angles().x);
+  Serial.print("\t accel_angle_y: "); Serial.print(imu_accel_angles().y);
+  Serial.print("\t accel_angle_z: "); Serial.print(imu_accel_angles().z);
+
+  Serial.print("angle_x: "); Serial.print(imu_angles().x);
+  Serial.print("\t angle_y: "); Serial.print(imu_angles().y);
+  Serial.println();
 
   // Serial.print("\t pid_x_out: "); Serial.print(pid(PID_RATE_X)->output);
   // Serial.print("\t pid_x_p: "); Serial.print(pid(PID_RATE_X)->p_term);
