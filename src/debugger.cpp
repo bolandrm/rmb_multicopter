@@ -36,6 +36,11 @@ void text_debug() {
   Serial.print("gyro_x: "); Serial.print(imu_gyro_raws().x);
   Serial.print("\t gyro_y: "); Serial.print(imu_gyro_raws().y);
   Serial.print("\t gyro_z: "); Serial.print(imu_gyro_raws().z);
+  Serial.println();
+
+  Serial.print("gyro_x: "); Serial.print(imu_rates().x);
+  Serial.print("\t gyro_y: "); Serial.print(imu_rates().y);
+  Serial.print("\t gyro_z: "); Serial.print(imu_rates().z);
 
   // Serial.print("\t pid_x_out: "); Serial.print(pid(PID_RATE_X)->output);
   // Serial.print("\t pid_x_p: "); Serial.print(pid(PID_RATE_X)->p_term);

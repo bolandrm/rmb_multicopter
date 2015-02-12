@@ -3,13 +3,13 @@
 
 #include <stdint.h>
 
-#define GYRO_X_OFFSET 2.59902
-#define GYRO_Y_OFFSET 1.48937
-#define GYRO_Z_OFFSET (-2.265635)
+#define GYRO_X_OFFSET 0
+#define GYRO_Y_OFFSET 0
+#define GYRO_Z_OFFSET 0
 
-#define ACCEL_X_OFFSET (0.01)
-#define ACCEL_Y_OFFSET (0.03)
-#define ACCEL_Z_OFFSET (0.05)
+#define ACCEL_X_OFFSET 0
+#define ACCEL_Y_OFFSET 0
+#define ACCEL_Z_OFFSET 0
 
 #define GYRO_PART 0.994
 #define ACC_PART (1.0 - GYRO_PART)
@@ -28,6 +28,7 @@ typedef struct {
 
 void imu_init();
 void imu_read_raw_values();
+void imu_process_values();
 
 axis_float_t imu_rates();
 axis_float_t imu_angles();

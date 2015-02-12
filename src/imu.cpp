@@ -10,7 +10,7 @@ static axis_float_t angles;
 
 
 static axis_int16_t gyro_raws;
-static axis_int32_t gyro_sums;
+static axis_float_t gyro_sums;
 static int16_t gyro_sum_count = 0;
 
 static axis_int16_t accel_raws;
@@ -19,8 +19,15 @@ static MedianFilter accel_y_filter(11, 0);
 static MedianFilter accel_z_filter(11, 0);
 
 void imu_init() {
-  Wire.begin(I2C_MASTER, 0, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_400);
+  Wire.begin(I2C_MASTER, 0x00, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_400);
   mpu6050_init();
+}
+
+static void reset_gyro_sums() {
+  gyro_sums.x = 0.0;
+  gyro_sums.y = 0.0;
+  gyro_sums.z = 0.0;
+  gyro_sum_count = 0;
 }
 
 static void read_gyro_raws() {
@@ -41,23 +48,34 @@ static void read_accel_raws() {
   accel_z_filter.in(accel_raws.z);
 }
 
-void imu_read_raw_values() {
-  read_gyro_raws();
-  read_accel_raws();
-}
+static void process_gyro() {
+  float rate_avg_x = (gyro_sums.x / gyro_sum_count) + GYRO_X_OFFSET;
+  float rate_avg_y = (gyro_sums.y / gyro_sum_count) + GYRO_Y_OFFSET;
+  float rate_avg_z = (gyro_sums.z / gyro_sum_count) + GYRO_Z_OFFSET;
 
-void update_gyro() {
-  mpu6050_read_gyro(&gyro_raws);
+  rates.x = rate_avg_x / MPU6050_GYRO_1000D_SENS;
+  rates.y = rate_avg_y / MPU6050_GYRO_1000D_SENS;
+  rates.z = rate_avg_z / MPU6050_GYRO_1000D_SENS;
 
-  rates.x = gyro_raws.x + GYRO_X_OFFSET;
-  rates.y = gyro_raws.y + GYRO_Y_OFFSET;
-  rates.z = gyro_raws.z + GYRO_Z_OFFSET;
+  reset_gyro_sums();
 
   // Integration of gyro rates to get the angles
   // for debugging only
   // gyro_angles.x += rates.x * (float)(micros() - gyro_update_timer) / 1000000;
   // gyro_angles.y += rates.y * (float)(micros() - gyro_update_timer) / 1000000;
 }
+
+void imu_read_raw_values() {
+  read_gyro_raws();
+  read_accel_raws();
+}
+
+void imu_process_values() {
+  process_gyro();
+  // process_accel();
+  // combine();
+}
+
 
 void update_accel() {
   mpu6050_read_accel(&accel_raws);

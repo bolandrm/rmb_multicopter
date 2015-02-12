@@ -33,7 +33,7 @@ void loop() {
     }
 
     if (schedule_counter % TASK_250HZ == 0) {
-
+      imu_process_values();
     }
 
     if (schedule_counter == 1000) schedule_counter = 0;
