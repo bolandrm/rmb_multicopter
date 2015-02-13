@@ -47,5 +47,4 @@ void loop() {
 //  rc_read_values();
 //  fc_process();
   debugger_print();
-  //delay(1000);
 }

@@ -1,15 +1,19 @@
 #include "motors.h"
-#include "flight_controller.h"
+// #include "flight_controller.h"
 
-#define M1_PIN 3
-#define M2_PIN 9
-#define M3_PIN 10
-#define M4_PIN 11
+// M3 FTM0_CH0 - PTC1 - 22  FTM0_C0V PORTC_PCR1
+// M4 FTM0_CH1 - PTC2 - 23  FTM0_C1V PORTC_PCR2
+//    FTM0_CH2 - PTC3 - 9   FTM0_C2V PORTC_PCR3
+//    FTM0_CH3 - PTC4 - 10  FTM0_C3V PORTC_PCR4
+//    FTM0_CH4 - PTD4 - 6   FTM0_C4V PORTD_PCR4
+// M1 FTM0_CH5 - PTD5 - 20  FTM0_C5V PORTD_PCR5
+// M2 FTM0_CH6 - PTD6 - 21  FTM0_C6V PORTD_PCR6
+//    FTM0_CH7 - PTD7 - 5   FTM0_C7V PORTD_PCR7
 
-#define M1_OUTPUT_REG OCR2B
-#define M2_OUTPUT_REG OCR1A
-#define M3_OUTPUT_REG OCR1B
-#define M4_OUTPUT_REG OCR2A
+#define M1_OUTPUT_REG FTM0_C5V
+#define M2_OUTPUT_REG FTM0_C6V
+#define M3_OUTPUT_REG FTM0_C0V
+#define M4_OUTPUT_REG FTM0_C1V
 
 uint16_t outputs[NUM_MOTORS];
 void _motors_command();
@@ -46,12 +50,12 @@ void adjust_for_bounds() {
 }
 
 void motors_safety_check() {
-  for(int i = 0; i < NUM_MOTORS; i++) {
-    if (outputs[i] > INDOOR_SAFE_MOTOR_SPEED) {
-      Serial.println("motors too high");
-      fc_emergency_stop();
-    }
-  }
+  // for(int i = 0; i < NUM_MOTORS; i++) {
+  //   if (outputs[i] > INDOOR_SAFE_MOTOR_SPEED) {
+  //     Serial.println("motors too high");
+  //     fc_emergency_stop();
+  //   }
+  // }
 }
 
 void motors_set_output(int8_t motor_number, int16_t output) {
@@ -59,7 +63,7 @@ void motors_set_output(int8_t motor_number, int16_t output) {
 }
 
 void motors_command() {
-  adjust_for_bounds();
+  // adjust_for_bounds();
   motors_safety_check();
   _motors_command();
 }
@@ -67,25 +71,25 @@ void motors_command() {
 void _motors_command() {
   #ifdef ALLOW_MOTORS
     #ifdef M1_ON
-      M1_OUTPUT_REG = outputs[M1] / 16;
+      M1_OUTPUT_REG = outputs[M1] * 3;
     #else
       M1_OUTPUT_REG = 0;
     #endif
 
     #ifdef M2_ON
-      M2_OUTPUT_REG = outputs[M2] * 2;
+      M2_OUTPUT_REG = outputs[M2] * 3;
     #else
       M2_OUTPUT_REG = 0;
     #endif
 
     #ifdef M3_ON
-      M3_OUTPUT_REG = outputs[M3] * 2;
+      M3_OUTPUT_REG = outputs[M3] * 3;
     #else
       M3_OUTPUT_REG = 0;
     #endif
 
     #ifdef M4_ON
-      M4_OUTPUT_REG = outputs[M4] / 16;
+      M4_OUTPUT_REG = outputs[M4] * 3;
     #else
       M4_OUTPUT_REG = 0;
     #endif
@@ -105,24 +109,17 @@ void motors_command_all_off() {
 void motors_init() {
   zero_outputs();
 
-  pinMode(M1_PIN, OUTPUT);
-  pinMode(M2_PIN, OUTPUT);
-  pinMode(M3_PIN, OUTPUT);
-  pinMode(M4_PIN, OUTPUT);
+  // Flex timer0 configuration
+  FTM0_SC = 0x0c;   // TOF=0 TOIE=0 CPWMS=0 CLKS=01 PS=100 (divide by 16)
+  FTM0_MOD = 7500;  // 400Hz PWM signal
 
-  // Init PWM Timer 1  16 bit
-  // // Clear OCnA/OCnB/OCnC on compare match, set OCnA/OCnB/OCnC at BOTTOM (non-inverting mode)
-  // // Prescaler set to 8, that gives us a resolution of 0.5us
-  TCCR1A = (1<<WGM11)|(1<<COM1A1)|(1<<COM1B1);
-  TCCR1B = (1<<WGM13)|(1<<WGM12)|(1<<CS11);
-  ICR1 = PWM_COUNTER_PERIOD;
+  // FTM0_C0SC = 0x28;   This appears to not be necessary
 
-  // Init PWM Timer 2   8bit                                 
-  // WGMn1 WGMn2 = Mode ? Fast PWM, TOP = 0xFF ,Update of OCRnx at BOTTOM
-  // Clear OCnA/OCnB on compare match, set OCnA/OCnB at BOTTOM (non-inverting mode)
-  // Prescaler set to 256, that gives us a resolution of 16us
-  // Output_PWM_Frequency = 244hz = 16000000/(256*(1+255)) = Clock_Speed / (Prescaler * (1 + TOP))
-  // TOP is fixed at 255                                     
-  TCCR2A = (1<<WGM20)|(1<<WGM21)|(1<<COM2A1)|(1<<COM2B1);
-  TCCR2B = (1<<CS22)|(1<<CS21);
+  motors_command_all_off();
+
+  // PORT Configuration
+  PORTD_PCR5 |= 0x400;
+  PORTD_PCR6 |= 0x400;
+  PORTC_PCR1 |= 0x400;
+  PORTC_PCR2 |= 0x400;
 }

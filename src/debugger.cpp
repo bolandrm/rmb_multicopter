@@ -43,6 +43,7 @@ void text_debug() {
   Serial.print("accel_angle_x: "); Serial.print(imu_accel_angles().x);
   Serial.print("\t accel_angle_y: "); Serial.print(imu_accel_angles().y);
   Serial.print("\t accel_angle_z: "); Serial.print(imu_accel_angles().z);
+  Serial.println();
 
   Serial.print("angle_x: "); Serial.print(imu_angles().x);
   Serial.print("\t angle_y: "); Serial.print(imu_angles().y);
