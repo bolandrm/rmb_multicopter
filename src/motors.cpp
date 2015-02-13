@@ -63,7 +63,7 @@ void motors_set_output(int8_t motor_number, int16_t output) {
 }
 
 void motors_command() {
-  // adjust_for_bounds();
+  adjust_for_bounds();
   motors_safety_check();
   _motors_command();
 }
