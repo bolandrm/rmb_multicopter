@@ -12,6 +12,6 @@ MONITOR_PORT      = /dev/tty.usbmodem*
 
 include ~/hardware/Arduino-Makefile/Teensy.mk
 
-up:
+burn:
 	make
 	~/hardware/teensy-loader-cli/teensy_loader_cli -w -v -mmcu=mk20dx256 .build-teensy31/src.hex
