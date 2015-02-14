@@ -1,4 +1,5 @@
 #include "remote_control.h"
+#include "flight_controller.h"
 
 static int16_t rc_in_min[] = { RC_CH1_IN_MIN, RC_CH2_IN_MIN, RC_CH3_IN_MIN,
                                RC_CH4_IN_MIN, RC_CH5_IN_MIN, RC_CH6_IN_MIN };
@@ -14,24 +15,25 @@ static int16_t rc_offset[] = { RC_CH1_OFFSET, RC_CH2_OFFSET, RC_CH3_OFFSET,
 static uint32_t last_update_time = 0;
 static uint16_t rc_values[NUM_CHANNELS];
 static uint32_t rc_start[NUM_CHANNELS];
-static uint16_t rc_out_values[NUM_CHANNELS];
+static int16_t rc_out_values[NUM_CHANNELS];
 static volatile uint16_t rc_shared[NUM_CHANNELS];
 static void process_channel_value(int channel);
 
 void rc_read_values() {
+  noInterrupts();
+  memcpy(rc_values, (const void *)rc_shared, sizeof(rc_shared));
+  interrupts();
+
   if (millis() - last_update_time > RC_TIMEOUT) {
     // If we don't get an input for RC_TIMEOUT, set all vals to 0
+    fc_disarm();
     for (int i = 0; i < NUM_CHANNELS; i++) {
-      rc_values[i] = 0;
+      rc_out_values[i] = 0;
     }
   } else {
-    noInterrupts();
-    memcpy(rc_values, (const void *)rc_shared, sizeof(rc_shared));
-    interrupts();
-  }
-
-  for (int i = 0; i < NUM_CHANNELS; i++) {
-    process_channel_value(i);
+    for (int i = 0; i < NUM_CHANNELS; i++) {
+      process_channel_value(i);
+    }
   }
 }
 

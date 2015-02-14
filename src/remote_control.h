@@ -16,7 +16,7 @@
 #define  RC_CH2_IN_MAX   1824
 #define  RC_CH2_OUT_MIN  -22
 #define  RC_CH2_OUT_MAX  22
-#define  RC_CH2_OFFSET   -1
+#define  RC_CH2_OFFSET   0
 
 #define  RC_CH3_IN_MIN   1172
 #define  RC_CH3_IN_MAX   1812

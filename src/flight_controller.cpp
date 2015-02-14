@@ -15,8 +15,8 @@ bool min_throttle();
 uint16_t gyro_freeze_counter = 0;
 float last_gyro_value = 0.0;
 bool emergency_stopped = false;
-uint8_t safety_mode = UNARMED;
-//uint8_t safety_mode = ARMED;
+//uint8_t safety_mode = UNARMED;
+uint8_t safety_mode = ARMED;
 uint8_t flight_mode = RATE;
 bool on_ground = true;
 
@@ -80,6 +80,14 @@ void compute_pids() {
 }
 
 void fc_safety_check() {
+  if (rc_get(RC_THROTTLE) == 0 && rc_get(RC_YAW) > RC_CH4_OUT_MAX/2-5) {
+    fc_arm();
+  }
+
+  if (rc_get(RC_THROTTLE) == 0 && rc_get(RC_YAW) < RC_CH4_OUT_MIN/2+5) {
+    fc_disarm();
+  }
+
   // watchdog to prevent stale imu values
   if (imu_rates().x == last_gyro_value) {
     gyro_freeze_counter++;
@@ -130,6 +138,10 @@ bool min_throttle() {
 
 void fc_arm() {
   safety_mode = ARMED;
+}
+
+void fc_disarm() {
+  safety_mode = UNARMED;
 }
 
 bool fc_armed() {
