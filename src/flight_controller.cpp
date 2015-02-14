@@ -5,6 +5,7 @@
 #include "motors.h"
 #include "serial_commands.h"
 #include "remote_control.h"
+#include "debugger.h"
 
 void fc_safety_check();
 void compute_pids();
@@ -14,8 +15,8 @@ bool min_throttle();
 uint16_t gyro_freeze_counter = 0;
 float last_gyro_value = 0.0;
 bool emergency_stopped = false;
-// TEMP uint8_t safety_mode = UNARMED;
-uint8_t safety_mode = ARMED;
+uint8_t safety_mode = UNARMED;
+//uint8_t safety_mode = ARMED;
 uint8_t flight_mode = RATE;
 bool on_ground = true;
 
@@ -47,7 +48,7 @@ void fc_process() {
 void fc_emergency_stop() {
   emergency_stopped = true;
   motors_command_all_off();
-  for(;;);
+  for(;;) debugger_indicate_emergency();
 }
 
 void compute_pids() {

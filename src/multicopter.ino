@@ -20,16 +20,12 @@ void setup() {
   imu_init();
   rc_init();
   fc_init();
+  debugger_leds_init();
 
   pinMode(0, INPUT);
   *portConfigRegister(0) |= PORT_PCR_PE; //pull enable
   *portConfigRegister(0) &= ~PORT_PCR_PS; //pull down
   attachInterrupt(0, prog_reset, RISING);
-
-  pinMode(14, OUTPUT);
-  digitalWrite(14, HIGH);
-  pinMode(15, OUTPUT);
-  digitalWrite(15, HIGH);
 }
 
 void loop() {
@@ -44,6 +40,10 @@ void loop() {
     if (schedule(TASK_500HZ)) {
       imu_process_values();
       fc_process();
+    }
+
+    if (schedule(TASK_2HZ)) {
+      debugger_leds();
     }
 
     schedule_end();

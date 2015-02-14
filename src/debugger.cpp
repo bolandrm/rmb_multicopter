@@ -9,6 +9,35 @@
 
 int32_t debug_timer = millis();
 
+void debugger_leds_init() {
+  pinMode(14, OUTPUT);
+  digitalWrite(14, HIGH);
+  pinMode(15, OUTPUT);
+  digitalWrite(15, HIGH);
+}
+
+void debugger_leds() {
+  if (fc_armed()) {          // red steady, green off
+    digitalWrite(14, HIGH);
+    digitalWrite(15, LOW);
+  } else {                   // green steady, red off
+    digitalWrite(14, LOW);
+    digitalWrite(15, HIGH);
+  }
+}
+
+void debugger_indicate_emergency() {
+  digitalWrite(15, LOW);
+
+  if (digitalRead(14)) {
+    digitalWrite(14, LOW);
+  } else {
+    digitalWrite(14, HIGH);
+  }
+
+  delay(500);
+}
+
 void text_debug() {
   // Serial.print("pid_rate_kp: "); Serial.print(pid(PID_RATE_X)->kp);
   // Serial.print("\t pid_rate_ki: "); Serial.print(pid(PID_RATE_X)->ki);
