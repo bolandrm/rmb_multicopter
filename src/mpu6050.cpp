@@ -39,6 +39,52 @@ void mpu6050_read_accel(axis_int16_t *accel_raws) {
   accel_raws->z = accel_z;
 }
 
+void calibrate_gyro() {
+  axis_int16_t gyro_raws;
+  axis_float_t gyro_sums;
+
+  delay(5000);
+  Serial.println("calibrating gyro");
+
+  for(int i = 0; i < 10000; i++) {
+    mpu6050_read_gyro(&gyro_raws);
+    gyro_sums.x += gyro_raws.x;
+    gyro_sums.y += gyro_raws.y;
+    gyro_sums.z += gyro_raws.z;
+    delay(1);
+  }
+
+  Serial.print("x avg: ");
+  Serial.println(gyro_sums.x / 10000);
+  Serial.print("y avg: ");
+  Serial.println(gyro_sums.y / 10000);
+  Serial.print("z avg: ");
+  Serial.println(gyro_sums.z / 10000);
+}
+
+void calibrate_accel() {
+  axis_int16_t accel_raws;
+  axis_float_t accel_sums;
+
+  delay(5000);
+  Serial.println("calibrating accel");
+
+  for(int i = 0; i < 10000; i++) {
+    mpu6050_read_accel(&accel_raws);
+    accel_sums.x += accel_raws.x;
+    accel_sums.y += accel_raws.y;
+    accel_sums.z += accel_raws.z;
+    delay(1);
+  }
+
+  Serial.print("x avg: ");
+  Serial.println(accel_sums.x / 10000);
+  Serial.print("y avg: ");
+  Serial.println(accel_sums.y / 10000);
+  Serial.print("z avg: ");
+  Serial.println(accel_sums.z / 10000);
+}
+
 void mpu6050_init() {
   mpu6050_write_reg(MPUREG_PWR_MGMT_1, BIT_H_RESET);
   delay(100);  // Startup time delay
@@ -63,4 +109,7 @@ void mpu6050_init() {
       delay(1000);
     }
   }
+
+  // calibrate_gyro();
+  // calibrate_accel();
 }

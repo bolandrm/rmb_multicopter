@@ -51,9 +51,9 @@ static void read_accel_raws() {
 }
 
 static void process_gyro() {
-  float rate_avg_x = (gyro_sums.x / gyro_sum_count) + GYRO_X_OFFSET;
-  float rate_avg_y = (gyro_sums.y / gyro_sum_count) + GYRO_Y_OFFSET;
-  float rate_avg_z = (gyro_sums.z / gyro_sum_count) + GYRO_Z_OFFSET;
+  float rate_avg_x = (gyro_sums.x / gyro_sum_count) - GYRO_X_OFFSET;
+  float rate_avg_y = (gyro_sums.y / gyro_sum_count) - GYRO_Y_OFFSET;
+  float rate_avg_z = (gyro_sums.z / gyro_sum_count) - GYRO_Z_OFFSET;
 
   rates.x = rate_avg_x / MPU6050_GYRO_1000D_SENS;
   rates.y = rate_avg_y / MPU6050_GYRO_1000D_SENS;
@@ -69,9 +69,9 @@ static void process_gyro() {
 }
 
 static void process_accel() {
-  accel_filtered.x = (float) accel_x_filter.out() / MPU6050_ACCEL_4G_SENS + ACCEL_X_OFFSET;
-  accel_filtered.y = (float) accel_y_filter.out() / MPU6050_ACCEL_4G_SENS + ACCEL_Y_OFFSET;
-  accel_filtered.z = (float) accel_z_filter.out() / MPU6050_ACCEL_4G_SENS + ACCEL_Z_OFFSET;
+  accel_filtered.x = (float) (accel_x_filter.out() - ACCEL_X_OFFSET) / MPU6050_ACCEL_4G_SENS;
+  accel_filtered.y = (float) (accel_y_filter.out() - ACCEL_Y_OFFSET) / MPU6050_ACCEL_4G_SENS;
+  accel_filtered.z = (float) (accel_z_filter.out() - ACCEL_Z_OFFSET) / MPU6050_ACCEL_4G_SENS;
 }
 
 static void combine() {
