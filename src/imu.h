@@ -37,6 +37,6 @@ axis_int16_t imu_gyro_raws();
 axis_int16_t imu_accel_raws();
 axis_float_t imu_accel_filtered();
 axis_float_t imu_accel_angles();
-uint32_t imu_combination_dt();
+uint32_t imu_value_process_dt();
 
 #endif

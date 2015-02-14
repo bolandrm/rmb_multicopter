@@ -10,14 +10,15 @@ static axis_float_t angles;
 static axis_int16_t gyro_raws;
 static axis_float_t gyro_sums;
 static int16_t gyro_sum_count = 0;
-static int32_t gyro_update_timer = micros();
-static int32_t combination_update_timer = micros();
+static uint32_t gyro_update_timer = micros();
+static uint32_t combination_update_timer = micros();
 static axis_int16_t accel_raws;
 static MedianFilter accel_x_filter(11, 0);
 static MedianFilter accel_y_filter(11, 0);
 static MedianFilter accel_z_filter(11, 0);
 
-static uint32_t combination_dt;
+static uint32_t value_process_timer = micros();
+static uint32_t value_process_dt;
 
 void imu_init() {
   Wire.begin(I2C_MASTER, 0x00, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_400);
@@ -74,8 +75,7 @@ static void process_accel() {
 }
 
 static void combine() {
-  combination_dt = micros() - combination_update_timer;  // for benchmarking
-  float dt = (float) combination_dt / 1000000.0;
+  float dt = (float) (micros() - combination_update_timer) / 1000000.0;
   combination_update_timer = micros();
 
   accel_angles.x = atan2(accel_filtered.y, accel_filtered.z) * RAD_TO_DEG;
@@ -93,6 +93,9 @@ void imu_read_raw_values() {
 }
 
 void imu_process_values() {
+  value_process_dt = micros() - value_process_timer;  // for benchmarking
+  value_process_timer = micros();
+
   process_gyro();
   process_accel();
   combine();
@@ -105,4 +108,4 @@ axis_int16_t imu_gyro_raws() { return gyro_raws; }
 axis_int16_t imu_accel_raws() { return accel_raws; }
 axis_float_t imu_accel_angles() { return accel_angles; }
 axis_float_t imu_accel_filtered() { return accel_filtered; }
-uint32_t imu_combination_dt() { return combination_dt; }
+uint32_t imu_value_process_dt() { return value_process_dt; }
