@@ -3,8 +3,8 @@
 #include "schedule.h"
 #include "imu.h"
 #include "debugger.h"
-// #include "flight_controller.h"
-// #include "serial_commands.h"
+#include "flight_controller.h"
+#include "serial_commands.h"
 #include "remote_control.h"
 
 #define RESTART_ADDR       0xE000ED0C
@@ -19,9 +19,8 @@ void setup() {
   Serial.begin(SERIAL_PORT_SPEED);
   imu_init();
   rc_init();
-  //fc_init();
-  //
-  //
+  fc_init();
+
   pinMode(0, INPUT);
   *portConfigRegister(0) |= PORT_PCR_PE; //pull enable
   *portConfigRegister(0) &= ~PORT_PCR_PS; //pull down
@@ -31,8 +30,6 @@ void setup() {
   digitalWrite(14, HIGH);
   pinMode(15, OUTPUT);
   digitalWrite(15, HIGH);
-
-  Serial3.begin(9600);
 }
 
 void loop() {
@@ -41,12 +38,12 @@ void loop() {
 
     if (schedule(TASK_50HZ)) {
       rc_read_values();
+      serial_commands_process();
     }
 
     if (schedule(TASK_500HZ)) {
       imu_process_values();
-      //serial_commands_process();
-      //fc_process();
+      fc_process();
     }
 
     schedule_end();

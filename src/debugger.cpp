@@ -1,10 +1,10 @@
 #include "debugger.h"
 #include <Arduino.h>
 #include "imu.h"
-// #include "pids.h"
-// #include "flight_controller.h"
+#include "pids.h"
+#include "flight_controller.h"
 #include "motors.h"
-// #include "serial_commands.h"
+#include "serial_commands.h"
 #include "remote_control.h"
 
 int32_t debug_timer = millis();
@@ -23,8 +23,6 @@ void text_debug() {
   // Serial.print("\t pid_x_p: "); Serial.print(pid(PID_ANGLE_X)->p_term);
   // Serial.print("\t pid_x_i: "); Serial.print(pid(PID_ANGLE_X)->i_term);
   // Serial.println();
-
-  Serial3.println("hello");
 
   Serial.println(digitalRead(15) == HIGH);
 

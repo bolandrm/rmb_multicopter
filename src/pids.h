@@ -30,10 +30,10 @@ typedef struct {
   float p_term;
   float i_term;
   float d_term;
-} pid_t;
+} m_pid_t;
 
 void pids_init();
-pid_t *pid(int8_t);
+m_pid_t *pid(int8_t);
 void pid_compute(int8_t);
 void pids_reset_i();
 

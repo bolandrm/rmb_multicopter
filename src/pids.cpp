@@ -1,8 +1,8 @@
 #include "pids.h"
 
-pid_t pids[NUM_PIDS];
+m_pid_t pids[NUM_PIDS];
 
-pid_t *pid(int8_t pid_number) {
+m_pid_t *pid(int8_t pid_number) {
   return &pids[pid_number];
 }
 
@@ -38,7 +38,7 @@ void pids_init() {
 }
 
 void pid_compute(int8_t pid_number) {
-  pid_t *pid = &pids[pid_number];
+  m_pid_t *pid = &pids[pid_number];
 
   float dt = (float) (micros() - pid->last_compute_time) / 1000000.0f;
   pid->last_compute_time = micros();
