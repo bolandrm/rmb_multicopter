@@ -1,50 +1,56 @@
 #define SERIAL_PORT_SPEED 115200
 
-#define TASK_500HZ 2
-#define TASK_250HZ 4
-#define TASK_50HZ  20
-
+#include "schedule.h"
 #include "imu.h"
 #include "debugger.h"
 // #include "flight_controller.h"
 // #include "serial_commands.h"
-// #include "remote_control.h"
+#include "remote_control.h"
 
-int32_t schedule_timer = micros();
-int16_t schedule_counter = 0;
+#define RESTART_ADDR       0xE000ED0C
+#define READ_RESTART()     (*(volatile uint32_t *)RESTART_ADDR)
+#define WRITE_RESTART(val) ((*(volatile uint32_t *)RESTART_ADDR) = (val))
+
+void prog_reset() {
+  WRITE_RESTART(0x5FA0004);
+}
 
 void setup() {
   Serial.begin(SERIAL_PORT_SPEED);
   imu_init();
-//  fc_init();
-//  rc_init();
+  rc_init();
+  //fc_init();
+  //
+  //
+  pinMode(0, INPUT);
+  *portConfigRegister(0) |= PORT_PCR_PE; //pull enable
+  *portConfigRegister(0) &= ~PORT_PCR_PS; //pull down
+  attachInterrupt(0, prog_reset, RISING);
+
+  pinMode(14, OUTPUT);
+  digitalWrite(14, HIGH);
+  pinMode(15, OUTPUT);
+  digitalWrite(15, HIGH);
+
+  Serial3.begin(9600);
 }
 
 void loop() {
-  if (micros() - schedule_timer > 1000) {
-    schedule_timer = micros();
-    schedule_counter++;
-
+  if (schedule(TASK_1000HZ)) {
     imu_read_raw_values();
 
-    if (schedule_counter % TASK_50HZ == 0) {
-
+    if (schedule(TASK_50HZ)) {
+      rc_read_values();
     }
 
-    if (schedule_counter % TASK_250HZ == 0) {
-    }
-
-    if (schedule_counter % TASK_500HZ == 0) {
+    if (schedule(TASK_500HZ)) {
       imu_process_values();
+      //serial_commands_process();
+      //fc_process();
     }
 
-    if (schedule_counter == 1000) schedule_counter = 0;
+    schedule_end();
   }
 
-//  while(!imu_read());
-  // imu_read();
-//  serial_commands_process();
-//  rc_read_values();
-//  fc_process();
   debugger_print();
 }

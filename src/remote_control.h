@@ -3,8 +3,7 @@
 
 #include <Arduino.h>
 
-//#define  NUM_CHANNELS    6
-#define  NUM_CHANNELS    4
+#define  NUM_CHANNELS    6
 #define  RC_TIMEOUT      1000  // milliseconds
 
 #define  RC_CH1_IN_MIN   1154
@@ -57,12 +56,12 @@
 #define RC_POT_A    RC_CH5
 #define RC_POT_B    RC_CH6
 
-#define  RC_CH1_INPUT  A0
-#define  RC_CH2_INPUT  A1
-#define  RC_CH3_INPUT  A2
-#define  RC_CH4_INPUT  A3
-#define  RC_CH5_INPUT  7
-#define  RC_CH6_INPUT  8
+#define  RC_CH1_INPUT  7
+#define  RC_CH2_INPUT  6
+#define  RC_CH3_INPUT  5
+#define  RC_CH4_INPUT  4
+#define  RC_CH5_INPUT  3
+#define  RC_CH6_INPUT  2
 
 void rc_init();
 void rc_read_values();
