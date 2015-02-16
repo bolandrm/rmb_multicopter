@@ -25,7 +25,7 @@ typedef struct {
   float input;
   float integrator;
   float output;
-  float last_error;
+  float last_input;
 
   float p_term;
   float i_term;

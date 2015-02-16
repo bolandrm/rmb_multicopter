@@ -13,10 +13,10 @@ static int16_t rc_offset[] = { RC_CH1_OFFSET, RC_CH2_OFFSET, RC_CH3_OFFSET,
                                RC_CH4_OFFSET, RC_CH5_OFFSET, RC_CH6_OFFSET };
 
 static uint32_t last_update_time = 0;
-static uint16_t rc_values[NUM_CHANNELS];
+static uint16_t rc_values[NUM_CHANNELS] = {1500};
 static uint32_t rc_start[NUM_CHANNELS];
-static int16_t rc_out_values[NUM_CHANNELS];
-static volatile uint16_t rc_shared[NUM_CHANNELS];
+static int16_t rc_out_values[NUM_CHANNELS] = {0};
+static volatile uint16_t rc_shared[NUM_CHANNELS] = {1500};
 static void process_channel_value(int channel);
 
 void rc_read_values() {
@@ -50,6 +50,11 @@ static void process_channel_value(int channel) {
   } else {
     value = constrain(value, rc_in_min[channel], rc_in_max[channel]);
     value = map(value, rc_in_min[channel], rc_in_max[channel], rc_out_min[channel], rc_out_max[channel]);
+
+    // workaround ... bug here
+    if (channel == RC_CH4 && value == -100) {
+      value = 0;
+    }
 
     if ((channel == RC_CH1 || channel == RC_CH2 || channel == RC_CH4)
          && ((value > 0 && value < 2) || (value < 0 && value > -2)) ) {
