@@ -92,24 +92,45 @@ void text_debug() {
   Serial.println();
 
   Serial.println();
+
+  Serial2.println("hello wrld2");
 }
 
 void chart_debug() {
-  //Serial.print(imu_gyro_angles().y);
-  Serial.print(imu_gyro_angles().x);
-  Serial.print(" ");
-  //Serial.print(imu_accel_angles().y);
-  Serial.print(imu_accel_angles().x);
-  Serial.print(" ");
-  //Serial.print(imu_angles().y);
-  Serial.print(imu_angles().x);
-  Serial.print(" ");
-  Serial.print(1);
-  Serial.print(" ");
-  Serial.print(1);
-  Serial.print(" ");
-  Serial.print(1);
-  Serial.println();
+  ////Serial.print(imu_gyro_angles().y);
+  //Serial.print(imu_gyro_angles().x);
+  //Serial.print(" ");
+  ////Serial.print(imu_accel_angles().y);
+  //Serial.print(imu_accel_angles().x);
+  //Serial.print(" ");
+  ////Serial.print(imu_angles().y);
+  //Serial.print(imu_angles().x);
+  //Serial.print(" ");
+  //Serial.print(1);
+  //Serial.print(" ");
+  //Serial.print(1);
+  //Serial.print(" ");
+  //Serial.print(1);
+  //Serial.println();
+
+  String output = "";
+  output += imu_gyro_angles().x;
+  output += " ";
+  output += imu_accel_angles().x;
+  output += " ";
+  output += imu_angles().x;
+  output += " ";
+  output += rc_get(RC_ROLL);
+  output += " ";
+  output += motor_level(M1);
+  output += " ";
+  output += motor_level(M2);
+  output += " ";
+  output += motor_level(M3);
+  output += " ";
+  output += motor_level(M4);
+  Serial.println(output);
+  Serial2.println(output);
 }
 
 void logger_debug() {

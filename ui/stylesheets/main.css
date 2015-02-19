@@ -17,3 +17,7 @@ body {
 .canvasjs-chart-credit {
   display: none !important;
 }
+
+.gauge-large {
+  float: left;
+}

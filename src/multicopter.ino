@@ -17,6 +17,7 @@ void prog_reset() {
 
 void setup() {
   Serial.begin(SERIAL_PORT_SPEED);
+  Serial2.begin(SERIAL_PORT_SPEED);
   imu_init();
   rc_init();
   fc_init();

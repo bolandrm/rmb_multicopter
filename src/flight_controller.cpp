@@ -16,8 +16,8 @@ uint16_t gyro_freeze_counter = 0;
 float last_gyro_value = 0.0;
 bool emergency_stopped = false;
 uint8_t safety_mode = UNARMED;
-uint8_t flight_mode = RATE;
-//uint8_t flight_mode = STABILIZE;
+//uint8_t flight_mode = RATE;
+uint8_t flight_mode = STABILIZE;
 bool on_ground = true;
 
 void fc_init() {
@@ -80,11 +80,11 @@ void compute_pids() {
 }
 
 void fc_safety_check() {
-  if (rc_get(RC_THROTTLE) == 0 && rc_get(RC_YAW) > RC_CH4_OUT_MAX/2-5) {
+  if (rc_get(RC_THROTTLE) == 0 && rc_get(RC_YAW) > RC_CH4_OUT_MAX/2-10) {
     fc_disarm();
   }
 
-  if (rc_get(RC_THROTTLE) == 0 && rc_get(RC_YAW) < RC_CH4_OUT_MIN/2+5) {
+  if (rc_get(RC_THROTTLE) == 0 && rc_get(RC_YAW) < RC_CH4_OUT_MIN/2+10) {
     fc_arm();
   }
 

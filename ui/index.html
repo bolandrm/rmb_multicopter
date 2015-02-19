@@ -10,21 +10,29 @@
   <script src="vendor/scripts/jquery-2.1.3.min.js"></script>
   <script src="vendor/scripts/underscore.min.js"></script>
   <script src="vendor/scripts/canvasjs.min.js"></script>
+  <script src="vendor/scripts/d3.min.js"></script>
+  <script src="vendor/scripts/epoch.min.js"></script>
   <script src="scripts/dashboard.js"></script>
   <script src="scripts/serial.js"></script>
 </head>
 <body>
 
 <div class="toolbar">
+  <button id="clear-line-button">Clear Line Chart</button>
+  <button id="pause-button">Pause</button>
   <label>
     Port:
     <select id="port-picker"></select>
   </label>
   <button id="connect-button">Toggle Connection</button>
-  <!-- <button id="pause-button">Toggle Pause</button> -->
 </div>
 
 <div id="line-chart" class="" style="height: 300px;"></div>
+
+<div id="m1-chart" class="epoch gauge-large"></div>
+<div id="m2-chart" class="epoch gauge-large"></div>
+<div id="m3-chart" class="epoch gauge-large"></div>
+<div id="m4-chart" class="epoch gauge-large"></div>
 
 </body>
 </html>

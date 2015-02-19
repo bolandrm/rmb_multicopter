@@ -18,8 +18,8 @@
 
 #define M1_ON
 #define M2_ON
-//#define M3_ON
-//#define M4_ON
+#define M3_ON
+#define M4_ON
 
 void motors_command();
 void motors_command_all_off();
