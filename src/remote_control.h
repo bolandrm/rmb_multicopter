@@ -3,33 +3,32 @@
 
 #include <Arduino.h>
 
-//#define  NUM_CHANNELS    6
-#define  NUM_CHANNELS    4
+#define  NUM_CHANNELS    6
 #define  RC_TIMEOUT      1000  // milliseconds
 
 #define  RC_CH1_IN_MIN   1154
 #define  RC_CH1_IN_MAX   1898
-#define  RC_CH1_OUT_MIN  -22
-#define  RC_CH1_OUT_MAX  22
+#define  RC_CH1_OUT_MIN  -25
+#define  RC_CH1_OUT_MAX  25
 #define  RC_CH1_OFFSET   0
 
 #define  RC_CH2_IN_MIN   1192
 #define  RC_CH2_IN_MAX   1824
-#define  RC_CH2_OUT_MIN  -22
-#define  RC_CH2_OUT_MAX  22
-#define  RC_CH2_OFFSET   -1
+#define  RC_CH2_OUT_MIN  -25
+#define  RC_CH2_OUT_MAX  25
+#define  RC_CH2_OFFSET   0
 
 #define  RC_CH3_IN_MIN   1172
 #define  RC_CH3_IN_MAX   1812
 #define  RC_CH3_OUT_MIN  1070
-#define  RC_CH3_OUT_MAX  1600 // 1864 is max motor input
+#define  RC_CH3_OUT_MAX  1500 // 1864 is max motor input
 #define  RC_CH3_OFFSET   0
 
 #define  RC_CH4_IN_MIN   1171
 #define  RC_CH4_IN_MAX   1871
 #define  RC_CH4_OUT_MIN  -100
 #define  RC_CH4_OUT_MAX  100
-#define  RC_CH4_OFFSET   0
+#define  RC_CH4_OFFSET   (-13)
 
 #define  RC_CH5_IN_MIN   996
 #define  RC_CH5_IN_MAX   2000
@@ -57,12 +56,12 @@
 #define RC_POT_A    RC_CH5
 #define RC_POT_B    RC_CH6
 
-#define  RC_CH1_INPUT  A0
-#define  RC_CH2_INPUT  A1
-#define  RC_CH3_INPUT  A2
-#define  RC_CH4_INPUT  A3
-#define  RC_CH5_INPUT  7
-#define  RC_CH6_INPUT  8
+#define  RC_CH1_INPUT  7
+#define  RC_CH2_INPUT  6
+#define  RC_CH3_INPUT  5
+#define  RC_CH4_INPUT  4
+#define  RC_CH5_INPUT  3
+#define  RC_CH6_INPUT  2
 
 void rc_init();
 void rc_read_values();

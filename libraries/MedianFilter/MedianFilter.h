@@ -37,20 +37,20 @@
 class MedianFilter
 {
 public:
-	MedianFilter(byte size, int seed);
-	float in(float value);
-	float out();
+	MedianFilter(byte size, int16_t seed);
+	int16_t in(int16_t value);
+	int16_t out(); 
 	//void printData();		// used for debugging
-
+	
 private:
-	int filterShift;
+	int16_t filterShift;
 	byte medFilterWin;		// number of samples in sliding median filter window - usually odd #
 	byte medDataPointer;	// mid point of window
-	float *sortedData;		// array pointer for data sorted by size
-	byte *historyMap;		// array pointer for locations of history data in sorted list
-	byte *locationMap;		// array pointer for data locations in history map
-	int ODP;				// oldest data point in accelRawHistory
-	float tempData;			// temp data storage while swapping data locations
+	int16_t * sortedData;		// array pointer for data sorted by size
+	byte * historyMap;		// array pointer for locations of history data in sorted list
+	byte * locationMap;		// array pointer for data locations in history map
+	int16_t ODP;				// oldest data point in accelRawHistory
+	int16_t tempData;			// temp data storage while swapping data locations
 	byte tempMap;			// temp map storage while swapping data locations
 	boolean dataMoved;
 };

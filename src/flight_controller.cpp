@@ -5,6 +5,7 @@
 #include "motors.h"
 #include "serial_commands.h"
 #include "remote_control.h"
+#include "debugger.h"
 
 void fc_safety_check();
 void compute_pids();
@@ -14,9 +15,9 @@ bool min_throttle();
 uint16_t gyro_freeze_counter = 0;
 float last_gyro_value = 0.0;
 bool emergency_stopped = false;
-// TEMP uint8_t safety_mode = UNARMED;
-uint8_t safety_mode = ARMED;
-uint8_t flight_mode = RATE;
+uint8_t safety_mode = UNARMED;
+//uint8_t flight_mode = RATE;
+uint8_t flight_mode = STABILIZE;
 bool on_ground = true;
 
 void fc_init() {
@@ -47,31 +48,31 @@ void fc_process() {
 void fc_emergency_stop() {
   emergency_stopped = true;
   motors_command_all_off();
-  for(;;);
+  for(;;) debugger_indicate_emergency();
 }
 
 void compute_pids() {
-  pid(PID_RATE_X)->setpoint = imu_rates().x;
-  pid(PID_RATE_Y)->setpoint = imu_rates().y;
-  pid(PID_ANGLE_X)->setpoint = imu_angles().x;
-  pid(PID_ANGLE_Y)->setpoint = imu_angles().y;
-  pid(PID_RATE_Z)->setpoint = imu_rates().z;
+  pid(PID_RATE_X)->input = imu_rates().x;
+  pid(PID_RATE_Y)->input = imu_rates().y;
+  pid(PID_ANGLE_X)->input = imu_angles().x;
+  pid(PID_ANGLE_Y)->input = imu_angles().y;
+  pid(PID_RATE_Z)->input = imu_rates().z;
 
   if (flight_mode == STABILIZE) {
-    pid(PID_ANGLE_X)->input = rc_get(RC_ROLL);
-    pid(PID_ANGLE_Y)->input = rc_get(RC_PITCH);
+    pid(PID_ANGLE_X)->setpoint = rc_get(RC_ROLL);
+    pid(PID_ANGLE_Y)->setpoint = rc_get(RC_PITCH);
 
     pid_compute(PID_ANGLE_X);
     pid_compute(PID_ANGLE_Y);
 
-    pid(PID_RATE_X)->input = pid(PID_ANGLE_X)->output;
-    pid(PID_RATE_Y)->input = pid(PID_ANGLE_Y)->output;
+    pid(PID_RATE_X)->setpoint = pid(PID_ANGLE_X)->output;
+    pid(PID_RATE_Y)->setpoint = pid(PID_ANGLE_Y)->output;
   } else {
-    pid(PID_RATE_X)->input = rc_get(RC_ROLL);
-    pid(PID_RATE_Y)->input = rc_get(RC_PITCH);
+    pid(PID_RATE_X)->setpoint = rc_get(RC_ROLL);
+    pid(PID_RATE_Y)->setpoint = rc_get(RC_PITCH);
   }
 
-  pid(PID_RATE_Z)->input = rc_get(RC_YAW);
+  pid(PID_RATE_Z)->setpoint = rc_get(RC_YAW);
 
   pid_compute(PID_RATE_X);
   pid_compute(PID_RATE_Y);
@@ -79,6 +80,14 @@ void compute_pids() {
 }
 
 void fc_safety_check() {
+  if (rc_get(RC_THROTTLE) == 0 && rc_get(RC_YAW) > RC_CH4_OUT_MAX/2-10) {
+    fc_disarm();
+  }
+
+  if (rc_get(RC_THROTTLE) == 0 && rc_get(RC_YAW) < RC_CH4_OUT_MIN/2+10) {
+    fc_arm();
+  }
+
   // watchdog to prevent stale imu values
   if (imu_rates().x == last_gyro_value) {
     gyro_freeze_counter++;
@@ -129,6 +138,10 @@ bool min_throttle() {
 
 void fc_arm() {
   safety_mode = ARMED;
+}
+
+void fc_disarm() {
+  safety_mode = UNARMED;
 }
 
 bool fc_armed() {

@@ -9,6 +9,7 @@
 
 void fc_init();
 void fc_arm();
+void fc_disarm();
 void fc_process();
 void fc_emergency_stop();
 bool fc_armed();

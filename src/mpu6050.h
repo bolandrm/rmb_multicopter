@@ -68,7 +68,7 @@
 #define BIT_INT_STATUS_DATA         0x01
 
 void mpu6050_init();
-void mpu6050_read_gyro(axis_float_t *gyro_rates);
-void mpu6050_read_accel(axis_float_t *accel_raws);
+void mpu6050_read_gyro(axis_int16_t *gyro_rates);
+void mpu6050_read_accel(axis_int16_t *accel_raws);
 
 #endif
