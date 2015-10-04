@@ -4,26 +4,29 @@
 #define PACKET_HEADER2 0xB5
 
 #define REQUEST_CONFIG 1
-#define REQUEST_GYRO_ACC 1
+#define REQUEST_GYRO_ACC 2
+
+#define SET_CONFIG 101
 
 #include "serial_commands.h"
+#include "config.h"
 #include "pids.h"
 #include "flight_controller.h"
 
 void read_serial_data(uint8_t data);
+void process_serial_data();
 
-uint8_t data;
-uint8_t state;
-uint8_t code;
-uint8_t incoming_crc;
-uint8_t outgoing_crc;
-uint16_t data_expected_length;
-uint16_t data_received_length;
-uint8_t data_buffer[200];
+static uint8_t state;
+static uint8_t code;
+static uint8_t incoming_crc;
+static uint8_t outgoing_crc;
+static uint16_t data_expected_length;
+static uint16_t data_received_length;
+static uint8_t data_buffer[200];
 
 void serial_commands_process() {
   while (Serial.available()) {
-    data = Serial.read();
+    uint8_t data = Serial.read();
     read_serial_data(data);
   }
 }
@@ -33,18 +36,23 @@ void read_serial_data(uint8_t data) {
     case 0:
       if (data == PACKET_HEADER1) {
         state++;
+        Serial.println("got header1");
       }
       break;
     case 1:
       if (data == PACKET_HEADER2) {
         state++;
+        Serial.println("got header2");
       } else {
         state = 0;
+        Serial.println("header2 bad, resetting");
       }
       break;
     case 2:
       code = data;
       incoming_crc = data;
+      Serial.print("code:");
+      Serial.println(data);
       state++;
       break;
     case 3:  // Data length LSB
@@ -55,6 +63,8 @@ void read_serial_data(uint8_t data) {
     case 4:  // Data length MSB
       data_expected_length |= (data << 8);
       incoming_crc ^= data;
+      Serial.print("data length:");
+      Serial.println(data_expected_length);
       state++;
       break;
     case 5:
@@ -64,13 +74,20 @@ void read_serial_data(uint8_t data) {
 
       if (data_received_length >= data_expected_length) {
         state++;
+        Serial.print("got data length:");
+        Serial.println(data_received_length);
       }
       break;
     case 6:
+      Serial.print("calculated crc: ");
+      Serial.println(incoming_crc);
       if (incoming_crc == data) {
+        Serial.print("responding to code: ");
+        Serial.println(code);
         // CRC is ok, process data
-        // process_data();
+        process_serial_data();
       } else {
+        Serial.println("crc bad");
         // respond that CRC failed
         // CRC_FAILED(code, incoming_crc);
       }
@@ -82,6 +99,36 @@ void read_serial_data(uint8_t data) {
       break;
   }
 }
+
+void process_serial_data() {
+  switch (code) {
+    case SET_CONFIG:
+      if (data_received_length == sizeof(CONFIG_union)) {
+
+        CONFIG_union config;
+
+        Serial.println("set config!");
+
+        for (uint16_t i = 0; i < sizeof(CONFIG_union); i++) {
+            config.raw[i] = data_buffer[i];
+        }
+
+        Serial.println(config.data.version);
+        Serial.println(config.data.pid_rate_z.kd);
+        Serial.println(config.data.pid_angle_z.i_max);
+
+      } else {
+        Serial.println("serial incorrect size");
+        Serial.print("config size: ");
+        Serial.print(sizeof(CONFIG_union));
+        Serial.print(" data size: ");
+        Serial.println(data_received_length);
+      }
+      break;
+  }
+}
+
+
 
 void serial_update_pids(byte incomingByte) {
   double kp, ki, kd;
