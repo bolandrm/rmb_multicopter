@@ -7,12 +7,12 @@
 #include "serial_commands.h"
 #include "remote_control.h"
 
-#define RESTART_ADDR       0xE000ED0C
-#define READ_RESTART()     (*(volatile uint32_t *)RESTART_ADDR)
-#define WRITE_RESTART(val) ((*(volatile uint32_t *)RESTART_ADDR) = (val))
+#define CPU_RESTART_ADDR (uint32_t *)0xE000ED0C
+#define CPU_RESTART_VAL 0x5FA0004
+#define CPU_RESTART (*CPU_RESTART_ADDR = CPU_RESTART_VAL);
 
 void prog_reset() {
-  WRITE_RESTART(0x5FA0004);
+  CPU_RESTART
 }
 
 void setup() {

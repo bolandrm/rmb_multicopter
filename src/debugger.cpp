@@ -170,7 +170,7 @@ void print_debug() {
 
 void debugger_print() {
   if (DEBUG && millis() - debug_timer > DEBUG_RATE_MILLIS) {
-    print_debug();
+    //print_debug();
     debug_timer = millis();
   }
 }
