@@ -7,6 +7,8 @@
 #include "remote_control.h"
 #include "debugger.h"
 
+#define ANGLE_SAFETY_STOP 0
+
 void fc_safety_check();
 void compute_pids();
 void compute_motor_outputs();
@@ -100,8 +102,8 @@ void fc_safety_check() {
     last_gyro_value = imu_rates().x;
   }
 
-  if (imu_angles().x > 45.0 || imu_angles().x < -45.0
-       || imu_angles().y > 45.0 || imu_angles().y < -45.0) {
+  if (ANGLE_SAFETY_STOP && (imu_angles().x > 45.0 || imu_angles().x < -45.0
+                             || imu_angles().y > 45.0 || imu_angles().y < -45.0)) {
     Serial.println("angles too high");
     fc_emergency_stop();
   }

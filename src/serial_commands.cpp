@@ -11,6 +11,7 @@
 #include "serial_commands.h"
 #include "config.h"
 #include "pids.h"
+#include "imu.h"
 #include "flight_controller.h"
 
 void read_serial_data(uint8_t data);
@@ -100,8 +101,60 @@ void read_serial_data(uint8_t data) {
   }
 }
 
+void output_uint8(uint8_t value) {
+  Serial.write(value);
+  outgoing_crc ^= value;
+}
+
+void output_uint16(uint16_t value) {
+  output_uint8(lowByte(value));
+  output_uint8(highByte(value));
+}
+
+void output_float32(float value) {
+  uint8_t *bytes = (uint8_t *) &value;
+
+  for (uint8_t i = 0; i < sizeof(value); i++) {
+    output_uint8(bytes[i]);
+  }
+}
+
+void packet_head(uint8_t code, uint16_t size) {
+  Serial.write(PACKET_HEADER1);
+  Serial.write(PACKET_HEADER2);
+
+  outgoing_crc = 0;
+
+  output_uint8(code);
+  output_uint16(size);
+}
+
+void protocol_tail() {
+  Serial.write(outgoing_crc);
+}
+
 void process_serial_data() {
   switch (code) {
+    case REQUEST_GYRO_ACC:
+      packet_head(REQUEST_GYRO_ACC, 24);
+
+      output_float32(imu_rates().x);
+      output_float32(imu_rates().y);
+      output_float32(imu_rates().z);
+      output_float32(imu_angles().x);
+      output_float32(imu_angles().y);
+      output_float32(imu_angles().z);
+
+      protocol_tail();
+
+      //imu_gyro_angles();
+      //imu_gyro_raws();
+      //imu_accel_raws();
+      //imu_accel_filtered();
+      //imu_accel_angles();
+      //packet_head(REQUEST_GYRO_ACC, 72);
+      break;
+
     case SET_CONFIG:
       if (data_received_length == sizeof(CONFIG_union)) {
 
