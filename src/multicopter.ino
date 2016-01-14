@@ -29,26 +29,46 @@ void setup() {
   attachInterrupt(0, prog_reset, RISING);
 }
 
-void loop() {
-  if (schedule(TASK_1000HZ)) {
-    imu_read_raw_values();
-
-    if (schedule(TASK_50HZ)) {
-      rc_read_values();
-      serial_commands_process();
-    }
-
-    if (schedule(TASK_500HZ)) {
-      imu_process_values();
-      fc_process();
-    }
-
-    if (schedule(TASK_2HZ)) {
-      debugger_leds();
-    }
-
-    schedule_end();
+extern "C" {    // another way
+  int _getpid(void) {
+    return 1;
   }
 
-  debugger_print();
+  int _kill(int pid, int sig) {
+    return -1;
+  }
+
+  void run_loop();
+};
+
+
+void loop() {
+  pinMode(14, OUTPUT);
+  digitalWrite(14, LOW);
+  digitalWrite(15, LOW);
+
+//digitalWrite(14, HIGH);
+  run_loop();
+
+  //if (schedule(TASK_1000HZ)) {
+  //  imu_read_raw_values();
+
+  //  if (schedule(TASK_50HZ)) {
+  //    rc_read_values();
+  //    serial_commands_process();
+  //  }
+
+  //  if (schedule(TASK_500HZ)) {
+  //    imu_process_values();
+  //    fc_process();
+  //  }
+
+  //  if (schedule(TASK_2HZ)) {
+  //    debugger_leds();
+  //  }
+
+  //  schedule_end();
+  //}
+
+  //debugger_print();
 }
