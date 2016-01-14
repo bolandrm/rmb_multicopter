@@ -1,7 +1,7 @@
 ARDUINO_DIR   = /Applications/Arduino.app/Contents/Resources/Java
 USER_LIB_PATH = ./libraries
 OBJDIR        = ./.build-$(BOARD_TAG)
-AVR_TOOLS_PATH = ~/hardware/gcc-arm-none-eabi-4_9-2014q4/bin
+AVR_TOOLS_PATH = /Users/bolandrm/hardware/gcc-arm-none-eabi-4_9-2014q4/bin
 
 BOARD_TAG    = teensy31
 ARDUINO_LIBS = MedianFilter i2c_t3
@@ -10,7 +10,6 @@ MONITOR_BAUDRATE  = 115200
 MONITOR_PORT      = /dev/tty.usbmodem*
 
 LOCAL_CPP_SRCS = $(wildcard *.cpp) $(wildcard ./hardware/*.cpp)
-RUST_OBJS = $(wildcard ~/hardware/rust_book/rust_test2/libs-arm/*.o)
 CPPFLAGS = -I./hardware -I.
 
 CXX_NAME     = arm-none-eabi-gcc
@@ -22,9 +21,26 @@ LDFLAGS += -T$(call PARSE_TEENSY,$(BOARD_TAG),build.linkscript)
 LDFLAGS += -$(MCU_FLAG_NAME)=$(MCU) -Wl,--gc-sections -O$(OPTIMIZATION_LEVEL)
 LDFLAGS2 = $(filter-out -larm_cortexM4l_math,$(LDFLAGS))
 
-$(TARGET_ELF): 	$(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS)
-		$(CC) $(LDFLAGS2) -o $@ $(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS) $(RUST_OBJS) ~/hardware/rust_book/rust_test2/test.o -L. -lsupc++_nano -lm -lc_nano -lstdc++_nano
+RUST_OBJS = $(wildcard $(RUST_LIBS_DIR)/*.o) $(OBJDIR)/rust.o
+
+$(TARGET_ELF): 	$(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS) $(RUST_OBJS)
+		$(CC) $(LDFLAGS2) -o $@ $(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS) $(RUST_OBJS) -L. -lsupc++_nano -lm -lc_nano -lstdc++_nano
 
 burn:
 	make
 	~/hardware/teensy-loader-cli/teensy_loader_cli -w -v -mmcu=mk20dx256 .build-teensy31/src.hex
+
+RUST_DIR = /Users/bolandrm/hardware/rust
+RUST_TARGET_DIR = ./.build-rust-arm
+RUST_LIBS_DIR = $(RUST_TARGET_DIR)/rust_libs
+
+rust_libs:
+	@$(MKDIR) $(RUST_LIBS_DIR)
+	rustc -C ar="$(AR)" -C opt-level=2 -Z no-landing-pads --target thumbv7em-none-eabi -g $(RUST_DIR)/src/libcore/lib.rs --out-dir $(RUST_LIBS_DIR) --emit link,obj
+	rustc -C ar="$(AR)" --cfg feature=\"external_funcs\" -C opt-level=2 -Z no-landing-pads --target thumbv7em-none-eabi -g $(RUST_DIR)/src/liballoc/lib.rs --out-dir $(RUST_LIBS_DIR) -L $(RUST_LIBS_DIR) --emit link,obj
+	rustc -C ar="$(AR)" -C opt-level=2 -Z no-landing-pads --target thumbv7em-none-eabi -g $(RUST_DIR)/src/librustc_unicode/lib.rs --out-dir $(RUST_LIBS_DIR) -L $(RUST_LIBS_DIR) --emit link,obj
+	rustc -C ar="$(AR)" -C opt-level=2 -Z no-landing-pads --target thumbv7em-none-eabi -g $(RUST_DIR)/src/libcollections/lib.rs --out-dir $(RUST_LIBS_DIR) -L $(RUST_LIBS_DIR) --emit link,obj
+	rustc -C ar="$(AR)" -C opt-level=2 -Z no-landing-pads --target thumbv7em-none-eabi -g embedded_allocator/lib.rs --out-dir $(RUST_LIBS_DIR) -L $(RUST_LIBS_DIR) --emit link,obj
+
+$(OBJDIR)/rust.o: $(wildcard *.rs)
+	rustc -C ar="$(AR)" -C opt-level=2 -Z no-landing-pads --target thumbv7em-none-eabi -g --crate-type staticlib -L $(RUST_LIBS_DIR) main.rs -o $@ --emit obj
