@@ -6,13 +6,13 @@ AVR_TOOLS_PATH = /Users/bolandrm/hardware/gcc-arm-none-eabi-4_9-2014q4/bin
 BOARD_TAG    = teensy31
 ARDUINO_LIBS = MedianFilter i2c_t3
 
+NO_CORE_MAIN_CPP = true
+
 MONITOR_BAUDRATE  = 115200
 MONITOR_PORT      = /dev/tty.usbmodem*
 
 LOCAL_CPP_SRCS = $(wildcard *.cpp) $(wildcard ./hardware/*.cpp)
 CPPFLAGS = -I./hardware -I.
-
-CXX_NAME     = arm-none-eabi-gcc
 
 include ~/hardware/Arduino-Makefile/Teensy.mk
 
@@ -24,11 +24,21 @@ LDFLAGS2 = $(filter-out -larm_cortexM4l_math,$(LDFLAGS))
 RUST_OBJS = $(wildcard $(RUST_LIBS_DIR)/*.o) $(OBJDIR)/rust.o
 
 $(TARGET_ELF): 	$(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS) $(RUST_OBJS)
-		$(CC) $(LDFLAGS2) -o $@ $(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS) $(RUST_OBJS) -L. -lsupc++_nano -lm -lc_nano -lstdc++_nano
+		$(CC) $(LDFLAGS2) -o $@ $(LOCAL_OBJS) $(CORE_LIB) $(OTHER_OBJS) $(RUST_OBJS) -L. -lm -lc_nano 
+
+TEENSY_LOADER_CLI = ~/hardware/teensy_loader_cli/teensy_loader_cli
+REBOOT_TEENSY = stty -f $(MONITOR_PORT) 134
 
 burn:
 	make
-	~/hardware/teensy-loader-cli/teensy_loader_cli -w -v -mmcu=mk20dx256 .build-teensy31/src.hex
+	if [ -a $(MONITOR_PORT) ]; then $(REBOOT_TEENSY); fi;
+	$(TEENSY_LOADER_CLI) -w -v -mmcu=mk20dx256 .build-teensy31/src.hex
+
+reboot:
+	$(REBOOT_TEENSY)
+
+boot:
+	$(TEENSY_LOADER_CLI) -b -v -mmcu=mk20dx256
 
 RUST_DIR = /Users/bolandrm/hardware/rust
 RUST_TARGET_DIR = ./.build-rust-arm
