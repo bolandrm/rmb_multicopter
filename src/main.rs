@@ -1,5 +1,5 @@
 #![no_std]
-#![feature(lang_items, alloc, collections, convert)]
+#![feature(lang_items, alloc, collections, convert, core_intrinsics)]
 
 extern crate embedded_allocator;
 extern crate alloc;
@@ -37,7 +37,10 @@ pub extern fn main() {
 
         imu.read_raw_values();
 
-        serial_println!("x: {}, y: {}, z: {}", imu.gyro_raws.x, imu.gyro_raws.y, imu.gyro_raws.z);
+        serial_print!("\x1b[2J\x1b[1;1H");
+        serial_println!("IMU:");
+        serial_println!("[Gyro Raws] x: {}, y: {}, z: {}", imu.gyro_raws.x, imu.gyro_raws.y, imu.gyro_raws.z);
+        serial_println!("{}", 15.0);
 
         c::_loop();
 

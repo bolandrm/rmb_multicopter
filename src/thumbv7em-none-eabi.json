@@ -13,7 +13,7 @@
     "no-compiler-rt": true,
     "pre-link-args": [
         "-mcpu=cortex-m4", "-mthumb",
-        "-Tlayout.ld"
+        "mk20dx256.ld", "-mfloat-abi=hard"
     ],
     "post-link-args": [
         "-nostdlib", "-nostartfiles"

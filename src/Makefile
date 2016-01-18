@@ -18,7 +18,7 @@ include ~/hardware/Arduino-Makefile/Teensy.mk
 
 LDFLAGS =  $(call PARSE_TEENSY,$(BOARD_TAG),build.linkoption) $(call PARSE_TEENSY,$(BOARD_TAG),build.additionalobject)
 LDFLAGS += -T$(call PARSE_TEENSY,$(BOARD_TAG),build.linkscript)
-LDFLAGS += -$(MCU_FLAG_NAME)=$(MCU) -Wl,--gc-sections -O$(OPTIMIZATION_LEVEL)
+LDFLAGS += -$(MCU_FLAG_NAME)=$(MCU) -Wl,--gc-sections -O$(OPTIMIZATION_LEVEL) -mfloat-abi=soft
 LDFLAGS2 = $(filter-out -larm_cortexM4l_math,$(LDFLAGS))
 
 RUST_OBJS = $(wildcard $(RUST_LIBS_DIR)/*.o) $(OBJDIR)/rust.o
@@ -33,6 +33,9 @@ burn:
 	make
 	if [ -a $(MONITOR_PORT) ]; then $(REBOOT_TEENSY); fi;
 	$(TEENSY_LOADER_CLI) -w -v -mmcu=mk20dx256 .build-teensy31/src.hex
+
+burnm:
+	make burn && sleep 1 && make monitor
 
 reboot:
 	$(REBOOT_TEENSY)
