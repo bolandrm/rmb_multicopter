@@ -93,7 +93,13 @@ mod helpers {
 pub struct MPU6050;
 
 impl MPU6050 {
-    pub fn init() {
+    pub fn new() -> MPU6050 {
+        let mpu = MPU6050;
+        mpu.init();
+        return mpu;
+    }
+
+    pub fn init(&self) {
         helpers::write_reg(MPUREG_PWR_MGMT_1, BIT_H_RESET);
         arduino::delay(100);  // Startup time delay
 
@@ -121,7 +127,7 @@ impl MPU6050 {
         }
     }
 
-    pub fn read_gyro(gyro_rates: &mut AxisI16) {
+    pub fn read_gyro(&self, gyro_rates: &mut AxisI16) {
         let gyro_x: i16 = helpers::read_word(MPUREG_GYRO_XOUT_H) as i16;
         let gyro_y: i16 = helpers::read_word(MPUREG_GYRO_YOUT_H) as i16;
         let gyro_z: i16 = helpers::read_word(MPUREG_GYRO_ZOUT_H) as i16;
@@ -130,4 +136,15 @@ impl MPU6050 {
         gyro_rates.y = gyro_y;
         gyro_rates.z = gyro_z;
     }
+
+    pub fn read_accel(&self, accel_raws: &mut AxisI16) {
+        let accel_x: i16 = helpers::read_word(MPUREG_ACCEL_XOUT_H) as i16;
+        let accel_y: i16 = helpers::read_word(MPUREG_ACCEL_YOUT_H) as i16;
+        let accel_z: i16 = helpers::read_word(MPUREG_ACCEL_ZOUT_H) as i16;
+
+        accel_raws.x = accel_x;
+        accel_raws.y = accel_y;
+        accel_raws.z = accel_z;
+    }
+
 }

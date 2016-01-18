@@ -52,5 +52,5 @@ rust_libs:
 	rustc -C ar="$(AR)" -C opt-level=2 -Z no-landing-pads --target thumbv7em-none-eabi -g $(RUST_DIR)/src/libcollections/lib.rs --out-dir $(RUST_LIBS_DIR) -L $(RUST_LIBS_DIR) --emit link,obj
 	rustc -C ar="$(AR)" -C opt-level=2 -Z no-landing-pads --target thumbv7em-none-eabi -g embedded_allocator/lib.rs --out-dir $(RUST_LIBS_DIR) -L $(RUST_LIBS_DIR) --emit link,obj
 
-$(OBJDIR)/rust.o: $(wildcard *.rs)
+$(OBJDIR)/rust.o: $(wildcard *.rs) $(wildcard imu/*.rs)
 	rustc -C ar="$(AR)" -C opt-level=2 -Z no-landing-pads --target thumbv7em-none-eabi -g --crate-type staticlib -L $(RUST_LIBS_DIR) main.rs -o $@ --emit obj

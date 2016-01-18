@@ -14,8 +14,9 @@ mod imu;
 
 #[no_mangle]
 pub extern fn main() {
-    let mut imu = imu::IMU::new();
+    i2c::begin();
 
+    let mut imu = imu::IMU::new();
     c::setup();
 
     arduino::pin_mode(14, arduino::OUTPUT);
@@ -36,8 +37,7 @@ pub extern fn main() {
 
         imu.read_raw_values();
 
-        let ref gyro_rates = imu.imu_gyro_raws;
-        serial_println!("x: {}, y: {}, z: {}", gyro_rates.x, gyro_rates.y, gyro_rates.z);
+        serial_println!("x: {}, y: {}, z: {}", imu.gyro_raws.x, imu.gyro_raws.y, imu.gyro_raws.z);
 
         c::_loop();
 
