@@ -1,18 +1,15 @@
 #![no_std]
-#![feature(lang_items, alloc, collections)]
-// #![feature(clone_from_slice)]
+#![feature(lang_items, alloc, collections, convert)]
 
 extern crate embedded_allocator;
 extern crate alloc;
 #[macro_use]
 extern crate collections;
 
-//use collections::string::*;
-// use core::prelude::*;
-
 pub mod runtime_support;
 mod arduino;
 mod c;
+#[macro_use] mod debug;
 
 #[no_mangle]
 pub extern fn main() {
@@ -26,7 +23,6 @@ pub extern fn main() {
 
     arduino::digital_write(15, 0);
 
-
     loop {
         arduino::digital_write(14, arduino::LOW);
         arduino::digital_write(15, arduino::HIGH);
@@ -35,7 +31,7 @@ pub extern fn main() {
         arduino::digital_write(15, arduino::LOW);
         arduino::delay(300);
 
-        arduino::usb_serial_println("ok then 2");
+        serial_println!("Hello, {}!", 12);
 
         c::_loop();
 

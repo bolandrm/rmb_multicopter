@@ -21,13 +21,8 @@ pub fn delay(ms: u16) {
     unsafe { native::delay(ms); }
 }
 
-pub fn usb_serial_print(str: &str) {
+pub fn usb_serial_write(str: &str) {
     unsafe { native::usb_serial_write(str.as_bytes().as_ptr(), str.len()); }
-}
-
-pub fn usb_serial_println(str: &str) {
-    usb_serial_print(str);
-    unsafe { native::usb_serial_write("\r\n".as_bytes().as_ptr(), 2); }
 }
 
 mod native {
