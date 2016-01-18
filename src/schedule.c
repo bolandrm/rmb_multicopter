@@ -1,19 +1,19 @@
 #include "schedule.h"
 
-static int32_t schedule_timer = micros();
+static int32_t schedule_timer = 0;
 static int16_t schedule_counter = 0;
 
-static bool check_loop_start() {
+static int8_t check_loop_start() {
   if (micros() - schedule_timer > 1000) {
     schedule_timer = micros();
     schedule_counter++;
-    return true;
+    return 1;
   } else {
-    return false;
+    return 0;
   }
 }
 
-bool schedule(uint16_t interval) {
+int8_t schedule(uint16_t interval) {
   if (interval == TASK_1000HZ) {
     return check_loop_start();
   } else {

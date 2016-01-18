@@ -8,6 +8,8 @@ ARDUINO_LIBS = i2c_t3 MedianFilter
 MONITOR_BAUDRATE  = 115200
 MONITOR_PORT      = /dev/tty.usbmodem*
 
+NO_CORE_MAIN_CPP = true
+
 # for additional directories
 # LOCAL_CPP_SRCS = $(wildcard *.cpp) $(wildcard ./hardware/*.cpp)
 # CPPFLAGS = -I./hardware -I.

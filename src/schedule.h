@@ -9,7 +9,7 @@
 #define TASK_50HZ   20
 #define TASK_2HZ   500
 
-bool schedule(uint16_t interval);
+int8_t schedule(uint16_t interval);
 void schedule_end();
 
 #endif

@@ -12,7 +12,7 @@ void fc_arm();
 void fc_disarm();
 void fc_process();
 void fc_emergency_stop();
-bool fc_armed();
+uint8_t fc_armed();
 int8_t fc_mode();
 
 #endif

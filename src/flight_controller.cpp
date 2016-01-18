@@ -146,6 +146,10 @@ void fc_disarm() {
   safety_mode = UNARMED;
 }
 
-bool fc_armed() {
-  return safety_mode == ARMED;
+uint8_t fc_armed() {
+  if (safety_mode == ARMED) {
+    return 1;
+  } else {
+    return 0;
+  }
 }
