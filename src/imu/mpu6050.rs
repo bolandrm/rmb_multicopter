@@ -1,10 +1,10 @@
 #![allow(dead_code)]
 
 use arduino;
-use i2c;
 use debug;
+use super::{AxisI16, AxisI32, AxisFloat};
 
-const MPU6050_I2C_ADDRESS:u8       = 0x68;
+const MPU6050_I2C_ADDRESS:u8        = 0x68;
 const MPU6050_GYRO_500D_SENS:f32    = 65.5;
 const MPU6050_GYRO_1000D_SENS:f32   = 32.8;
 const MPU6050_ACCEL_4G_SENS:f32     = 8192.0;
@@ -90,16 +90,10 @@ mod helpers {
     }
 }
 
-pub struct AxisI16 { pub x: i16, pub y: i16, pub z: i16 }
-pub struct AxisI32 { pub x: i32, pub y: i32, pub z: i32 }
-pub struct AxisFloat { pub x: f32, pub y: f32, pub z: f32 }
-
 pub struct MPU6050;
 
 impl MPU6050 {
     pub fn init() {
-        i2c::begin();
-
         helpers::write_reg(MPUREG_PWR_MGMT_1, BIT_H_RESET);
         arduino::delay(100);  // Startup time delay
 

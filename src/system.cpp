@@ -40,11 +40,6 @@ extern "C" {
   //digitalWrite(14, HIGH);
     // run_loop();
 
-    // i2c_send_byte(MPU6050_I2C_ADDRESS, MPUREG_WHOAMI);
-    // uint8_t test = i2c_read_byte(MPU6050_I2C_ADDRESS);
-    // Serial.println("test:");
-    // Serial.println(test);
-
     //if (schedule(TASK_1000HZ)) {
     //  imu_read_raw_values();
 

@@ -10,11 +10,11 @@ pub mod runtime_support;
 mod arduino;
 mod c;
 mod i2c;
-mod mpu;
+mod imu;
 
 #[no_mangle]
 pub extern fn main() {
-    mpu::MPU6050::init();
+    let mut imu = imu::IMU::new();
 
     c::setup();
 
@@ -26,8 +26,6 @@ pub extern fn main() {
 
     arduino::digital_write(15, 0);
 
-    let mut gyro_rates = mpu::AxisI16 { x: 0, y: 0, z: 0 };
-
     loop {
         arduino::digital_write(14, arduino::LOW);
         arduino::digital_write(15, arduino::HIGH);
@@ -36,7 +34,9 @@ pub extern fn main() {
         arduino::digital_write(15, arduino::LOW);
         arduino::delay(300);
 
-        mpu::MPU6050::read_gyro(&mut gyro_rates);
+        imu.read_raw_values();
+
+        let ref gyro_rates = imu.imu_gyro_raws;
         serial_println!("x: {}, y: {}, z: {}", gyro_rates.x, gyro_rates.y, gyro_rates.z);
 
         c::_loop();
