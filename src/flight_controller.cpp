@@ -1,6 +1,10 @@
 #include <Arduino.h>
 #include "flight_controller.h"
+
+extern "C" {
 #include "imu.h"
+}
+
 #include "pids.h"
 #include "motors.h"
 #include "serial_commands.h"

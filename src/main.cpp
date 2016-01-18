@@ -1,26 +1,20 @@
 #define SERIAL_PORT_SPEED 115200
 
 #include "WProgram.h"
-#include "imu.h"
 #include "debugger.h"
 #include "flight_controller.h"
 #include "serial_commands.h"
 #include "remote_control.h"
+#include <i2c_t3.h>
 
-//#include "schedule.h"
-#define TASK_1000HZ 0
-#define TASK_500HZ  2
-#define TASK_250HZ  4
-#define TASK_50HZ   20
-#define TASK_2HZ   500
 extern "C" {
-  int8_t schedule(uint16_t interval);
-  void schedule_end();
+  #include "schedule.h"
+  #include "imu.h"
 }
-//#include "schedule.h"
 
 void setup() {
   serial2_begin(SERIAL_PORT_SPEED);
+  Wire.begin(I2C_MASTER, 0x00, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_400);
   imu_init();
   rc_init();
   fc_init();

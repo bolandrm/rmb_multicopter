@@ -11,7 +11,9 @@
 #include "serial_commands.h"
 #include "config.h"
 #include "pids.h"
+extern "C" {
 #include "imu.h"
+}
 #include "flight_controller.h"
 
 void read_serial_data(uint8_t data);

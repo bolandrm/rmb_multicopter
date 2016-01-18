@@ -10,18 +10,21 @@ static axis_float_t angles;
 static axis_int16_t gyro_raws;
 static axis_float_t gyro_sums;
 static int16_t gyro_sum_count = 0;
-static uint32_t gyro_update_timer = micros();
-static uint32_t combination_update_timer = micros();
+static uint32_t gyro_update_timer = 0;
+static uint32_t combination_update_timer = 0;
 static axis_int16_t accel_raws;
-static MedianFilter accel_x_filter(11, 0);
-static MedianFilter accel_y_filter(11, 0);
-static MedianFilter accel_z_filter(11, 0);
+static median_filter_t accel_x_filter;
+static median_filter_t accel_y_filter;
+static median_filter_t accel_z_filter;
 
-static uint32_t value_process_timer = micros();
+static uint32_t value_process_timer = 0;
 static uint32_t value_process_dt;
 
 void imu_init() {
-  Wire.begin(I2C_MASTER, 0x00, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_400);
+  accel_x_filter = median_filter_new(11, 0);
+  accel_y_filter = median_filter_new(11, 0);
+  accel_z_filter = median_filter_new(11, 0);
+
   mpu6050_init();
 }
 
@@ -45,9 +48,9 @@ static void read_gyro_raws() {
 static void read_accel_raws() {
   mpu6050_read_accel(&accel_raws);
 
-  accel_x_filter.in(accel_raws.x);
-  accel_y_filter.in(accel_raws.y);
-  accel_z_filter.in(accel_raws.z);
+  median_filter_in(accel_x_filter, accel_raws.x);
+  median_filter_in(accel_y_filter, accel_raws.y);
+  median_filter_in(accel_z_filter, accel_raws.z);
 }
 
 static void process_gyro() {
@@ -69,9 +72,9 @@ static void process_gyro() {
 }
 
 static void process_accel() {
-  accel_filtered.x = (float) (accel_x_filter.out() - ACCEL_X_OFFSET) / MPU6050_ACCEL_4G_SENS;
-  accel_filtered.y = (float) (accel_y_filter.out() - ACCEL_Y_OFFSET) / MPU6050_ACCEL_4G_SENS;
-  accel_filtered.z = (float) (accel_z_filter.out() - ACCEL_Z_OFFSET) / MPU6050_ACCEL_4G_SENS;
+  accel_filtered.x = (float) (median_filter_out(accel_x_filter) - ACCEL_X_OFFSET) / MPU6050_ACCEL_4G_SENS;
+  accel_filtered.y = (float) (median_filter_out(accel_y_filter) - ACCEL_Y_OFFSET) / MPU6050_ACCEL_4G_SENS;
+  accel_filtered.z = (float) (median_filter_out(accel_z_filter) - ACCEL_Z_OFFSET) / MPU6050_ACCEL_4G_SENS;
 }
 
 static void combine() {

@@ -1,6 +1,10 @@
 #include "debugger.h"
 #include <Arduino.h>
+
+extern "C" {
 #include "imu.h"
+}
+
 #include "pids.h"
 #include "flight_controller.h"
 #include "motors.h"

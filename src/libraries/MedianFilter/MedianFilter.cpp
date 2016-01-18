@@ -146,3 +146,17 @@ void MedianFilter::printData() // display sorting data for debugging
 }  
 */
 
+
+typedef void* median_filter_t;
+
+median_filter_t median_filter_new(byte size, int16_t seed) {
+    return reinterpret_cast<void*>(new MedianFilter(size, seed));
+}
+
+int16_t median_filter_in(median_filter_t filter, int16_t value) {
+    return reinterpret_cast<MedianFilter*>(filter)->in(value);
+}
+
+int16_t median_filter_out(median_filter_t filter) {
+    return reinterpret_cast<MedianFilter*>(filter)->out();
+}

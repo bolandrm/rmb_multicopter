@@ -1,3 +1,5 @@
+#include "imu.h"
+#include "i2c_helpers.h"
 #include "mpu6050.h"
 
 static void mpu6050_write_reg(uint16_t addr, uint8_t data) {
