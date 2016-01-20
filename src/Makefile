@@ -26,3 +26,6 @@ burn:
 
 burnm:
 	make burn && sleep 1 && make monitor
+
+make check:
+	cppcheck --enable=all --inconclusive --quiet $(LOCAL_C_SRCS) $(LOCAL_CPP_SRCS)
