@@ -5,16 +5,19 @@
 #include "flight_controller.h"
 #include "serial_commands.h"
 #include "remote_control.h"
-#include <i2c_t3.h>
+#include "i2c_helpers.h"
 
 extern "C" {
+  #include "utils.h"
   #include "schedule.h"
   #include "imu.h"
 }
 
 void setup() {
+  support_printing_floats();
+
   serial2_begin(SERIAL_PORT_SPEED);
-  Wire.begin(I2C_MASTER, 0x00, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_400);
+  i2c_begin();
   imu_init();
   rc_init();
   fc_init();

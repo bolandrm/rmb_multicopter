@@ -3,6 +3,7 @@
 
 extern "C" {
 #include "imu.h"
+#include "utils.h"
 }
 
 #include "pids.h"
@@ -43,6 +44,8 @@ void debugger_indicate_emergency() {
 }
 
 void text_debug() {
+  serial_printf("\033[2J\033[1;1H");
+
   // Serial.print("\t pid_x_out: "); Serial.print(pid(PID_ANGLE_X)->output);
   // Serial.print("\t pid_x_p: "); Serial.print(pid(PID_ANGLE_X)->p_term);
   // Serial.print("\t pid_x_i: "); Serial.print(pid(PID_ANGLE_X)->i_term);
@@ -53,51 +56,46 @@ void text_debug() {
   // Serial.print("\t pid_y_i: "); Serial.print(pid(PID_ANGLE_Y)->i_term);
   // Serial.println();
 
-  Serial.print("pid_rate_kp: "); Serial.print(pid(PID_RATE_X)->kp);
-  Serial.print("\t pid_rate_ki: "); Serial.print(pid(PID_RATE_X)->ki);
-  Serial.print("\t pid_rate_kd: "); Serial.print(pid(PID_RATE_X)->kd);
-  Serial.print("\t pid_rate_yaw_kp: "); Serial.print(pid(PID_RATE_Z)->kp);
-  Serial.print("\t pid_angle_kp: "); Serial.print(pid(PID_ANGLE_X)->kp);
-  Serial.print("\t pid_angle_ki: "); Serial.print(pid(PID_ANGLE_X)->ki);
-  Serial.print("\t pid_angle_kd: "); Serial.print(pid(PID_ANGLE_X)->kd);
-  Serial.println();
+  serial_printf("pid_rate_kp: %8.3f", pid(PID_RATE_X)->kp);
+  serial_printf("\t pid_rate_ki: %8.3f", pid(PID_RATE_X)->ki);
+  serial_printf("\t pid_rate_kd: %8.3f", pid(PID_RATE_X)->kd);
+  serial_printf("\t pid_rate_yaw_kp: %8.3f", pid(PID_RATE_Z)->kp);
+  serial_printf("\t pid_angle_kp: %8.3f", pid(PID_ANGLE_X)->kp);
+  serial_printf("\t pid_angle_ki: %8.3f", pid(PID_ANGLE_X)->ki);
+  serial_printf("\t pid_angle_kd: %8.3f", pid(PID_ANGLE_X)->kd);
+  serial_printlnf("");
 
-  Serial.print("gyro_x: "); Serial.print(imu_rates().x);
-  Serial.print("\t pid_x_out: "); Serial.print(pid(PID_RATE_X)->output);
-  Serial.print("\t pid_x_p: "); Serial.print(pid(PID_RATE_X)->p_term);
-  Serial.print("\t pid_x_i: "); Serial.print(pid(PID_RATE_X)->i_term);
-  Serial.print("\t rc_x: "); Serial.print(rc_get(RC_ROLL));
-  Serial.print("\t angle_x: "); Serial.print(imu_angles().x);
-  Serial.println();
+  serial_printf("gyro_x: %8.3f", imu_rates().x);
+  serial_printf("\t pid_x_out: %8.3f", pid(PID_RATE_X)->output);
+  serial_printf("\t pid_x_p: %8.3f", pid(PID_RATE_X)->p_term);
+  serial_printf("\t pid_x_i: %8.3f", pid(PID_RATE_X)->i_term);
+  serial_printf("\t rc_x: %8.3f", rc_get(RC_ROLL));
+  serial_printf("\t angle_x: %8.3f", imu_angles().x);
+  serial_printlnf("");
 
-  Serial.print("gyro_y: "); Serial.print(imu_rates().y);
-  Serial.print("\t pid_y_out: "); Serial.print(pid(PID_RATE_Y)->output);
-  Serial.print("\t pid_y_p: "); Serial.print(pid(PID_RATE_Y)->p_term);
-  Serial.print("\t pid_y_i: "); Serial.print(pid(PID_RATE_Y)->i_term);
-  Serial.print("\t rc_y: "); Serial.print(rc_get(RC_PITCH));
-  Serial.print("\t angle_y: "); Serial.print(imu_angles().y);
-  Serial.println();
+  serial_printf("gyro_y: %8.3f", imu_rates().y);
+  serial_printf("\t pid_y_out: %8.3f", pid(PID_RATE_Y)->output);
+  serial_printf("\t pid_y_p: %8.3f", pid(PID_RATE_Y)->p_term);
+  serial_printf("\t pid_y_i: %8.3f", pid(PID_RATE_Y)->i_term);
+  serial_printf("\t rc_y: %8.3f", rc_get(RC_PITCH));
+  serial_printf("\t angle_y: %8.3f", imu_angles().y);
+  serial_printlnf("");
 
-  Serial.print("gyro_z: "); Serial.print(imu_rates().z);
-  Serial.print("\t pid_z_out: "); Serial.print(pid(PID_RATE_Z)->output);
-  Serial.print("\t pid_z_p: "); Serial.print(pid(PID_RATE_Z)->p_term);
-  Serial.print("\t pid_z_i: "); Serial.print(pid(PID_RATE_Z)->i_term);
-  Serial.print("\t rc_z: "); Serial.print(rc_get(RC_YAW));
-  Serial.println();
+  serial_printf("gyro_z: %8.3f", imu_rates().z);
+  serial_printf("\t pid_z_out: %8.3f", pid(PID_RATE_Z)->output);
+  serial_printf("\t pid_z_p: %8.3f", pid(PID_RATE_Z)->p_term);
+  serial_printf("\t pid_z_i: %8.3f", pid(PID_RATE_Z)->i_term);
+  serial_printf("\t rc_z: %8.3f", rc_get(RC_YAW));
+  serial_printlnf("");
 
-  Serial.print("rc_throttle: "); Serial.print(rc_get(RC_THROTTLE));
-  Serial.print("\t m1: "); Serial.print(motor_level(M1));
-  Serial.print("\t m2: "); Serial.print(motor_level(M2));
-  Serial.print("\t m3: "); Serial.print(motor_level(M3));
-  Serial.print("\t m4: "); Serial.print(motor_level(M4));
-  Serial.println();
+  serial_printf("rc_throttle: %8.3f", rc_get(RC_THROTTLE));
+  serial_printf("\t m1: %8.3f", motor_level(M1));
+  serial_printf("\t m2: %8.3f", motor_level(M2));
+  serial_printf("\t m3: %8.3f", motor_level(M3));
+  serial_printf("\t m4: %8.3f", motor_level(M4));
+  serial_printlnf("");
 
-  Serial.print("value process dt: "); Serial.print(imu_value_process_dt());
-  Serial.println();
-
-  Serial.println();
-
-  Serial2.println("hello wrld2");
+  serial_printlnf("value process dt: "); Serial.print(imu_value_process_dt());
 }
 
 void chart_debug() {

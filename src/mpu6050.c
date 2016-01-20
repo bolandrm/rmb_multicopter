@@ -1,6 +1,7 @@
 #include "imu.h"
 #include "i2c_helpers.h"
 #include "mpu6050.h"
+#include "utils.h"
 
 static void mpu6050_write_reg(uint16_t addr, uint8_t data) {
   i2c_update_register(MPU6050_I2C_ADDRESS, addr, data);
@@ -17,7 +18,7 @@ static uint16_t mpu6050_read_word(uint16_t addr) {
   return i2c_read_word(MPU6050_I2C_ADDRESS);
 }
 
-static bool mpu6050_test_connection() {
+static int mpu6050_test_connection() {
   return mpu6050_read_byte(MPUREG_WHOAMI) == 0x68;
 }
 
@@ -46,7 +47,7 @@ void calibrate_gyro() {
   axis_float_t gyro_sums;
 
   delay(5000);
-  Serial.println("calibrating gyro");
+  serial_printlnf("calibrating gyro");
 
   for(int i = 0; i < 10000; i++) {
     mpu6050_read_gyro(&gyro_raws);
@@ -56,12 +57,9 @@ void calibrate_gyro() {
     delay(1);
   }
 
-  Serial.print("x avg: ");
-  Serial.println(gyro_sums.x / 10000);
-  Serial.print("y avg: ");
-  Serial.println(gyro_sums.y / 10000);
-  Serial.print("z avg: ");
-  Serial.println(gyro_sums.z / 10000);
+  serial_printlnf("x avg: %f", gyro_sums.x / 10000);
+  serial_printlnf("y avg: %f", gyro_sums.y / 10000);
+  serial_printlnf("z avg: %f", gyro_sums.z / 10000);
 }
 
 void calibrate_accel() {
@@ -69,7 +67,7 @@ void calibrate_accel() {
   axis_float_t accel_sums;
 
   delay(5000);
-  Serial.println("calibrating accel");
+  serial_printlnf("calibrating accel");
 
   for(int i = 0; i < 10000; i++) {
     mpu6050_read_accel(&accel_raws);
@@ -79,12 +77,9 @@ void calibrate_accel() {
     delay(1);
   }
 
-  Serial.print("x avg: ");
-  Serial.println(accel_sums.x / 10000);
-  Serial.print("y avg: ");
-  Serial.println(accel_sums.y / 10000);
-  Serial.print("z avg: ");
-  Serial.println(accel_sums.z / 10000);
+  serial_printlnf("x avg: %f", accel_sums.x / 10000);
+  serial_printlnf("y avg: %f", accel_sums.y / 10000);
+  serial_printlnf("z avg: %f", accel_sums.z / 10000);
 }
 
 void mpu6050_init() {
@@ -104,10 +99,10 @@ void mpu6050_init() {
   mpu6050_write_reg(MPUREG_ACCEL_CONFIG, 0x08);   // Accel scale +-4g
 
   if (mpu6050_test_connection()) {
-    Serial.println("Connected to MPU6050!");
+    serial_printlnf("Connected to MPU6050!");
   } else {
     for(;;) {
-      Serial.println("Unable to connect to MPU6050.");
+      serial_printlnf("Unable to connect to MPU6050.");
       delay(1000);
     }
   }

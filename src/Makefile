@@ -14,6 +14,8 @@ NO_CORE_MAIN_CPP = true
 # LOCAL_CPP_SRCS = $(wildcard *.cpp) $(wildcard ./hardware/*.cpp)
 # CPPFLAGS = -I./hardware -I.
 
+CFLAGS += -std=c99
+
 include ~/hardware/Arduino-Makefile/Teensy.mk
 
 TEENSY_LOADER_CLI = ~/hardware/teensy_loader_cli/teensy_loader_cli
