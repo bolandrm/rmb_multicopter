@@ -5,8 +5,8 @@
 #include "flight_controller.h"
 #include "serial_commands.h"
 #include "remote_control.h"
-#include "i2c_helpers.h"
 
+#include "i2c_helpers.h"
 extern "C" {
   #include "utils.h"
   #include "schedule.h"
@@ -15,7 +15,6 @@ extern "C" {
 
 void setup() {
   support_printing_floats();
-
   serial2_begin(SERIAL_PORT_SPEED);
   i2c_begin();
   imu_init();
@@ -49,9 +48,10 @@ void loop() {
 }
 
 int main(void) {
-	setup();
-	while (1) {
-		loop();
-		yield();
+  setup();
+
+  for(;;) {
+    loop();
+    yield();
   }
 }

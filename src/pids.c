@@ -1,4 +1,5 @@
 #include "pids.h"
+#include "utils.h"
 
 m_pid_t pids[NUM_PIDS];
 
@@ -48,7 +49,7 @@ void pid_compute(int8_t pid_number) {
   float error = pid->setpoint - pid->input;
 
   pid->integrator += pid->ki * error * dt;
-  pid->integrator = constrain(pid->integrator, -pid->i_max, pid->i_max);
+  pid->integrator = constrain_c(pid->integrator, -pid->i_max, pid->i_max);
 
   float d_error = (pid->input - pid->last_input) / dt;
 

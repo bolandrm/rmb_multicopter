@@ -1,6 +1,7 @@
 #ifndef PIDS_H
 #define PIDS_H
 
+#include "stdint.h"
 #include <Arduino.h>
 
 #define NUM_PIDS 5

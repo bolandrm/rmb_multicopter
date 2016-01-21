@@ -4,9 +4,9 @@
 extern "C" {
 #include "imu.h"
 #include "utils.h"
+#include "pids.h"
 }
 
-#include "pids.h"
 #include "flight_controller.h"
 #include "motors.h"
 #include "serial_commands.h"

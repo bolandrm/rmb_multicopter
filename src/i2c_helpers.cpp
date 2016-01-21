@@ -2,7 +2,7 @@
 #include "i2c_helpers.h"
 
 void i2c_begin() {
-  Wire.begin(I2C_MASTER, 0x00, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_400);
+  Wire.begin(I2C_MASTER, 0x00, I2C_PINS_18_19, I2C_PULLUP_INT, I2C_RATE_800);
 }
 
 void i2c_update_register(uint16_t device_address, uint8_t data_address, uint8_t data_value) {
