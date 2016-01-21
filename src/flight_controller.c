@@ -1,15 +1,12 @@
 #include <Arduino.h>
 #include "flight_controller.h"
-
-extern "C" {
 #include "imu.h"
 #include "pids.h"
 #include "remote_control.h"
 #include "motors.h"
-}
-
-#include "serial_commands.h"
 #include "debugger.h"
+#include "utils.h"
+#include <stdbool.h>
 
 #define ANGLE_SAFETY_STOP 0
 
@@ -98,7 +95,7 @@ void fc_safety_check() {
   if (imu_rates().x == last_gyro_value) {
     gyro_freeze_counter++;
     if (gyro_freeze_counter == 500) {
-      Serial.println("gyro freeze");
+      serial_printlnf("gyro freeze");
       fc_emergency_stop();
     }
   } else {
@@ -108,7 +105,7 @@ void fc_safety_check() {
 
   if (ANGLE_SAFETY_STOP && (imu_angles().x > 45.0 || imu_angles().x < -45.0
                              || imu_angles().y > 45.0 || imu_angles().y < -45.0)) {
-    Serial.println("angles too high");
+    serial_printlnf("angles too high");
     fc_emergency_stop();
   }
 }

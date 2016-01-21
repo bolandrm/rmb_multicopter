@@ -1,17 +1,14 @@
 #define SERIAL_PORT_SPEED 115200
 
 #include "WProgram.h"
-#include "debugger.h"
-#include "flight_controller.h"
-
 #include "i2c_helpers.h"
-extern "C" {
+#include "flight_controller.h"
+#include "debugger.h"
 #include "utils.h"
 #include "schedule.h"
 #include "imu.h"
 #include "remote_control.h"
 #include "serial_commands.h"
-}
 
 void setup() {
   support_printing_floats();

@@ -1,18 +1,14 @@
 #include "debugger.h"
 #include <Arduino.h>
-
-extern "C" {
 #include "imu.h"
 #include "utils.h"
 #include "pids.h"
 #include "remote_control.h"
 #include "motors.h"
-}
-
 #include "flight_controller.h"
 #include "serial_commands.h"
 
-int32_t debug_timer = millis();
+int32_t debug_timer = 0;
 
 void debugger_leds_init() {
   pinMode(14, OUTPUT);
@@ -45,16 +41,6 @@ void debugger_indicate_emergency() {
 
 void text_debug() {
   serial_printf("\033[2J\033[1;1H");
-
-  // Serial.print("\t pid_x_out: "); Serial.print(pid(PID_ANGLE_X)->output);
-  // Serial.print("\t pid_x_p: "); Serial.print(pid(PID_ANGLE_X)->p_term);
-  // Serial.print("\t pid_x_i: "); Serial.print(pid(PID_ANGLE_X)->i_term);
-  // Serial.println();
-
-  // Serial.print("\t pid_y_out: "); Serial.print(pid(PID_ANGLE_Y)->output);
-  // Serial.print("\t pid_y_p: "); Serial.print(pid(PID_ANGLE_Y)->p_term);
-  // Serial.print("\t pid_y_i: "); Serial.print(pid(PID_ANGLE_Y)->i_term);
-  // Serial.println();
 
   serial_printf("pid_rate_kp: %8.3f", pid(PID_RATE_X)->kp);
   serial_printf("\t pid_rate_ki: %8.3f", pid(PID_RATE_X)->ki);
@@ -95,79 +81,11 @@ void text_debug() {
   serial_printf("\t m4: %8.3f", motor_level(M4));
   serial_printlnf("");
 
-  serial_printlnf("value process dt: "); Serial.print(imu_value_process_dt());
-}
-
-void chart_debug() {
-  ////Serial.print(imu_gyro_angles().y);
-  //Serial.print(imu_gyro_angles().x);
-  //Serial.print(" ");
-  ////Serial.print(imu_accel_angles().y);
-  //Serial.print(imu_accel_angles().x);
-  //Serial.print(" ");
-  ////Serial.print(imu_angles().y);
-  //Serial.print(imu_angles().x);
-  //Serial.print(" ");
-  //Serial.print(1);
-  //Serial.print(" ");
-  //Serial.print(1);
-  //Serial.print(" ");
-  //Serial.print(1);
-  //Serial.println();
-
-  String output = "";
-  output += imu_gyro_angles().x;
-  output += " ";
-  output += imu_accel_angles().x;
-  output += " ";
-  output += imu_angles().x;
-  output += " ";
-  output += rc_get(RC_ROLL);
-  output += " ";
-  output += motor_level(M1);
-  output += " ";
-  output += motor_level(M2);
-  output += " ";
-  output += motor_level(M3);
-  output += " ";
-  output += motor_level(M4);
-  Serial.println(output);
-  Serial2.println(output);
-}
-
-void logger_debug() {
-//  Serial.print(imu_rates().x);
-//  Serial.print("\t"); Serial.print(imu_rates().y);
-//  Serial.print("\t"); Serial.print(imu_rates().z);
-//
-  String output = "";
-  output += imu_rates().x;
-  output += "\t";
-  output += imu_rates().y;
-  output += "\t";
-  output += imu_rates().z;
-  // output += imu_accel_raws().x;
-  // output += "\t";
-  // output += imu_accel_raws().y;
-  // output += "\t";
-  // output += imu_accel_raws().z;
-  // output += "\t";
-  // output += imu_accel_filtered().x;
-  // output += "\t";
-  // output += imu_accel_filtered().y;
-  // output += "\t";
-  // output += imu_accel_filtered().z;
-  Serial.println(output);
+  serial_printlnf("value process dt: %d", imu_value_process_dt());
 }
 
 void print_debug() {
-  if (CHART_DEBUG) {
-    chart_debug();
-  } else if (LOGGER_DEBUG) {
-    logger_debug();
-  } else {
-    text_debug();
-  }
+  text_debug();
 }
 
 void debugger_print() {
