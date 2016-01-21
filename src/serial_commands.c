@@ -11,10 +11,10 @@
 #include "serial_commands.h"
 #include "config.h"
 #include "pids.h"
-extern "C" {
 #include "imu.h"
-}
 #include "flight_controller.h"
+#include "utils.h"
+#include <usb_serial.h>
 
 void read_serial_data(uint8_t data);
 void process_serial_data();
@@ -28,8 +28,8 @@ static uint16_t data_received_length;
 static uint8_t data_buffer[200];
 
 void serial_commands_process() {
-  while (Serial.available()) {
-    uint8_t data = Serial.read();
+  while (usb_serial_available()) {
+    uint8_t data = usb_serial_getchar();
     read_serial_data(data);
   }
 }
@@ -39,23 +39,22 @@ void read_serial_data(uint8_t data) {
     case 0:
       if (data == PACKET_HEADER1) {
         state++;
-        Serial.println("got header1");
+        serial_printlnf("got header1");
       }
       break;
     case 1:
       if (data == PACKET_HEADER2) {
         state++;
-        Serial.println("got header2");
+        serial_printlnf("got header2");
       } else {
         state = 0;
-        Serial.println("header2 bad, resetting");
+        serial_printlnf("header2 bad, resetting");
       }
       break;
     case 2:
       code = data;
       incoming_crc = data;
-      Serial.print("code:");
-      Serial.println(data);
+      serial_printf("code: %d", data);
       state++;
       break;
     case 3:  // Data length LSB
@@ -66,8 +65,7 @@ void read_serial_data(uint8_t data) {
     case 4:  // Data length MSB
       data_expected_length |= (data << 8);
       incoming_crc ^= data;
-      Serial.print("data length:");
-      Serial.println(data_expected_length);
+      serial_printlnf("data length: %d", data_expected_length);
       state++;
       break;
     case 5:
@@ -77,20 +75,17 @@ void read_serial_data(uint8_t data) {
 
       if (data_received_length >= data_expected_length) {
         state++;
-        Serial.print("got data length:");
-        Serial.println(data_received_length);
+        serial_printlnf("got data length: %d", data_received_length);
       }
       break;
     case 6:
-      Serial.print("calculated crc: ");
-      Serial.println(incoming_crc);
+      serial_printlnf("calculated crc: %d", incoming_crc);
       if (incoming_crc == data) {
-        Serial.print("responding to code: ");
-        Serial.println(code);
+        serial_printlnf("responding to code: %d", code);
         // CRC is ok, process data
         process_serial_data();
       } else {
-        Serial.println("crc bad");
+        serial_printlnf("crc bad");
         // respond that CRC failed
         // CRC_FAILED(code, incoming_crc);
       }
@@ -104,7 +99,7 @@ void read_serial_data(uint8_t data) {
 }
 
 void output_uint8(uint8_t value) {
-  Serial.write(value);
+  usb_serial_putchar(value);
   outgoing_crc ^= value;
 }
 
@@ -122,8 +117,8 @@ void output_float32(float value) {
 }
 
 void packet_head(uint8_t code, uint16_t size) {
-  Serial.write(PACKET_HEADER1);
-  Serial.write(PACKET_HEADER2);
+  usb_serial_putchar(PACKET_HEADER1);
+  usb_serial_putchar(PACKET_HEADER2);
 
   outgoing_crc = 0;
 
@@ -132,7 +127,7 @@ void packet_head(uint8_t code, uint16_t size) {
 }
 
 void protocol_tail() {
-  Serial.write(outgoing_crc);
+  usb_serial_putchar(outgoing_crc);
 }
 
 void process_serial_data() {
@@ -162,22 +157,20 @@ void process_serial_data() {
 
         CONFIG_union config;
 
-        Serial.println("set config!");
+        serial_printlnf("set config!");
 
         for (uint16_t i = 0; i < sizeof(CONFIG_union); i++) {
             config.raw[i] = data_buffer[i];
         }
 
-        Serial.println(config.data.version);
-        Serial.println(config.data.pid_rate_z.kd);
-        Serial.println(config.data.pid_angle_z.i_max);
+        serial_printlnf("%d", config.data.version);
+        serial_printlnf("%8.2f", config.data.pid_rate_z.kd);
+        serial_printlnf("%8.2f", config.data.pid_angle_z.i_max);
 
       } else {
-        Serial.println("serial incorrect size");
-        Serial.print("config size: ");
-        Serial.print(sizeof(CONFIG_union));
-        Serial.print(" data size: ");
-        Serial.println(data_received_length);
+        serial_printlnf("serial incorrect size");
+        serial_printf("config size: %d", sizeof(CONFIG_union));
+        serial_printlnf(" data size: %d", data_received_length);
       }
       break;
   }

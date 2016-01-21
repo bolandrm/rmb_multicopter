@@ -6,10 +6,10 @@ extern "C" {
 #include "utils.h"
 #include "pids.h"
 #include "remote_control.h"
+#include "motors.h"
 }
 
 #include "flight_controller.h"
-#include "motors.h"
 #include "serial_commands.h"
 
 int32_t debug_timer = millis();

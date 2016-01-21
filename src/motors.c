@@ -1,5 +1,6 @@
 #include "motors.h"
 #include "flight_controller.h"
+#include "utils.h"
 
 // M3 FTM0_CH0 - PTC1 - 22  FTM0_C0V PORTC_PCR1
 // M4 FTM0_CH1 - PTC2 - 23  FTM0_C1V PORTC_PCR2
@@ -52,7 +53,7 @@ void adjust_for_bounds() {
 void motors_safety_check() {
   for(int i = 0; i < NUM_MOTORS; i++) {
     if (outputs[i] > INDOOR_SAFE_MOTOR_SPEED) {
-      Serial.println("motors too high");
+      serial_printlnf("motors too high");
       fc_emergency_stop();
     }
   }

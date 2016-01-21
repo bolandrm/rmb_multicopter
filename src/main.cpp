@@ -3,7 +3,6 @@
 #include "WProgram.h"
 #include "debugger.h"
 #include "flight_controller.h"
-#include "serial_commands.h"
 
 #include "i2c_helpers.h"
 extern "C" {
@@ -11,6 +10,7 @@ extern "C" {
 #include "schedule.h"
 #include "imu.h"
 #include "remote_control.h"
+#include "serial_commands.h"
 }
 
 void setup() {

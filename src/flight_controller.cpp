@@ -5,9 +5,9 @@ extern "C" {
 #include "imu.h"
 #include "pids.h"
 #include "remote_control.h"
+#include "motors.h"
 }
 
-#include "motors.h"
 #include "serial_commands.h"
 #include "debugger.h"
 
