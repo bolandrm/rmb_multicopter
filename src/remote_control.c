@@ -1,5 +1,6 @@
 #include "remote_control.h"
 #include "flight_controller.h"
+#include "utils.h"
 
 static int16_t rc_in_min[] = { RC_CH1_IN_MIN, RC_CH2_IN_MIN, RC_CH3_IN_MIN,
                                RC_CH4_IN_MIN, RC_CH5_IN_MIN, RC_CH6_IN_MIN };
@@ -44,12 +45,12 @@ static void process_channel_value(int channel) {
     if (value < 1070) {
       value = 0;
     } else if (value > 1070) {
-      value = constrain(value, rc_in_min[channel], rc_in_max[channel]);
-      value = map(value, rc_in_min[channel], rc_in_max[channel], rc_out_min[channel], rc_out_max[channel]);
+      value = constrain_c(value, rc_in_min[channel], rc_in_max[channel]);
+      value = map_c(value, rc_in_min[channel], rc_in_max[channel], rc_out_min[channel], rc_out_max[channel]);
     }
   } else {
-    value = constrain(value, rc_in_min[channel], rc_in_max[channel]);
-    value = map(value, rc_in_min[channel], rc_in_max[channel], rc_out_min[channel], rc_out_max[channel]);
+    value = constrain_c(value, rc_in_min[channel], rc_in_max[channel]);
+    value = map_c(value, rc_in_min[channel], rc_in_max[channel], rc_out_min[channel], rc_out_max[channel]);
 
     // workaround ... bug here
     if (channel == RC_CH4 && value == -100) {

@@ -4,11 +4,11 @@
 extern "C" {
 #include "imu.h"
 #include "pids.h"
+#include "remote_control.h"
 }
 
 #include "motors.h"
 #include "serial_commands.h"
-#include "remote_control.h"
 #include "debugger.h"
 
 #define ANGLE_SAFETY_STOP 0

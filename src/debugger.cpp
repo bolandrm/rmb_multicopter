@@ -5,12 +5,12 @@ extern "C" {
 #include "imu.h"
 #include "utils.h"
 #include "pids.h"
+#include "remote_control.h"
 }
 
 #include "flight_controller.h"
 #include "motors.h"
 #include "serial_commands.h"
-#include "remote_control.h"
 
 int32_t debug_timer = millis();
 
