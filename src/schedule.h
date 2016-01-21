@@ -1,5 +1,5 @@
-#ifndef schedule_h
-#define schedule_h
+#ifndef SCHEDULE_H
+#define SCHEDULE_H
 
 #include <Arduino.h>
 

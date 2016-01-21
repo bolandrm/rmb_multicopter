@@ -44,7 +44,7 @@ void mpu6050_read_accel(axis_int16_t *accel_raws) {
 
 void calibrate_gyro() {
   axis_int16_t gyro_raws;
-  axis_float_t gyro_sums;
+  axis_float_t gyro_sums = { 0.0, 0.0, 0.0 };
 
   delay(5000);
   serial_printlnf("calibrating gyro");
@@ -64,7 +64,7 @@ void calibrate_gyro() {
 
 void calibrate_accel() {
   axis_int16_t accel_raws;
-  axis_float_t accel_sums;
+  axis_float_t accel_sums = { 0.0, 0.0, 0.0 };
 
   delay(5000);
   serial_printlnf("calibrating accel");

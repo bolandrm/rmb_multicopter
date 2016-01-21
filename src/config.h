@@ -1,3 +1,6 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
 typedef struct __attribute__((packed)) {
   float kp;
   float ki;
@@ -22,3 +25,5 @@ typedef union {
   CONFIG_struct data;
   uint8_t raw[sizeof(CONFIG_struct)];
 } CONFIG_union;
+
+#endif

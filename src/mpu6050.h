@@ -65,14 +65,8 @@
 #define BIT_I2C_IF_DIS              0x10
 #define BIT_INT_STATUS_DATA         0x01
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 void mpu6050_init();
 void mpu6050_read_gyro(axis_int16_t *gyro_rates);
 void mpu6050_read_accel(axis_int16_t *accel_raws);
-#ifdef __cplusplus
-}
-#endif
 
 #endif

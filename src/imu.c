@@ -20,19 +20,21 @@ static median_filter_t accel_z_filter;
 static uint32_t value_process_timer = 0;
 static uint32_t value_process_dt;
 
-void imu_init() {
-  accel_x_filter = median_filter_new(11, 0);
-  accel_y_filter = median_filter_new(11, 0);
-  accel_z_filter = median_filter_new(11, 0);
-
-  mpu6050_init();
-}
-
 static void reset_gyro_sums() {
   gyro_sums.x = 0.0;
   gyro_sums.y = 0.0;
   gyro_sums.z = 0.0;
   gyro_sum_count = 0;
+}
+
+void imu_init() {
+  accel_x_filter = median_filter_new(11, 0);
+  accel_y_filter = median_filter_new(11, 0);
+  accel_z_filter = median_filter_new(11, 0);
+
+  reset_gyro_sums();
+
+  mpu6050_init();
 }
 
 static void read_gyro_raws() {

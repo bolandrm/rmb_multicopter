@@ -1,5 +1,5 @@
-#ifndef I2C_HELPERS
-#define I2C_HELPERS
+#ifndef I2C_HELPERS_H
+#define I2C_HELPERS_H
 
 #include <Arduino.h>
 

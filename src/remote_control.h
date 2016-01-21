@@ -1,5 +1,5 @@
-#ifndef remote_control_h
-#define remote_control_h
+#ifndef REMOTE_CONTROL_H
+#define REMOTE_CONTROL_H
 
 #include <Arduino.h>
 
