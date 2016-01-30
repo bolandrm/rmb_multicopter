@@ -1,5 +1,5 @@
 import struct
-from .serialreader import SerialReader
+import comms
 
 class SerialWriter():
     def __init__(self, serial_port):
@@ -19,7 +19,7 @@ class SerialWriter():
             crc = crc ^ b
 
         packet = bytes()
-        packet += struct.pack("< BB", SerialReader.PACKET_HEADER1, SerialReader.PACKET_HEADER2)
+        packet += struct.pack("< BB", comms.PACKET_HEADER1, comms.PACKET_HEADER2)
         packet += packet_body
         packet += struct.pack("< B", crc)
 

@@ -17,9 +17,7 @@ typedef struct __attribute__((packed)) {
 
   pid_config pid_rate_xy;
   pid_config pid_rate_z;
-
-  //pid_config pid_angle_xy;
-  //pid_config pid_angle_z;
+  pid_config pid_angle_xy;
 
 } CONFIG_struct;
 

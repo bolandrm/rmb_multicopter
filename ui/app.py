@@ -29,25 +29,22 @@ class InfoWindow(QtGui.QWidget):
         self.orientation_widget.setZRotation(0)
 
 class ConfigWindow(QtGui.QMainWindow):
-    def __init__(self, serial_manager):
+    def __init__(self):
         QtGui.QMainWindow.__init__(self)
         self.setGeometry(100, 100, 600, 700)
         self.setWindowTitle("Configuration")
 
-        self.central_widget = ConfigWidget(serial_manager)
+        self.central_widget = ConfigWidget()
         self.setCentralWidget(self.central_widget)
 
-def exit_handler(serial_manager):
-    serial_manager.stop()
+def exit_handler():
+    SerialManager().stop()
 
 def main():
     app = QtGui.QApplication(sys.argv)
+    app.aboutToQuit.connect(exit_handler)
 
-    serial_manager = SerialManager()
-
-    app.aboutToQuit.connect(lambda: exit_handler(serial_manager))
-
-    config_window = ConfigWindow(serial_manager)
+    config_window = ConfigWindow()
     config_window.show()
 
     #infoWindow = InfoWindow()

@@ -1,13 +1,8 @@
 from PySide.QtCore import QThread, Signal
 import struct
+import comms
 
 class SerialReader(QThread):
-    PACKET_HEADER1 = 0x02
-    PACKET_HEADER2 = 0xB5
-
-    REQUEST_CONFIG = 0x01
-    REQUEST_GYRO_ACC = 0x02
-
     is_finished = False
     config_received = Signal(object)
 
@@ -30,18 +25,18 @@ class SerialReader(QThread):
                 continue
 
             if (state == 0):
-                if (ord(data) == self.PACKET_HEADER1):
+                if (ord(data) == comms.PACKET_HEADER1):
                     state += 1
-                    print("got header1")
+                    self.log("got header1")
             elif (state == 1):
-                if (ord(data) == self.PACKET_HEADER2):
+                if (ord(data) == comms.PACKET_HEADER2):
                     state += 1
-                    print("got header2")
+                    self.log("got header2")
                 else:
                     state = 0
             elif (state == 2):
                 code = ord(data)
-                print("code: {}".format(code))
+                self.log("code: {}".format(code))
                 crc ^= ord(data)
                 state += 1
             elif (state == 3):
@@ -52,7 +47,7 @@ class SerialReader(QThread):
                 data_expected_length |= (ord(data) << 8)
                 crc ^= ord(data)
                 state += 1
-                print("data length: {}".format(data_expected_length))
+                self.log("data length: {}".format(data_expected_length))
             elif (state == 5):
                 data_buffer += data
                 crc ^= ord(data)
@@ -60,19 +55,22 @@ class SerialReader(QThread):
                 if (data_received_length >= data_expected_length):
                     state += 1
             elif (state == 6):
-                if (crc == ord(data)):
-                    print("crc correct!")
-                    print("expected: {}".format(data_received_length))
-                    print("recieved: {}".format(data_expected_length))
+                self.log("expected: {}".format(data_expected_length))
+                self.log("received: {}".format(data_received_length))
 
-                    if (code == self.REQUEST_CONFIG):
+                if (crc == ord(data)):
+                    self.log("crc correct!")
+
+                    if (code == comms.REQUEST_CONFIG):
                         self.unpack_config_data(data_buffer)
-                    if (code == self.REQUEST_GYRO_ACC):
+                    elif (code == comms.REQUEST_GYRO_ACC):
                         self.unpack_gyro_acc_data(data_buffer)
+                    else:
+                        self.log("unrecognized code: {}".format(code))
                 else:
-                    print("calc crc: {}".format(bytes([crc])))
-                    print("got crc: {}".format(data))
-                    print("crc bad!")
+                    self.log("calc crc: {}".format(bytes([crc])))
+                    self.log("got crc: {}".format(data))
+                    self.log("crc bad!")
                 state = 0
                 crc = 0
                 data_expected_length = 0
@@ -80,24 +78,16 @@ class SerialReader(QThread):
                 data_buffer = bytes()
 
     def unpack_gyro_acc_data(self, data_buffer):
-        print("unpacking gyro acc data")
+        self.log("unpacking gyro acc data")
         data = struct.unpack("< ffffff", data_buffer)
-        print("recieved gyro acc data: {}".format(data))
+        self.log("recieved gyro acc data: {}".format(data))
 
     def unpack_config_data(self, data_buffer):
-        print("unpacking config data")
-        data = struct.unpack("< Hffffffff", data_buffer)
-        self.config_received.emit(data)
-        print("recieved config data: {}".format(data))
+        self.log("recieved config data")
+        self.config_received.emit(data_buffer)
 
     def finished(self):
         self.is_finished = True
 
-#config = (
-#            1,
-#            1.01,
-#            1.02,
-#            1.03,
-#            1.04,
-#        )
-##send_packet(serial_port, 101, struct.pack("< h ffff ffff ffff ffff ffff ffff", *config))
+    def log(self, text):
+        print("[SerialReader] {}".format(text))
