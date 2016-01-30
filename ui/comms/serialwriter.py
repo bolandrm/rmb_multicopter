@@ -24,7 +24,6 @@ class SerialWriter():
         packet += struct.pack("< B", crc)
 
         self.serial_port.write(packet)
-        print(packet)
 
     #def request_gyro_acc(serial_port):
     #    while True:

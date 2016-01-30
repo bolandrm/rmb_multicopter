@@ -8,7 +8,7 @@ class ConfigWidget(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.config = ConfigSync()
+        self.config = ConfigSync(self)
 
         self.layout = QVBoxLayout()
 
@@ -27,13 +27,17 @@ class ConfigWidget(QWidget):
 
         loadButton = QPushButton("Load Config")
         loadButton.clicked.connect(self.config.load_config)
-        saveButton = QPushButton("Save Config")
-        saveButton.clicked.connect(self.config.save_config)
+        self.saveButton = QPushButton("Save Config")
+        self.saveButton.setEnabled(False)
+        self.saveButton.clicked.connect(self.config.save_config)
 
         self.buttonLayout = QHBoxLayout()
         self.buttonLayout.addWidget(loadButton)
-        self.buttonLayout.addWidget(saveButton)
+        self.buttonLayout.addWidget(self.saveButton)
         self.layout.addLayout(self.buttonLayout)
 
         self.layout.addStretch(1)
         self.setLayout(self.layout)
+
+    def config_loaded(self):
+        self.saveButton.setEnabled(True)

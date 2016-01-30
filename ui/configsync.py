@@ -25,8 +25,10 @@ CONFIG_MAP = [
 ]
 
 class ConfigSync(object):
-    def __init__(self):
+    def __init__(self, config_widget):
         comms.SerialManager().reader.config_received.connect(self.config_received)
+
+        self.config_widget = config_widget
 
         defaults = {}
 
@@ -60,6 +62,7 @@ class ConfigSync(object):
             new_config[k] = data[i]
 
         self.manager.set_many(new_config)
+        self.config_widget.config_loaded()
 
     def save_config(self):
         print("saving config")
