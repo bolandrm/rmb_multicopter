@@ -1,6 +1,6 @@
 from PySide import QtCore
 from PySide.QtGui import *
-from communication import SerialReader
+from comms import SerialReader
 from pyqtconfig import ConfigManager
 
 class ConfigWidget(QWidget):
@@ -145,4 +145,4 @@ class ConfigWidget(QWidget):
     def loadConfig(self):
         print("config loaded")
 
-        self.serialManager.writer.sendPacket(SerialReader.REQUEST_CONFIG)
+        self.serialManager.writer.send_packet(SerialReader.REQUEST_CONFIG)

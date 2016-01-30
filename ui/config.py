@@ -9,7 +9,7 @@ import numpy as np
 from PySide import QtCore, QtGui, QtOpenGL
 
 from widgets import *
-from communication import SerialManager
+from comms import SerialManager
 
 def update_imu_data(imu_data):
     (imu_rate_x, imu_rate_y, imu_rate_z,
@@ -46,17 +46,17 @@ class ConfigWindow(QtGui.QMainWindow):
         self.centralWidget = ConfigWidget(serialManager)
         self.setCentralWidget(self.centralWidget)
 
-def exitHandler(serialManager):
-    serialManager.stop()
+def exitHandler(serial_manager):
+    serial_manager.stop()
 
 def main():
     app = QtGui.QApplication(sys.argv)
 
-    serialManager = SerialManager()
+    serial_manager = SerialManager()
 
-    app.aboutToQuit.connect(lambda: exitHandler(serialManager))
+    app.aboutToQuit.connect(lambda: exitHandler(serial_manager))
 
-    configWindow = ConfigWindow(serialManager)
+    configWindow = ConfigWindow(serial_manager)
     configWindow.show()
 
     #infoWindow = InfoWindow()

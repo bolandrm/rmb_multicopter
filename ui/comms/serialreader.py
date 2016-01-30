@@ -8,11 +8,11 @@ class SerialReader(QThread):
     REQUEST_CONFIG = 0x01
     REQUEST_GYRO_ACC = 0x02
 
-    isFinished = False
-    configReceived = Signal(object)
+    is_finished = False
+    config_received = Signal(object)
 
-    def __init__(self, serialPort):
-        self.serialPort = serialPort
+    def __init__(self, serial_port):
+        self.serial_port = serial_port
         super(SerialReader, self).__init__()
 
     def run(self):
@@ -23,8 +23,8 @@ class SerialReader(QThread):
         data_received_length = 0
         data_buffer = bytes()
 
-        while self.isFinished == False:
-            data = self.serialPort.read()
+        while self.is_finished == False:
+            data = self.serial_port.read()
 
             if data == b'':
                 continue
@@ -66,9 +66,9 @@ class SerialReader(QThread):
                     print("recieved: {}".format(data_expected_length))
 
                     if (code == self.REQUEST_CONFIG):
-                        self.unpackConfigData(data_buffer)
+                        self.unpack_config_data(data_buffer)
                     if (code == self.REQUEST_GYRO_ACC):
-                        self.unpackGyroAccData(data_buffer)
+                        self.unpack_gyro_acc_data(data_buffer)
                 else:
                     print("calc crc: {}".format(bytes([crc])))
                     print("got crc: {}".format(data))
@@ -79,18 +79,18 @@ class SerialReader(QThread):
                 data_received_length = 0
                 data_buffer = bytes()
 
-    def unpackGyroAccData(self, data_buffer):
+    def unpack_gyro_acc_data(self, data_buffer):
         print("unpacking gyro acc data")
         data = struct.unpack("< ffffff", data_buffer)
         print("recieved gyro acc data: {}".format(data))
 
-    def unpackConfigData(self, data_buffer):
+    def unpack_config_data(self, data_buffer):
         print("unpacking config data")
         data = struct.unpack("< Hffffffff", data_buffer)
         print("recieved config data: {}".format(data))
 
     def finished(self):
-        self.isFinished = True
+        self.is_finished = True
 
 #config = (
 #            1,

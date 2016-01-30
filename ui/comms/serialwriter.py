@@ -1,11 +1,11 @@
 import struct
-from .serial_reader import SerialReader
+from .serialreader import SerialReader
 
 class SerialWriter():
-    def __init__(self, serialPort):
-        self.serialPort = serialPort
+    def __init__(self, serial_port):
+        self.serial_port = serial_port
 
-    def sendPacket(self, code, data=None):
+    def send_packet(self, code, data=None):
         if data == None: data = struct.pack("< x")
         size = len(data)
         print("size is {}".format(size))
@@ -23,10 +23,10 @@ class SerialWriter():
         packet += packet_body
         packet += struct.pack("< B", crc)
 
-        self.serialPort.write(packet)
+        self.serial_port.write(packet)
         print(packet)
 
-    #def request_gyro_acc(serialPort):
+    #def request_gyro_acc(serial_port):
     #    while True:
     #        time.sleep(0.1)
-    #        sendPacket(serialPort, 2)
+    #        send_packet(serial_port, 2)
