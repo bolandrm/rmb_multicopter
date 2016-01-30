@@ -117,3 +117,12 @@ class OrientationWidget(QtOpenGL.QGLWidget):
         GL.glVertex3d(x2, y2, -0.07)
         GL.glVertex3d(x2, y2, +0.07)
         GL.glVertex3d(x1, y1, +0.07)
+
+#def update_imu_data(imu_data):
+#    (imu_rate_x, imu_rate_y, imu_rate_z,
+#    imu_angles_x, imu_angles_y, imu_angles_z) = imu_data
+#
+#    window.glWidget.setXRotation(-imu_angles_y)
+#    window.glWidget.setYRotation(imu_angles_x)
+#
+#    print("imu data: {}", imu_data)

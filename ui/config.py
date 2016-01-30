@@ -11,42 +11,32 @@ from PySide import QtCore, QtGui, QtOpenGL
 from widgets import *
 from comms import SerialManager
 
-def update_imu_data(imu_data):
-    (imu_rate_x, imu_rate_y, imu_rate_z,
-    imu_angles_x, imu_angles_y, imu_angles_z) = imu_data
-
-    window.glWidget.setXRotation(-imu_angles_y)
-    window.glWidget.setYRotation(imu_angles_x)
-
-    print("imu data: {}", imu_data)
-
-
 class InfoWindow(QtGui.QWidget):
     def __init__(self):
         super().__init__()
         self.setGeometry(703, 100, 500, 600)
         self.setWindowTitle("Configuration")
-        self.orientationWidget = OrientationWidget()
+        self.orientation_widget = OrientationWidget()
         layout = QtGui.QHBoxLayout()
-        layout.addWidget(self.orientationWidget)
+        layout.addWidget(self.orientation_widget)
         self.setLayout(layout)
 
     def show(self):
         super().show()
-        self.orientationWidget.setXRotation(-10)
-        self.orientationWidget.setYRotation(30)
-        self.orientationWidget.setZRotation(0)
+        self.orientation_widget.setXRotation(-10)
+        self.orientation_widget.setYRotation(30)
+        self.orientation_widget.setZRotation(0)
 
 class ConfigWindow(QtGui.QMainWindow):
-    def __init__(self, serialManager):
+    def __init__(self, serial_manager):
         QtGui.QMainWindow.__init__(self)
         self.setGeometry(100, 100, 600, 700)
         self.setWindowTitle("Configuration")
 
-        self.centralWidget = ConfigWidget(serialManager)
-        self.setCentralWidget(self.centralWidget)
+        self.central_widget = ConfigWidget(serial_manager)
+        self.setCentralWidget(self.central_widget)
 
-def exitHandler(serial_manager):
+def exit_handler(serial_manager):
     serial_manager.stop()
 
 def main():
@@ -54,10 +44,10 @@ def main():
 
     serial_manager = SerialManager()
 
-    app.aboutToQuit.connect(lambda: exitHandler(serial_manager))
+    app.aboutToQuit.connect(lambda: exit_handler(serial_manager))
 
-    configWindow = ConfigWindow(serial_manager)
-    configWindow.show()
+    config_window = ConfigWindow(serial_manager)
+    config_window.show()
 
     #infoWindow = InfoWindow()
     #infoWindow.show()
