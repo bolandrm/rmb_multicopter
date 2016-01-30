@@ -1,33 +1,9 @@
-#!/usr/bin/env python3
-
-import sys
-import math
-import time
 from PySide import QtCore, QtGui, QtOpenGL
 from OpenGL import GL
 
-class Window(QtGui.QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-
-        self.glWidget = GLWidget()
-
-        mainLayout = QtGui.QHBoxLayout()
-        mainLayout.addWidget(self.glWidget)
-        self.setLayout(mainLayout)
-
-        self.setWindowTitle(self.tr("Hello GL"))
-
-    def show(self):
-        super().show()
-
-        self.glWidget.setXRotation(-10)
-        self.glWidget.setYRotation(30)
-        self.glWidget.setZRotation(0)
-
-class GLWidget(QtOpenGL.QGLWidget):
-    def __init__(self, parent=None):
-        QtOpenGL.QGLWidget.__init__(self, parent)
+class OrientationWidget(QtOpenGL.QGLWidget):
+    def __init__(self):
+        QtOpenGL.QGLWidget.__init__(self)
 
         print("widget init")
         self.object = 0
@@ -141,11 +117,3 @@ class GLWidget(QtOpenGL.QGLWidget):
         GL.glVertex3d(x2, y2, -0.07)
         GL.glVertex3d(x2, y2, +0.07)
         GL.glVertex3d(x1, y1, +0.07)
-
-
-if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)
-    window = Window()
-    window.show()
-
-    sys.exit(app.exec_())

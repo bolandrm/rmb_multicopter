@@ -14,6 +14,7 @@ void setup() {
   support_printing_floats();
   serial2_begin(SERIAL_PORT_SPEED);
   i2c_begin();
+  config_init();
   imu_init();
   rc_init();
   fc_init();

@@ -1,0 +1,6 @@
+numpy==1.9.3
+PyOpenGL==3.1.0
+PyOpenGL-accelerate==3.1.0
+pyqtgraph==0.9.10
+pyserial==2.7
+wheel==0.26.0

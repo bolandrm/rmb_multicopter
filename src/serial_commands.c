@@ -18,6 +18,7 @@
 
 void read_serial_data(uint8_t data);
 void process_serial_data();
+CONFIG_union current_config();
 
 static uint8_t state;
 static uint8_t code;
@@ -132,6 +133,16 @@ void protocol_tail() {
 
 void process_serial_data() {
   switch (code) {
+    case REQUEST_CONFIG:
+      packet_head(REQUEST_CONFIG, sizeof(CONFIG));
+
+      for (uint16_t i = 0; i < sizeof(CONFIG); i++) {
+        output_uint8(CONFIG.raw[i]);
+      }
+
+      protocol_tail();
+      break;
+
     case REQUEST_GYRO_ACC:
       packet_head(REQUEST_GYRO_ACC, 24);
 
@@ -153,30 +164,26 @@ void process_serial_data() {
       break;
 
     case SET_CONFIG:
-      if (data_received_length == sizeof(CONFIG_union)) {
-
-        CONFIG_union config;
+      if (data_received_length == sizeof(CONFIG)) {
 
         serial_printlnf("set config!");
 
-        for (uint16_t i = 0; i < sizeof(CONFIG_union); i++) {
-            config.raw[i] = data_buffer[i];
+        for (uint16_t i = 0; i < sizeof(CONFIG); i++) {
+            CONFIG.raw[i] = data_buffer[i];
         }
 
-        serial_printlnf("%d", config.data.version);
-        serial_printlnf("%8.2f", config.data.pid_rate_z.kd);
-        serial_printlnf("%8.2f", config.data.pid_angle_z.i_max);
+        //serial_printlnf("%d", config.data.version);
+        //serial_printlnf("%8.2f", config.data.pid_rate_z.kd);
+        //serial_printlnf("%8.2f", config.data.pid_angle_z.i_max);
 
       } else {
-        serial_printlnf("serial incorrect size");
-        serial_printf("config size: %d", sizeof(CONFIG_union));
-        serial_printlnf(" data size: %d", data_received_length);
+        //serial_printlnf("serial incorrect size");
+        //serial_printf("config size: %d", sizeof(CONFIG_union));
+        //serial_printlnf(" data size: %d", data_received_length);
       }
       break;
   }
 }
-
-
 
 void serial_update_pids(byte incomingByte) {
   double kp, ki, kd;

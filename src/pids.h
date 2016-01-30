@@ -17,6 +17,7 @@ typedef struct {
   float ki;
   float kd;
 
+  float p_max;
   float i_max;
   float d_max;
 
