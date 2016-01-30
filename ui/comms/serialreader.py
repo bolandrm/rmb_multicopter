@@ -87,6 +87,7 @@ class SerialReader(QThread):
     def unpack_config_data(self, data_buffer):
         print("unpacking config data")
         data = struct.unpack("< Hffffffff", data_buffer)
+        self.config_received.emit(data)
         print("recieved config data: {}".format(data))
 
     def finished(self):

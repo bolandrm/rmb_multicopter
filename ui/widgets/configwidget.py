@@ -22,6 +22,7 @@ class ConfigWidget(QWidget):
         self.config.set_defaults(defaults)
 
         self.serial_manager = serial_manager
+        self.serial_manager.reader.config_received.connect(self.config_received)
 
         self.layout = QGridLayout()
 
@@ -152,3 +153,6 @@ class ConfigWidget(QWidget):
         print("config loaded")
 
         self.serial_manager.writer.send_packet(SerialReader.REQUEST_CONFIG)
+
+    def config_received(self, data):
+        print("widget got config data {}".format(data))
