@@ -1,7 +1,7 @@
 from PySide import QtCore
 from PySide.QtGui import *
 from comms import SerialReader
-from pyqtconfig import ConfigManager
+from libs.pyqtconfig import ConfigManager
 
 class ConfigWidget(QWidget):
     def __init__(self, serialManager):
