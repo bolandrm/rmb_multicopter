@@ -1,2 +1,2 @@
-from .orientation_widget import OrientationWidget
-from .config_widget import ConfigWidget
+from .orientationwidget import OrientationWidget
+from .configwidget import ConfigWidget
