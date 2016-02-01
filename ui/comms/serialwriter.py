@@ -1,14 +1,28 @@
+from PySide.QtCore import QThread, Signal
 import struct
 import comms
+import time
+
+class DataRequestThread(QThread):
+    is_finished = False
+
+    def __init__(self):
+        super(DataRequestThread, self).__init__()
+        self.start()
+
+    def run(self):
+        while self.is_finished == False:
+            comms.SerialManager().writer.send_packet(comms.REQUEST_GYRO_ACC)
+            time.sleep(0.1)
 
 class SerialWriter():
     def __init__(self, serial_port):
         self.serial_port = serial_port
+        self.request_thread = DataRequestThread()
 
     def send_packet(self, code, data=None):
         if data == None: data = struct.pack("< x")
         size = len(data)
-        print("size is {}".format(size))
 
         packet_body = bytes()
         packet_body += struct.pack("< Bh", code, size)
@@ -25,7 +39,8 @@ class SerialWriter():
 
         self.serial_port.write(packet)
 
-    #def request_gyro_acc(serial_port):
-    #    while True:
-    #        time.sleep(0.1)
-    #        send_packet(serial_port, 2)
+    def finished(self):
+        self.request_thread.is_finished = True
+
+    def isRunning(self):
+        return self.request_thread.isRunning()

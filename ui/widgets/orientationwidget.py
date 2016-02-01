@@ -1,11 +1,14 @@
 from PySide import QtCore, QtGui, QtOpenGL
 from OpenGL import GL
 
+import comms
+
 class OrientationWidget(QtOpenGL.QGLWidget):
     def __init__(self):
         QtOpenGL.QGLWidget.__init__(self)
 
-        print("widget init")
+        comms.SerialManager().reader.on_gyro_acc_received.connect(self.update_data)
+
         self.object = 0
         self.xRot = 0
         self.yRot = 0
@@ -15,6 +18,11 @@ class OrientationWidget(QtOpenGL.QGLWidget):
         self.colorGray = QtGui.QColor.fromRgb(177, 177, 177)
         self.colorGreen = QtGui.QColor.fromRgb(0, 240, 0)
         self.colorWhite = QtGui.QColor.fromRgb(255, 255, 255)
+
+    def setupInitialRotation(self):
+        self.setXRotation(-10)
+        self.setYRotation(30)
+        self.setZRotation(0)
 
     def xRotation(self):
         return self.xRot
@@ -118,11 +126,9 @@ class OrientationWidget(QtOpenGL.QGLWidget):
         GL.glVertex3d(x2, y2, +0.07)
         GL.glVertex3d(x1, y1, +0.07)
 
-#def update_imu_data(imu_data):
-#    (imu_rate_x, imu_rate_y, imu_rate_z,
-#    imu_angles_x, imu_angles_y, imu_angles_z) = imu_data
-#
-#    window.glWidget.setXRotation(-imu_angles_y)
-#    window.glWidget.setYRotation(imu_angles_x)
-#
-#    print("imu data: {}", imu_data)
+    def update_data(self, imu_data):
+        (imu_rate_x, imu_rate_y, imu_rate_z,
+        imu_angles_x, imu_angles_y, imu_angles_z) = imu_data
+
+        self.setXRotation(-imu_angles_y)
+        self.setYRotation(imu_angles_x)

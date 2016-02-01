@@ -4,11 +4,14 @@ import comms
 
 class SerialReader(QThread):
     is_finished = False
-    config_received = Signal(object)
+    on_config_received = Signal(object)
+    on_gyro_acc_received = Signal(object)
+    on_success = Signal()
 
     def __init__(self, serial_port):
         self.serial_port = serial_port
         super(SerialReader, self).__init__()
+        self.start()
 
     def run(self):
         code = 0
@@ -65,6 +68,8 @@ class SerialReader(QThread):
                         self.unpack_config_data(data_buffer)
                     elif (code == comms.REQUEST_GYRO_ACC):
                         self.unpack_gyro_acc_data(data_buffer)
+                    elif (code == comms.INFO_SUCCESS):
+                        self.on_success.emit()
                     else:
                         self.log("unrecognized code: {}".format(code))
                 else:
@@ -81,13 +86,15 @@ class SerialReader(QThread):
         self.log("unpacking gyro acc data")
         data = struct.unpack("< ffffff", data_buffer)
         self.log("recieved gyro acc data: {}".format(data))
+        self.on_gyro_acc_received.emit(data)
 
     def unpack_config_data(self, data_buffer):
         self.log("recieved config data")
-        self.config_received.emit(data_buffer)
+        self.on_config_received.emit(data_buffer)
 
     def finished(self):
         self.is_finished = True
 
     def log(self, text):
+        return
         print("[SerialReader] {}".format(text))

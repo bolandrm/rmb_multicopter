@@ -1,32 +1,47 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-#import pyqtgraph as pg
 
 import sys
-import time
 import math
 import numpy as np
 from PySide import QtCore, QtGui, QtOpenGL
+import PySide
+import pyqtgraph as pg
 
 from widgets import *
 from comms import SerialManager
 
+pg.setConfigOption('background', 'w')
+pg.setConfigOption('foreground', 'k')
+
+#class InfoWindow(QtGui.QWidget):
+#    def __init__(self):
+#        super().__init__()
+#        self.setGeometry(703, 100, 500, 600)
+#        self.setWindowTitle("Configuration")
+#        layout = QtGui.QHBoxLayout()
+#
+#        self.orientation_widget = OrientationWidget()
+#        layout.addWidget(self.orientation_widget)
+#
+#        self.setLayout(layout)
+#
+#    def show(self):
+#        super().show()
+#        self.orientation_widget.setupInitialRotation()
+
 class InfoWindow(QtGui.QWidget):
     def __init__(self):
         super().__init__()
-        self.setGeometry(703, 100, 500, 600)
+        self.setGeometry(703, 100, 800, 400)
         self.setWindowTitle("Configuration")
-        self.orientation_widget = OrientationWidget()
         layout = QtGui.QHBoxLayout()
-        layout.addWidget(self.orientation_widget)
-        self.setLayout(layout)
 
-    def show(self):
-        super().show()
-        self.orientation_widget.setXRotation(-10)
-        self.orientation_widget.setYRotation(30)
-        self.orientation_widget.setZRotation(0)
+        self.chart_widget = ChartWidget()
+        layout.addWidget(self.chart_widget)
+
+        self.setLayout(layout)
 
 class ConfigWindow(QtGui.QMainWindow):
     def __init__(self):
@@ -36,6 +51,18 @@ class ConfigWindow(QtGui.QMainWindow):
 
         self.central_widget = ConfigWidget()
         self.setCentralWidget(self.central_widget)
+
+        SerialManager().reader.on_success.connect(self.success_reported)
+        SerialManager().reader.on_config_received.connect(self.config_loaded)
+
+        self.statusBar().setStyleSheet("border-top: 1px dashed #666")
+        self.statusBar().setSizeGripEnabled(False)
+
+    def success_reported(self):
+        self.statusBar().showMessage("config saved!", 2000)
+
+    def config_loaded(self):
+        self.statusBar().showMessage("loading config...", 1000)
 
 def exit_handler():
     SerialManager().stop()
@@ -47,8 +74,8 @@ def main():
     config_window = ConfigWindow()
     config_window.show()
 
-    #infoWindow = InfoWindow()
-    #infoWindow.show()
+    infoWindow = InfoWindow()
+    infoWindow.show()
 
     sys.exit(app.exec_())
 

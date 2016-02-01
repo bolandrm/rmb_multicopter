@@ -26,7 +26,7 @@ CONFIG_MAP = [
 
 class ConfigSync(object):
     def __init__(self, config_widget):
-        comms.SerialManager().reader.config_received.connect(self.config_received)
+        comms.SerialManager().reader.on_config_received.connect(self.config_received)
 
         self.config_widget = config_widget
 

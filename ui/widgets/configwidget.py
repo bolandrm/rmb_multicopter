@@ -25,9 +25,9 @@ class ConfigWidget(QWidget):
         self.angle_pid_xy_row = PidConfigRow("X/Y", key="angle_xy", config=self.config)
         self.layout.addWidget(self.angle_pid_xy_row)
 
-        loadButton = QPushButton("Load Config")
+        loadButton = QPushButton("Fetch Config")
         loadButton.clicked.connect(self.config.load_config)
-        self.saveButton = QPushButton("Save Config")
+        self.saveButton = QPushButton("Write Config")
         self.saveButton.setEnabled(False)
         self.saveButton.clicked.connect(self.config.save_config)
 
