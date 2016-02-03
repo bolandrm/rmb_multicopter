@@ -4,7 +4,7 @@ from PySide.QtGui import *
 from configsync import ConfigSync
 from .pidconfigrow import PidConfigRow
 
-class ConfigWidget(QWidget):
+class ConfigWidget(QFrame):
     def __init__(self):
         super().__init__()
 
@@ -38,6 +38,8 @@ class ConfigWidget(QWidget):
 
         self.layout.addStretch(1)
         self.setLayout(self.layout)
+
+        self.setFrameStyle(QFrame.StyledPanel)
 
     def config_loaded(self):
         self.saveButton.setEnabled(True)

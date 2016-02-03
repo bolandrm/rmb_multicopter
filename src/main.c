@@ -9,6 +9,7 @@
 #include "imu.h"
 #include "remote_control.h"
 #include "serial_commands.h"
+#include "config.h"
 
 void setup() {
   support_printing_floats();

@@ -25,7 +25,7 @@ class SerialWriter():
         size = len(data)
 
         packet_body = bytes()
-        packet_body += struct.pack("< Bh", code, size)
+        packet_body += struct.pack("< BH", code, size)
         packet_body += data
 
         crc = 0x00

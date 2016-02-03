@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
 import sys
 import math
 import numpy as np
@@ -31,38 +30,53 @@ pg.setConfigOption('foreground', 'k')
 #        super().show()
 #        self.orientation_widget.setupInitialRotation()
 
-class InfoWindow(QtGui.QWidget):
+class InfoWidget(QtGui.QFrame):
     def __init__(self):
         super().__init__()
-        self.setGeometry(703, 100, 800, 400)
-        self.setWindowTitle("Configuration")
         layout = QtGui.QHBoxLayout()
 
         self.chart_widget = ChartWidget()
         layout.addWidget(self.chart_widget)
 
+        self.setFrameStyle(QtGui.QFrame.StyledPanel)
+
         self.setLayout(layout)
+
+
+class FrameContainer(QtGui.QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.layout = QtGui.QHBoxLayout()
+
+        self.config_widget = ConfigWidget()
+        self.layout.addWidget(self.config_widget)
+
+        self.info_widget = InfoWidget()
+        self.layout.addWidget(self.info_widget)
+
+        self.setLayout(self.layout)
 
 class ConfigWindow(QtGui.QMainWindow):
     def __init__(self):
-        QtGui.QMainWindow.__init__(self)
-        self.setGeometry(100, 100, 600, 700)
+        super().__init__()
+        self.move(100, 100)
         self.setWindowTitle("Configuration")
 
-        self.central_widget = ConfigWidget()
+        self.central_widget = FrameContainer()
         self.setCentralWidget(self.central_widget)
 
         SerialManager().reader.on_success.connect(self.success_reported)
-        SerialManager().reader.on_config_received.connect(self.config_loaded)
+        #SerialManager().reader.on_config_received.connect(self.config_loaded)
 
         self.statusBar().setStyleSheet("border-top: 1px dashed #666")
         self.statusBar().setSizeGripEnabled(False)
 
     def success_reported(self):
-        self.statusBar().showMessage("config saved!", 2000)
+        self.statusBar().showMessage("success!", 2000)
 
-    def config_loaded(self):
-        self.statusBar().showMessage("loading config...", 1000)
+    #def config_loaded(self):
+    #    self.statusBar().showMessage("", 1000)
 
 def exit_handler():
     SerialManager().stop()
@@ -73,9 +87,6 @@ def main():
 
     config_window = ConfigWindow()
     config_window.show()
-
-    infoWindow = InfoWindow()
-    infoWindow.show()
 
     sys.exit(app.exec_())
 

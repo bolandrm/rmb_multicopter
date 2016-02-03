@@ -2,5 +2,6 @@ numpy==1.9.3
 PyOpenGL==3.1.0
 PyOpenGL-accelerate==3.1.0
 pyqtgraph==0.9.10
-pyserial==2.7
+pyserial==3.0.1
+PySide==1.2.4
 wheel==0.26.0

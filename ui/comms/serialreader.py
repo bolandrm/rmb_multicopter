@@ -22,10 +22,11 @@ class SerialReader(QThread):
         data_buffer = bytes()
 
         while self.is_finished == False:
+            #if !self.serial_port.is_open: continue
+
             data = self.serial_port.read()
 
-            if data == b'':
-                continue
+            if data == b'': continue
 
             if (state == 0):
                 if (ord(data) == comms.PACKET_HEADER1):
@@ -73,8 +74,8 @@ class SerialReader(QThread):
                     else:
                         self.log("unrecognized code: {}".format(code))
                 else:
-                    self.log("calc crc: {}".format(bytes([crc])))
-                    self.log("got crc: {}".format(data))
+                    self.log("calc crc: {}".format(crc))
+                    self.log("got crc: {}".format(ord(data)))
                     self.log("crc bad!")
                 state = 0
                 crc = 0
@@ -84,7 +85,7 @@ class SerialReader(QThread):
 
     def unpack_gyro_acc_data(self, data_buffer):
         self.log("unpacking gyro acc data")
-        data = struct.unpack("< ffffff", data_buffer)
+        data = struct.unpack("< fff fff fff hhh hhh fff fff", data_buffer)
         self.log("recieved gyro acc data: {}".format(data))
         self.on_gyro_acc_received.emit(data)
 
