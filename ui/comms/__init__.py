@@ -7,6 +7,7 @@ REQUEST_GYRO_ACC = 2
 SET_CONFIG = 101
 
 INFO_SUCCESS = 201
+INFO_FAILURE = 202
 
 from .serialmanager import SerialManager
 from .serialwriter import SerialWriter

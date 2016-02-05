@@ -9,6 +9,7 @@ class SerialReader(QThread):
     on_config_received = Signal(object)
     on_gyro_acc_received = Signal(object)
     on_success = Signal()
+    on_failure = Signal()
 
     def __init__(self, serial_port):
         self.serial_port = serial_port
@@ -79,8 +80,10 @@ class SerialReader(QThread):
                         self.unpack_gyro_acc_data(data_buffer)
                     elif (code == comms.INFO_SUCCESS):
                         self.on_success.emit()
+                    elif (code == comms.INFO_FAILURE):
+                        self.on_failure.emit()
                     else:
-                        self.log("unrecognized code: {}".format(code))
+                        self.log("unrecognized code: {}".format(code), True)
                 else:
                     self.log("calc crc: {}".format(crc))
                     self.log("got crc: {}".format(ord(data)))
@@ -104,6 +107,6 @@ class SerialReader(QThread):
     def finished(self):
         self.is_finished = True
 
-    def log(self, text):
-        return
+    def log(self, text, important=False):
+        if not important: return
         print("[SerialReader] {}".format(text))

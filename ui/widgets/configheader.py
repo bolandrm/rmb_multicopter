@@ -38,6 +38,8 @@ class ConfigHeader(QFrame):
         self.layout.addStretch(1)
 
         self.refresh_port_list()
+        if self.choose_default_port() == True:
+            self.connect_to_port()
 
         self.setFrameStyle(QFrame.StyledPanel)
         self.setLayout(self.layout)
@@ -61,7 +63,7 @@ class ConfigHeader(QFrame):
         for i in range(self.port_selector.count()):
             if "usbmodem" in self.port_selector.itemText(i):
                 self.port_selector.setCurrentIndex(i)
-                return
+                return True
 
     def refresh(self):
         if comms.SerialManager().serial_port.isOpen():

@@ -73,6 +73,7 @@ class ConfigWindow(QtGui.QMainWindow):
         self.setCentralWidget(self.central_widget)
 
         SerialManager().reader.on_success.connect(self.success_reported)
+        SerialManager().reader.on_failure.connect(self.failure_reported)
         SerialManager().reader.on_config_received.connect(self.config_loaded)
 
         self.statusBar().setStyleSheet("border-top: 1px dashed #666")
@@ -80,6 +81,9 @@ class ConfigWindow(QtGui.QMainWindow):
 
     def success_reported(self):
         self.statusBar().showMessage("success!", 2000)
+
+    def failure_reported(self):
+        self.statusBar().showMessage("error!", 2000)
 
     def config_loaded(self):
         self.statusBar().showMessage("config received", 1000)
