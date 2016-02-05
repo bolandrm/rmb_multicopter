@@ -29,5 +29,6 @@ typedef union {
 extern CONFIG_union CONFIG;
 
 void config_init();
+void config_set();
 
 #endif

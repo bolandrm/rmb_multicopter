@@ -204,9 +204,7 @@ void process_serial_data() {
           break;
         }
 
-        for (uint16_t i = 0; i < sizeof(CONFIG); i++) {
-            CONFIG.raw[i] = data_buffer[i];
-        }
+        config_set(data_buffer);
 
         send_success();
 

@@ -15,11 +15,9 @@
 typedef struct {
   float kp;
   float ki;
-  float kd;
 
   float p_max;
   float i_max;
-  float d_max;
 
   uint32_t last_compute_time;
 
@@ -31,7 +29,6 @@ typedef struct {
 
   float p_term;
   float i_term;
-  float d_term;
 } m_pid_t;
 
 void pids_init();

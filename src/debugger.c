@@ -44,11 +44,9 @@ void text_debug() {
 
   serial_printf("pid_rate_kp: %8.3f", pid(PID_RATE_X)->kp);
   serial_printf("\t pid_rate_ki: %8.3f", pid(PID_RATE_X)->ki);
-  serial_printf("\t pid_rate_kd: %8.3f", pid(PID_RATE_X)->kd);
   serial_printf("\t pid_rate_yaw_kp: %8.3f", pid(PID_RATE_Z)->kp);
   serial_printf("\t pid_angle_kp: %8.3f", pid(PID_ANGLE_X)->kp);
   serial_printf("\t pid_angle_ki: %8.3f", pid(PID_ANGLE_X)->ki);
-  serial_printf("\t pid_angle_kd: %8.3f", pid(PID_ANGLE_X)->kd);
   serial_printlnf("");
 
   serial_printf("gyro_x: %8.3f", imu_rates().x);
