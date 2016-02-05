@@ -3,10 +3,15 @@ from libs.pyqtconfig import ConfigManager
 from collections import OrderedDict
 import comms
 
-CONFIG_VERSION = 1
+CONFIG_VERSION = 2
 
 CONFIG_MAP = [
     ("version", "H"),
+
+    ("pid_rate_xy_kp", "f"),
+    ("pid_rate_xy_p_max", "f"),
+    ("pid_rate_xy_ki", "f"),
+    ("pid_rate_xy_i_max", "f"),
 
     ("pid_rate_xy_kp", "f"),
     ("pid_rate_xy_p_max", "f"),
@@ -17,6 +22,11 @@ CONFIG_MAP = [
     ("pid_rate_z_p_max", "f"),
     ("pid_rate_z_ki", "f"),
     ("pid_rate_z_i_max", "f"),
+
+    ("pid_angle_xy_kp", "f"),
+    ("pid_angle_xy_p_max", "f"),
+    ("pid_angle_xy_ki", "f"),
+    ("pid_angle_xy_i_max", "f"),
 
     ("pid_angle_xy_kp", "f"),
     ("pid_angle_xy_p_max", "f"),

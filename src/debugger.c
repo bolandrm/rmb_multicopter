@@ -42,12 +42,12 @@ void debugger_indicate_emergency() {
 void text_debug() {
   serial_printf("\033[2J\033[1;1H");
 
-  serial_printf("pid_rate_kp: %8.3f", pid(PID_RATE_X)->kp);
-  serial_printf("\t pid_rate_ki: %8.3f", pid(PID_RATE_X)->ki);
-  serial_printf("\t pid_rate_yaw_kp: %8.3f", pid(PID_RATE_Z)->kp);
-  serial_printf("\t pid_angle_kp: %8.3f", pid(PID_ANGLE_X)->kp);
-  serial_printf("\t pid_angle_ki: %8.3f", pid(PID_ANGLE_X)->ki);
-  serial_printlnf("");
+  // serial_printf("pid_rate_kp: %8.3f", CONFIG.data.pids[PID_RATE_X].kp);
+  // serial_printf("\t pid_rate_ki: %8.3f", pid(PID_RATE_X)->ki);
+  // serial_printf("\t pid_rate_yaw_kp: %8.3f", pid(PID_RATE_Z)->kp);
+  // serial_printf("\t pid_angle_kp: %8.3f", pid(PID_ANGLE_X)->kp);
+  // serial_printf("\t pid_angle_ki: %8.3f", pid(PID_ANGLE_X)->ki);
+  // serial_printlnf("");
 
   serial_printf("gyro_x: %8.3f", imu_rates().x);
   serial_printf("\t pid_x_out: %8.3f", pid(PID_RATE_X)->output);

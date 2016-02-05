@@ -2,8 +2,9 @@
 #define CONFIG_H
 
 #include <stdint.h>
+#include "pids.h"
 
-#define CONFIG_VERSION 1
+#define CONFIG_VERSION 2
 
 typedef struct __attribute__((packed)) {
   float kp;
@@ -15,9 +16,7 @@ typedef struct __attribute__((packed)) {
 typedef struct __attribute__((packed)) {
   uint16_t version;
 
-  pid_config pid_rate_xy;
-  pid_config pid_rate_z;
-  pid_config pid_angle_xy;
+  pid_config pids[NUM_PIDS];
 
 } CONFIG_struct;
 

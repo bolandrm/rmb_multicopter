@@ -13,12 +13,6 @@
 #define PID_ANGLE_Y 4
 
 typedef struct {
-  float kp;
-  float ki;
-
-  float p_max;
-  float i_max;
-
   uint32_t last_compute_time;
 
   float setpoint;
