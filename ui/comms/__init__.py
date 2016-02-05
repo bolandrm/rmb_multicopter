@@ -1,5 +1,3 @@
-SERIAL_PORT = "/dev/tty.usbmodem747851"
-
 PACKET_HEADER1 = 0x02
 PACKET_HEADER2 = 0xB5
 

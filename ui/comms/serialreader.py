@@ -1,6 +1,8 @@
 from PySide.QtCore import QThread, Signal
 import struct
 import comms
+import serial
+import time
 
 class SerialReader(QThread):
     is_finished = False
@@ -22,9 +24,15 @@ class SerialReader(QThread):
         data_buffer = bytes()
 
         while self.is_finished == False:
-            #if !self.serial_port.is_open: continue
-
-            data = self.serial_port.read()
+            if comms.SerialManager().port_is_open():
+                try:
+                    data = self.serial_port.read()
+                except serial.serialutil.SerialException:
+                    print("error - closing serial port")
+                    comms.SerialManager().close_port()
+            else:
+                time.sleep(0.2)
+                continue
 
             if data == b'': continue
 

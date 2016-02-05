@@ -10,6 +10,8 @@ class ConfigWidget(QFrame):
 
         self.config = ConfigSync(self)
 
+        self.setFixedWidth(550)
+
         self.layout = QVBoxLayout()
 
         self.layout.addWidget(QLabel("Rate PID"))

@@ -2,6 +2,7 @@ from PySide.QtCore import QThread, Signal
 import struct
 import comms
 import time
+import serial
 
 class DataRequestThread(QThread):
     is_finished = False
@@ -37,7 +38,12 @@ class SerialWriter():
         packet += packet_body
         packet += struct.pack("< B", crc)
 
-        self.serial_port.write(packet)
+        if comms.SerialManager().port_is_open():
+            try:
+                self.serial_port.write(packet)
+            except serial.serialutil.SerialException:
+                print("error - closing serial port")
+                comms.SerialManager().close_port()
 
     def finished(self):
         self.request_thread.is_finished = True

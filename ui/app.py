@@ -35,6 +35,8 @@ class InfoWidget(QtGui.QFrame):
         super().__init__()
         layout = QtGui.QHBoxLayout()
 
+        self.setMinimumWidth(800)
+
         self.chart_widget = ChartWidget()
         layout.addWidget(self.chart_widget)
 
@@ -42,18 +44,22 @@ class InfoWidget(QtGui.QFrame):
 
         self.setLayout(layout)
 
-
 class FrameContainer(QtGui.QWidget):
     def __init__(self):
         super().__init__()
 
-        self.layout = QtGui.QHBoxLayout()
+        self.sublayout = QtGui.QHBoxLayout()
 
         self.config_widget = ConfigWidget()
-        self.layout.addWidget(self.config_widget)
+        self.sublayout.addWidget(self.config_widget)
 
         self.info_widget = InfoWidget()
-        self.layout.addWidget(self.info_widget)
+        self.sublayout.addWidget(self.info_widget)
+
+        self.config_header = ConfigHeader()
+        self.layout = QtGui.QVBoxLayout()
+        self.layout.addWidget(self.config_header)
+        self.layout.addLayout(self.sublayout)
 
         self.setLayout(self.layout)
 
@@ -67,7 +73,7 @@ class ConfigWindow(QtGui.QMainWindow):
         self.setCentralWidget(self.central_widget)
 
         SerialManager().reader.on_success.connect(self.success_reported)
-        #SerialManager().reader.on_config_received.connect(self.config_loaded)
+        SerialManager().reader.on_config_received.connect(self.config_loaded)
 
         self.statusBar().setStyleSheet("border-top: 1px dashed #666")
         self.statusBar().setSizeGripEnabled(False)
@@ -75,15 +81,16 @@ class ConfigWindow(QtGui.QMainWindow):
     def success_reported(self):
         self.statusBar().showMessage("success!", 2000)
 
-    #def config_loaded(self):
-    #    self.statusBar().showMessage("", 1000)
+    def config_loaded(self):
+        self.statusBar().showMessage("config received", 1000)
 
-def exit_handler():
-    SerialManager().stop()
+    def closeEvent(self, event):
+        self.central_widget.config_header.stop()
+        SerialManager().stop()
+        event.accept()
 
 def main():
     app = QtGui.QApplication(sys.argv)
-    app.aboutToQuit.connect(exit_handler)
 
     config_window = ConfigWindow()
     config_window.show()
