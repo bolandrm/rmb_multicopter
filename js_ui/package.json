@@ -1,0 +1,22 @@
+{
+  "name": "rmb_multicopter_config",
+  "version": "0.0.1",
+  "description": "configurator",
+  "main": "main.js",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-preset-es2015": "^6.5.0",
+    "babel-preset-stage-1": "^6.5.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-concat": "^2.6.0",
+    "gulp-exec": "^2.1.2",
+    "tiny-lr": "^0.2.1",
+    "underscore": "^1.8.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ryan Boland",
+  "license": "MIT"
+}

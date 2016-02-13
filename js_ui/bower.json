@@ -1,0 +1,19 @@
+{
+  "name": "config",
+  "version": "0.0.1",
+  "homepage": "https://github.com/bolandrm/rmb_multicopter",
+  "authors": [
+    "Ryan Boland <bolandryanm@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "chrome-app-livereload": "bestander/chrome-app-livereload#~0.0.5"
+  }
+}

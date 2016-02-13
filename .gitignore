@@ -1,3 +1,7 @@
 .build*
 .DS_Store
 __pycache__
+bower_components
+node_modules
+dist
+ui_js/.gitignore
