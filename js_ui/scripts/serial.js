@@ -1,8 +1,9 @@
 cfg.Serial = class Serial {
   openPortId = -1;
 
-  listPorts(ports) {
-    console.log(ports);
+  log(text) {
+    return;
+    console.log(text);
   }
 
   connectToPort(port) {
@@ -31,13 +32,13 @@ cfg.Serial = class Serial {
       case 0:
         if (data === cfg.SerialCodes.PACKET_HEADER1) {
           this.state++;
-          console.log("got header 1");
+          this.log("got header 1");
         }
         break;
       case 1:
         if (data === cfg.SerialCodes.PACKET_HEADER2) {
           this.state++;
-          console.log("got header 2");
+          this.log("got header 2");
         } else {
           this.state = 0;
         }
@@ -46,7 +47,7 @@ cfg.Serial = class Serial {
         this.code = data;
         this.incomingCrc = data;
         this.state++;
-        console.log(`got code: ${data}`);
+        this.log(`got code: ${data}`);
         break;
       case 3:  // Data length LSB
         this.dataExpectedLength = data;
@@ -56,7 +57,7 @@ cfg.Serial = class Serial {
       case 4:  // Data length MSB
         this.dataExpectedLength |= (data << 8);
         this.incomingCrc ^= data;
-        console.log(`data length: ${this.dataExpectedLength}`);
+        this.log(`data length: ${this.dataExpectedLength}`);
         this.dataBuffer = new ArrayBuffer(this.dataExpectedLength);
         this.dataBufferView = new Uint8Array(this.dataBuffer);
         this.state++;
@@ -69,11 +70,28 @@ cfg.Serial = class Serial {
         }
         break;
       case 6:
-        console.log(`data length received: ${this.dataReceivedLength}`);
-        console.log(`incoming crc: ${data} -- calc'd crc: ${this.incomingCrc}`);
+        this.log(`data length received: ${this.dataReceivedLength}`);
+        this.log(`incoming crc: ${data} -- calc'd crc: ${this.incomingCrc}`);
 
         if (this.incomingCrc === data) {
-          console.log("success!");
+          this.log("crc match!");
+
+          switch(this.code) {
+            case cfg.SerialCodes.REQUEST_CONFIG:
+              console.log(cfg.Struct.parse(this.dataBuffer, cfg.StructLayouts.config));
+              break;
+            case cfg.SerialCodes.REQUEST_GYRO_ACC:
+              console.log(cfg.Struct.parse(this.dataBuffer, cfg.StructLayouts.gyroAcc));
+              break;
+            case cfg.SerialCodes.INFO_SUCCESS:
+              console.log("controller responded with success!");
+              break;
+            case cfg.SerialCodes.INFO_FAILURE:
+              console.log("controller responded with failure");
+              break;
+            default:
+              console.log(`unknown code ${this.code}`);
+          }
         } else {
           console.log("bad crc!");
         }
@@ -97,12 +115,11 @@ cfg.Serial = class Serial {
     });
   }
 
-  sendTest() {
-    const data = new ArrayBuffer(1);
+  sendPacket(code, data = null) {
+    if (!data) { data = new ArrayBuffer(1); }
     const dataView = new Uint8Array(data);
-    dataView[0] = 0x00;
 
-    const size = 6 + 1;
+    const size = 6 + data.byteLength;
     let crc = 0;
 
     let packetBuffer = new ArrayBuffer(size);
@@ -110,7 +127,7 @@ cfg.Serial = class Serial {
 
     packetView[0] = cfg.SerialCodes.PACKET_HEADER1;
     packetView[1] = cfg.SerialCodes.PACKET_HEADER2;
-    packetView[2] = cfg.SerialCodes.REQUEST_CONFIG;
+    packetView[2] = code;
     packetView[3] = cfg.Utils.lowByte(data.byteLength);
     packetView[4] = cfg.Utils.highByte(data.byteLength);
 
@@ -121,16 +138,16 @@ cfg.Serial = class Serial {
       crc ^= d;
     });
 
-    packetView[6] = crc;
+    packetView[size-1] = crc;
 
-    chrome.serial.send(this.openPortId, packetBuffer, function(sendInfo) {
-      console.log(packetView);
-      console.log(sendInfo);
+    chrome.serial.send(this.openPortId, packetBuffer, (sendInfo) => {
+      this.log(packetView);
+      this.log(sendInfo);
     });
   }
 
   autoConnect() {
-    chrome.serial.getDevices(this.listPorts);
+    chrome.serial.getDevices(this.log);
     this.connectToPort("/dev/cu.usbmodem747851");
     chrome.serial.onReceive.addListener(this.handleData);
   }

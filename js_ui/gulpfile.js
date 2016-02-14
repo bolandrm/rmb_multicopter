@@ -19,8 +19,8 @@ gulp.task('scripts', function() {
     './scripts/**/*.js'
   ])
     .pipe(plumber())
-    .pipe(concat('app.js'))
     .pipe(babel({ presets: ['es2015'], "plugins": ["transform-class-properties"] }))
+    .pipe(concat('app.js'))
     .pipe(gulp.dest('./dist/'));
 });
 
