@@ -23,6 +23,7 @@ class SerialReader(QThread):
         data_expected_length = 0
         data_received_length = 0
         data_buffer = bytes()
+        data = 0
 
         while self.is_finished == False:
             if comms.SerialManager().port_is_open():
@@ -35,7 +36,10 @@ class SerialReader(QThread):
                 time.sleep(0.2)
                 continue
 
-            if data == b'': continue
+            if data == b'':
+                # this is for when the serial port times out.
+                # does this have a chance of breaking things if the data is ever empty?
+                continue
 
             if (state == 0):
                 if (ord(data) == comms.PACKET_HEADER1):

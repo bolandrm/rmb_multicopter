@@ -3,6 +3,7 @@ var tinylr = require('tiny-lr');
 var exec = require('child_process').exec;
 var concat = require('gulp-concat');
 var babel = require('gulp-babel');
+var plumber = require('gulp-plumber');
 
 gulp.task('vendor-scripts', function() {
   return gulp.src([
@@ -14,10 +15,12 @@ gulp.task('vendor-scripts', function() {
 
 gulp.task('scripts', function() {
   return gulp.src([
+    './scripts/init.js',
     './scripts/**/*.js'
   ])
+    .pipe(plumber())
     .pipe(concat('app.js'))
-    .pipe(babel({ presets: ['stage-1', 'es2015'] }))
+    .pipe(babel({ presets: ['es2015'], "plugins": ["transform-class-properties"] }))
     .pipe(gulp.dest('./dist/'));
 });
 
@@ -25,15 +28,15 @@ gulp.task('dev', function () {
   var lr = tinylr();
   lr.listen(35729);
 
-  gulp.watch(['**.{css,html}', './.dist/*.js'], function (e) {
-    console.log("reloading");
+  // gulp.watch(['**.{css,html}', './.dist/*.js'], function (e) {
+  //   console.log("reloading");
 
-    lr.changed({
-      body: {
-        files: [e.path]
-      }
-    });
-  });
+  //   lr.changed({
+  //     body: {
+  //       files: [e.path]
+  //     }
+  //   });
+  // });
 
   gulp.watch(['./scripts/**/*.js'], function(e) {
     gulp.start('scripts');

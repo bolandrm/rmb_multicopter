@@ -12,3 +12,8 @@ chrome.app.runtime.onLaunched.addListener(function() {
     resizable: false
   });
 });
+
+// chrome.commands.onCommand.addListener(function(command) {
+//   console.log('Command:', command);
+// });
+// 

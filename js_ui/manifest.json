@@ -6,7 +6,8 @@
 
   "app": {
     "background": {
-      "scripts": [ "main.js" ]
+      "scripts": [ "main.js" ],
+      "persistent": true
     }
   },
 
@@ -14,6 +15,17 @@
     "serial",
     "storage",
     "fileSystem",
-    "fileSystem.write"
+    "fileSystem.write",
+    "commands"
   ]
+
+  // "commands": {
+  //   "toggle-feature-foo": {
+  //     "suggested_key": {
+  //       "default": "Ctrl+R",
+  //       "mac": "Command+R"
+  //     },
+  //     "description": "Toggle feature foo"
+  //   }
+  // }
 }
