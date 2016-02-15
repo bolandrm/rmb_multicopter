@@ -1,32 +1,55 @@
 var gulp = require('gulp');
+var sourcemaps = require('gulp-sourcemaps');
+var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
+var browserify = require('browserify');
+var watchify = require('watchify');
+var babelify = require('babelify');
 var tinylr = require('tiny-lr');
 var exec = require('child_process').exec;
 var concat = require('gulp-concat');
-var babel = require('gulp-babel');
-var plumber = require('gulp-plumber');
 
-gulp.task('vendor-scripts', function() {
-  return gulp.src([
-    'node_modules/underscore/underscore-min.js'
-  ])
-    .pipe(concat('vendor.js'))
-    .pipe(gulp.dest('./dist/'));
-});
+function compile(watch) {
+  var bundler = browserify('./scripts/init.js', { debug: true })
+    .transform(babelify, {
+      presets: ['es2015', 'react'],
+      plugins: ["transform-class-properties"]
+    })
 
-gulp.task('scripts', function() {
-  return gulp.src([
-    './scripts/init.js',
-    './scripts/**/*.js'
-  ])
-    .pipe(plumber())
-    .pipe(babel({ presets: ['es2015'], "plugins": ["transform-class-properties"] }))
-    .pipe(concat('app.js'))
-    .pipe(gulp.dest('./dist/'));
-});
+  if (watch) {
+    bundler = watchify(bundler);
+  }
 
-gulp.task('dev', function () {
-  var lr = tinylr();
-  lr.listen(35729);
+  function rebundle() {
+    bundler.bundle()
+      .on("error", function(err) {
+        console.log("Browserify error:", err);
+        this.emit('end');
+      })
+      .pipe(source('app.js'))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({ loadMaps: true }))
+      .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest('./dist'))
+  }
+
+  if (watch) {
+    bundler.on('update', function() {
+      console.log('-> bundling...');
+      rebundle();
+    });
+  }
+
+  rebundle();
+}
+
+function watch() {
+  return compile(true);
+};
+
+gulp.task('watch', function () {
+  // var lr = tinylr();
+  // lr.listen(35729);
 
   // gulp.watch(['**.{css,html}', './.dist/*.js'], function (e) {
   //   console.log("reloading");
@@ -38,15 +61,13 @@ gulp.task('dev', function () {
   //   });
   // });
 
-  gulp.watch(['./scripts/**/*.js'], function(e) {
-    gulp.start('scripts');
-  });
-
-  gulp.start('scripts');
-  gulp.start('vendor-scripts');
+  compile();
+  watch();
 
   gulp.start('launch');
 });
+
+gulp.task('build', function() { return compile(); });
 
 gulp.task('launch', function (cb) {
   var launchApp = '`/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --profile-directory=Default --app-id=alihedogaebgomfcknhkbiikjocomeae`';

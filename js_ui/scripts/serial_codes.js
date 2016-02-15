@@ -1,4 +1,4 @@
-cfg.SerialCodes = {
+export default {
   PACKET_HEADER1: 0x02,
   PACKET_HEADER2: 0xB5,
 

@@ -1,4 +1,4 @@
-cfg.StructLayouts = {
+export default {
   gyroAcc: [
     [ 
       "rates", [

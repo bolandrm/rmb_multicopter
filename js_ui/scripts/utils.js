@@ -1,4 +1,4 @@
-cfg.Utils = {
+const Utils = {
   highByte: function(num) {
     return num >> 8;
   },
@@ -7,3 +7,5 @@ cfg.Utils = {
     return 0x00FF & num;
   }
 };
+
+export default Utils;
