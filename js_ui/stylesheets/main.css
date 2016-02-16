@@ -1,23 +1,28 @@
+body {
+  margin: 0;
+}
+
 .toolbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
   height: 30px;
   background-color: #DDD;
   text-align: right;
   padding-top: 10px;
   padding-right: 20px;
+  margin-bottom: 10px;
 }
 
-body {
-  padding-top: 75px;
+.line-chart {
 }
 
-.canvasjs-chart-credit {
-  display: none !important;
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
 }
 
-.gauge-large {
-  float: left;
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
 }

@@ -1,32 +1,92 @@
+import _ from "underscore";
 import SerialReader from "./serial_reader";
 import SerialWriter from "./serial_writer";
 
 class SerialManager {
   openPortId = -1;
+  connectionListeners = [];
+  callbacks = {};
 
   constructor() {
-    this.connect();
-    this.reader = new SerialReader();
-    this.writer = new SerialWriter(this.sendData);
+    this.reader = new SerialReader(this.dataReceieved);
+    this.writer = new SerialWriter(this.rawSendData);
+    chrome.serial.onReceive.addListener(this.handleData);
+    setInterval(this.checkConnectionStatus, 500);
   }
 
-  sendData = (packetBuffer) => {
-    chrome.serial.send(this.openPortId, packetBuffer, (sendInfo) => {
-      this.log(sendInfo);
+  connect(port) {
+    if (this.connecting === true) { return; }
+    this.connecting = true;
+
+    chrome.serial.connect(port, { bitrate: 115200 }, (connectionInfo) => {
+      if (connectionInfo) {
+        console.log("connected");
+        console.log(connectionInfo);
+        this.openPortId = connectionInfo.connectionId;
+        this.connectionStatus("connected");
+      } else {
+        console.log("failed to connect");
+        this.connectionStatus("failed to connect");
+      }
+      this.connecting = false;
     });
   }
 
-  connectToPort(port) {
-    chrome.serial.connect(port, { bitrate: 115200 }, (connectionInfo) => {
-      const connectionId = connectionInfo.connectionId;
-
-      if (connectionId === -1) {
-        this.log("could not open");
+  disconnect() {
+    this.clearCallbacks();
+    chrome.serial.disconnect(this.openPortId, (success) => {
+      if (success) {
+        console.log("disconnected");
+        this.connectionStatus("disconnected");
+        this.openPortId = -1;
       } else {
-        this.openPortId = connectionId;
-        this.log("opened port");
+        console.log("failed to disconnect");
       }
     });
+  }
+
+  rawSendData = (packetBuffer) => {
+    if (this.openPortId === -1) {
+      console.log("no ports open");
+      return;
+    }
+
+    chrome.serial.send(this.openPortId, packetBuffer, (sendInfo) => {
+      // console.log(sendInfo);
+      if (sendInfo.error) { this.disconnect(); }
+    });
+  }
+
+  send = (code, data, callback) => {
+    if (callback) {
+      let callbackWrapper = this.callbacks[code];
+
+      if (!callbackWrapper) {
+        callbackWrapper = { handlers: [] }
+        callbackWrapper.timer = setTimeout(() => {
+          console.log(`request timed out: ${code}`);
+          this.disconnect();
+        }, 1000);
+        this.callbacks[code] = callbackWrapper;
+      }
+
+      callbackWrapper.handlers.push(callback);
+    }
+
+    this.writer.sendPacket(code, data);
+  }
+
+  dataReceieved = (code, data) => {
+    let callback = this.callbacks[code];
+
+    if (callback) {
+      _.each(callback.handlers, function(handler) {
+        handler(data);
+      });
+
+      clearTimeout(callback.timer);
+      this.callbacks = _.omit(this.callbacks, code);
+    }
   }
 
   handleData = (info) => {
@@ -37,15 +97,36 @@ class SerialManager {
     });
   }
 
-  connect() {
-    chrome.serial.getDevices((p) => { this.log(p) });
-    this.connectToPort("/dev/cu.usbmodem747851");
-    chrome.serial.onReceive.addListener(this.handleData);
+  getDevices(callback) {
+    chrome.serial.getDevices(function(ports) {
+      ports = _.map(ports, function(port) { return port.path; });
+
+      ports = _.filter(ports, function(port) {
+        return !port.match(/[Bb]luetooth/) && port.match(/\/dev\/tty/);
+      });
+
+      callback(ports);
+    });
   }
 
-  log(text) {
-    return;
-    console.log(text);
+  addConnectionStatusListener(listener) {
+    this.connectionListeners.push(listener);
+  }
+
+  connectionStatus(status) {
+    _.each(this.connectionListeners, function(listener) { listener(status); });
+  }
+
+  checkConnectionStatus = () => {
+    if (this.openPortId === -1) { return; }
+    this.rawSendData(new ArrayBuffer(1));
+  }
+
+  clearCallbacks() {
+    _.mapObject(this.callbacks, function(key, callback) {
+      clearTimeout(callback.timer);
+    });
+    this.callbacks = {};
   }
 }
 

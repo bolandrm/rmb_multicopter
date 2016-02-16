@@ -10,7 +10,7 @@ var exec = require('child_process').exec;
 var concat = require('gulp-concat');
 
 function compile(watch) {
-  var bundler = browserify('./scripts/init.js', { debug: true })
+  var bundler = browserify('./scripts/init.js', { debug: true, extensions: [".jsx"] })
     .transform(babelify, {
       presets: ['es2015', 'react'],
       plugins: ["transform-class-properties"]

@@ -6,7 +6,7 @@ class SerialWriter {
     this.send = send;
   }
 
-  sendPacket(code, data = null) {
+  sendPacket(code, data = null, callback = null) {
     if (!data) { data = new ArrayBuffer(1); }
     const dataView = new Uint8Array(data);
 

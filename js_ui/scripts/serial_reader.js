@@ -11,6 +11,10 @@ class SerialReader {
   dataBuffer = null;
   dataBufferView = null;
 
+  constructor(dataReceived) {
+    this.dataReceived = dataReceived;
+  }
+
   processCommand(data) {
     switch(this.state) {
       case 0:
@@ -60,12 +64,14 @@ class SerialReader {
         if (this.incomingCrc === data) {
           this.log("crc match!");
 
+          var response;
+
           switch(this.code) {
             case SerialCodes.REQUEST_CONFIG:
-              console.log(Struct.parse(this.dataBuffer, StructLayouts.config));
+              response = Struct.parse(this.dataBuffer, StructLayouts.config);
               break;
             case SerialCodes.REQUEST_GYRO_ACC:
-              console.log(Struct.parse(this.dataBuffer, StructLayouts.gyroAcc));
+              response = Struct.parse(this.dataBuffer, StructLayouts.gyroAcc);
               break;
             case SerialCodes.INFO_SUCCESS:
               console.log("controller responded with success!");
@@ -76,6 +82,9 @@ class SerialReader {
             default:
               console.log(`unknown code ${this.code}`);
           }
+
+          this.dataReceived(this.code, response);
+
         } else {
           console.log("bad crc!");
         }
@@ -98,25 +107,3 @@ class SerialReader {
 }
 
 export default SerialReader;
-
-//   $("#connect-button").click(function() {
-//     if (connectionId !== -1) {
-//       chrome.serial.disconnect(connectionId, function(){});
-//       connectionId = -1;
-//     } else {
-//       openSelectedPort();
-//     }
-//   });
-// 
-//     ports = _.filter(ports, function(port) {
-//       return !port.match(/[Bb]luetooth/) && port.match(/\/dev\/tty/);
-//     });
-// 
-//     portPicker.change(function() {
-//       if (connectionId != -1) {
-//         chrome.serial.disconnect(connectionId, openSelectedPort);
-//       } else {
-//         openSelectedPort();
-//       }
-//     });
-//   }

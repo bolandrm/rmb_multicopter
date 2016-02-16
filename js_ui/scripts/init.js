@@ -1,11 +1,18 @@
-import codes from "./serial_codes";
+import React from "react";
+import ReactDOM from 'react-dom';
+import d3 from "d3";
 import serial from "./serial_manager";
-
-var cfg = {};
+import SerialCodes from "./serial_codes";
+import App from "./components/app";
 
 window.onload = function() {
+  // for debugging
   window.serial = serial;
-  console.log(`working ${codes.SET_CONFIG}`);
-};
+  window.SerialCodes = SerialCodes;
+  window.d3 = d3;
 
-console.log("working22");
+  ReactDOM.render(
+    React.createElement(App),
+    document.getElementById('app')
+  );
+};
