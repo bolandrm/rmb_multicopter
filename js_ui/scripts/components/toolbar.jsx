@@ -27,12 +27,13 @@ class Toolbar extends React.Component {
   refreshDevices = (connectToDefault = false) => {
     serial.getDevices((devices) => {
       var device;
+      var autoConnectDevice;
 
       if (connectToDefault) {
-        device = _.detect(devices, function (device) {
-          console.log(device);
+        autoConnectDevice = _.detect(devices, function (device) {
           return device.match(/usbmodem/);
-        }) || devices[0];
+        });
+          device = autoConnectDevice || devices[0];
       } else {
         device = devices[0];
       }
@@ -40,7 +41,10 @@ class Toolbar extends React.Component {
       console.log(device);
 
       this.setState({ devices: devices, deviceSelected: device }, () => {
-        if (connectToDefault) { this.toggleConnection(); }
+        if (connectToDefault && autoConnectDevice) {
+          console.log("attempting autoconnect");
+          this.toggleConnection();
+        }
       });
     });
   }

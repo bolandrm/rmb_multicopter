@@ -33,6 +33,8 @@ class SerialManager {
   }
 
   disconnect() {
+    if (this.openPortId === -1) { return; }
+
     this.clearCallbacks();
     chrome.serial.disconnect(this.openPortId, (success) => {
       if (success) {
@@ -58,6 +60,8 @@ class SerialManager {
   }
 
   send = (code, data, callback) => {
+    if (this.openPortId === -1) { return; }
+
     if (callback) {
       let callbackWrapper = this.callbacks[code];
 
@@ -65,7 +69,6 @@ class SerialManager {
         callbackWrapper = { handlers: [] }
         callbackWrapper.timer = setTimeout(() => {
           console.log(`request timed out: ${code}`);
-          this.disconnect();
         }, 1000);
         this.callbacks[code] = callbackWrapper;
       }

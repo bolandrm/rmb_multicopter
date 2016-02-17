@@ -5,6 +5,12 @@ const Utils = {
 
   lowByte: function(num) {
     return 0x00FF & num;
+  },
+
+  deepFetch: function(obj, path) {
+    var current=obj; 
+    path.split('.').forEach(function(p){ current = current[p]; }); 
+    return current;
   }
 };
 
