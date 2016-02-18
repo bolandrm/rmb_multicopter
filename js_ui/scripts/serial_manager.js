@@ -10,25 +10,20 @@ class SerialManager {
   constructor() {
     this.reader = new SerialReader(this.dataReceieved);
     this.writer = new SerialWriter(this.rawSendData);
-    chrome.serial.onReceive.addListener(this.handleData);
-    setInterval(this.checkConnectionStatus, 500);
+    // chrome.serial.onReceive.addListener(this.handleData);
+    // setInterval(this.checkConnectionStatus, 500);
   }
 
-  connect(port) {
-    if (this.connecting === true) { return; }
-    this.connecting = true;
-
+  connect(port, callback) {
     chrome.serial.connect(port, { bitrate: 115200 }, (connectionInfo) => {
       if (connectionInfo) {
         console.log("connected");
         console.log(connectionInfo);
-        this.openPortId = connectionInfo.connectionId;
-        this.connectionStatus("connected");
+        callback(connectionInfo.connectionId)
       } else {
         console.log("failed to connect");
-        this.connectionStatus("failed to connect");
+        callback(false)
       }
-      this.connecting = false;
     });
   }
 
@@ -114,10 +109,6 @@ class SerialManager {
 
   addConnectionStatusListener(listener) {
     this.connectionListeners.push(listener);
-  }
-
-  connectionStatus(status) {
-    _.each(this.connectionListeners, function(listener) { listener(status); });
   }
 
   checkConnectionStatus = () => {
