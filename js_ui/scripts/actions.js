@@ -1,16 +1,26 @@
-import _ from "underscore";
+import _ from 'underscore';
 import { createAction } from 'redux-act'
-import store from './store'
 import serial from './serial_manager'
 
-export const busy = createAction()
-export const failedToConnect = createAction()
-export const connected = createAction()
-export const disconnected = createAction()
-export const deviceChanged = createAction()
+export const busy = createAction('busy')
+export const failedToConnect = createAction('failedToConnect')
+export const connected = createAction('connected')
+export const disconnected = createAction('disconnected')
+export const gotDevices = createAction('gotDevices')
+export const deviceChanged = createAction('deviceChanged')
+
+var _store = null
+
+const getState = () => {
+  return _store.getState()
+}
+
+export const setStore = function (store) {
+  _store = store
+}
 
 export const toggleConnection = function () {
-  const comms = store.getState().comms
+  const comms = getState().comms
   if (comms.busy) return
 
   if (comms.connected) {
@@ -22,6 +32,8 @@ export const toggleConnection = function () {
 
 export const refreshDevices = function (opts = {}) {
   serial.getDevices((devices) => {
+    gotDevices(devices)
+
     var device;
     var autoconnectDevice;
 
@@ -32,24 +44,20 @@ export const refreshDevices = function (opts = {}) {
       device = devices[0];
     }
 
-    console.log(device);
-
     deviceChanged(device)
 
-    if (opts.autoconnect && autoconnectDevice) {
-      connect(autoconnectDevice)
-    }
+    if (opts.autoconnect && autoconnectDevice) connect()
   })
 }
 
 const getAutoconnectDevice = function (devices) {
-  _.detect(devices, (device) => device.match(/usbmodem/))
+  return _.detect(devices, (device) => device.match(/usbmodem/))
 }
 
-const connect = function (port) {
+const connect = function () {
   busy()
 
-  serial.connect(port, function(portId) {
+  serial.connect(getState().comms.selectedDevice, function (portId) {
     if (portId) {
       connected(portId)
     } else {
@@ -60,5 +68,5 @@ const connect = function (port) {
 
 const disconnect = function () {
   busy()
-  serial.disconnect(disconnected)
+  serial.disconnect(getState().comms.openPortId, disconnected)
 }

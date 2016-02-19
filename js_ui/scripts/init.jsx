@@ -13,10 +13,12 @@ import store from "./store"
 
 //assignAll(actions, store)
 Object.keys(actions).reduce(function (assigns, action) {
-  if (!_.isFunction(actions[action].assignTo)) { return }
+  if (!_.isFunction(actions[action].assignTo)) return
   assigns[action] = actions[action].assignTo(store);
   return assigns;
 }, {});
+
+actions.setStore(store)
 
 window.onload = function() {
   // for debugging
@@ -24,6 +26,7 @@ window.onload = function() {
   window._SerialCodes = SerialCodes
   window._d3 = d3
   window._store = store
+  window._actions = actions
 
   ReactDOM.render(
     <Provider store={store}>

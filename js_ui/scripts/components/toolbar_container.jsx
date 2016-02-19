@@ -8,9 +8,7 @@ import Toolbar from "./toolbar"
 class ToolbarContainer extends React.Component {
   constructor(props) {
     super(props)
-    console.log(props)
-    console.log("hello")
-    refreshDevices({autoconnect: true})
+    this.props.refreshDevices({autoconnect: true})
   }
 
   render() {
@@ -30,7 +28,7 @@ export default connect(
   () => {
     return {
       refreshDevices: refreshDevices,
-      deviceChanged: deviceChanged,
+      deviceChanged: (e) => deviceChanged(e.target.value),
       toggleConnection: toggleConnection
     }
   }

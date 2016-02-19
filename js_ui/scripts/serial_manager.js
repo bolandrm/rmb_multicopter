@@ -27,18 +27,17 @@ class SerialManager {
     });
   }
 
-  disconnect() {
-    if (this.openPortId === -1) { return; }
-
+  disconnect(port, callback) {
     this.clearCallbacks();
-    chrome.serial.disconnect(this.openPortId, (success) => {
+
+    chrome.serial.disconnect(port, (success) => {
       if (success) {
         console.log("disconnected");
-        this.connectionStatus("disconnected");
-        this.openPortId = -1;
       } else {
         console.log("failed to disconnect");
       }
+
+      callback()
     });
   }
 
