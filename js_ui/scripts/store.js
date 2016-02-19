@@ -1,10 +1,23 @@
-import { createStore } from 'redux'
+import _ from 'underscore'
+import { createStore, applyMiddleware } from 'redux'
+import createSagaMiddleware from 'redux-saga'
+
 import reducer from './reducer'
+import rootSaga from './saga'
 
-const store = createStore(reducer)
+const sagaMiddleware = createSagaMiddleware(rootSaga)
 
-store.subscribe(() =>
-  console.log("store updated", store.getState())
+const store = createStore(
+  reducer,
+  applyMiddleware(sagaMiddleware)
 )
+
+var previousStoreState = {}
+store.subscribe(() => {
+  if (!_.isEqual(previousStoreState, store.getState())) {
+    previousStoreState = store.getState()
+    console.log('store updated', store.getState())
+  }
+})
 
 export default store

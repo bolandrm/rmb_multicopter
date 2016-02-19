@@ -1,21 +1,25 @@
-import _ from "underscore"
 import React from "react"
-import serial from "../serial_manager"
 
 class Toolbar extends React.Component {
+  deviceChanged = (e) => {
+    this.props.actions.deviceChanged(e.target.value)
+  }
+
   render() {
-    return(
+    const actions = this.props.actions
+
+    return (
       <div className="toolbar">
         <label>
           Port:
-          <select onChange={this.props.deviceChanged} value={this.props.selectedDevice}>
+          <select onChange={this.deviceChanged} value={this.props.selectedDevice}>
             {this.props.devices.map((device, i) => {
               return <option key={i}>{device}</option>
             })}
           </select>
         </label>
-        <button onClick={this.props.refreshDevices}>Refresh</button>
-        <button onClick={this.props.toggleConnection}>
+        <button onClick={actions.refreshDevices}>Refresh</button>
+        <button onClick={actions.toggleConnection}>
           {this.props.connected ? "Disconnect" : "Connect"}
         </button>
       </div>

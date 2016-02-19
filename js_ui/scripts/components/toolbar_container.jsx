@@ -1,22 +1,10 @@
-import _ from 'underscore'
 import React from 'react'
 import { connect } from 'react-redux'
-import { refreshDevices, deviceChanged, toggleConnection } from '../actions'
-import serial from '../serial_manager'
+import { bindActionCreators } from 'redux'
+import * as actions from '../actions'
 import Toolbar from "./toolbar"
 
-class ToolbarContainer extends React.Component {
-  constructor(props) {
-    super(props)
-    this.props.refreshDevices({autoconnect: true})
-  }
-
-  render() {
-    return <Toolbar {...this.props} />
-  }
-}
-
-export default connect(
+const ToolbarContainer = connect(
   (state) => {
     return {
       selectedDevice: state.comms.selectedDevice,
@@ -25,14 +13,12 @@ export default connect(
     }
   },
 
-  () => {
-    return {
-      refreshDevices: refreshDevices,
-      deviceChanged: (e) => deviceChanged(e.target.value),
-      toggleConnection: toggleConnection
-    }
+  (dispatch) => {
+    return { actions: bindActionCreators(actions, dispatch) }
   }
-)(ToolbarContainer)
+)(Toolbar)
+
+export default ToolbarContainer
 
   //const deviceChanged = (e) => {
   //  this.setState({selectedDevice: e.target.value});

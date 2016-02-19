@@ -1,37 +1,35 @@
 import { combineReducers } from 'redux'
-import { createReducer } from 'redux-act'
-import * as actions from './actions'
+import * as t from "./action_types"
 
-const comms = createReducer({
-  [actions.deviceChanged]: (state, device) => {
-    return { ...state, selectedDevice: device }
-  },
-
-  [actions.busy]: (state) => {
-    return { ...state, busy: true }
-  },
-
-  [actions.gotDevices]: (state, devices) => {
-    return { ...state, devices: devices }
-  },
-
-  [actions.failedToConnect]: (state) => {
-    return { ...state, busy: false, connected: false }
-  },
-
-  [actions.connected]: (state, portId) => {
-    return { ...state, busy: false, connected: true, openPortId: portId }
-  },
-
-  [actions.disconnected]: (state) => {
-    return { ...state, busy: false, connected: false, openPortId: null }
-  },
-},
-{
+const commsInitialState = {
   selectedDevice: null,
   busy: false,
   devices: [],
   connected: false
-});
+}
+
+const comms = function (state = commsInitialState, action) {
+  console.log("Action triggered", action.type, action.payload)
+
+  const payload = action.payload
+
+  switch (action.type) {
+    case t.DEVICE_CHANGED:
+      return { ...state, selectedDevice: payload }
+    case t.GOT_DEVICES:
+      return { ...state, devices: payload }
+    case t.CONNECT:
+    case t.DISCONNECT:
+      return { ...state, busy: true }
+    case t.CONNECTED:
+      return { ...state, busy: false, connected: true, openPortId: payload }
+    case t.FAILED_TO_CONNECT:
+      return { ...state, busy: false, connected: false }
+    case t.DISCONNECTED:
+      return { ...state, busy: false, connected: false, openPortId: null }
+    default:
+      return state
+  }
+}
 
 export default combineReducers({comms})

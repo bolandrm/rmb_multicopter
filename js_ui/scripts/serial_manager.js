@@ -14,31 +14,35 @@ class SerialManager {
     // setInterval(this.checkConnectionStatus, 500);
   }
 
-  connect(port, callback) {
-    chrome.serial.connect(port, { bitrate: 115200 }, (connectionInfo) => {
-      if (connectionInfo) {
-        console.log("connected");
-        console.log(connectionInfo);
-        callback(connectionInfo.connectionId)
-      } else {
-        console.log("failed to connect");
-        callback(false)
-      }
-    });
+  connect(port) {
+    return new Promise(function (resolve, reject) {
+      chrome.serial.connect(port, { bitrate: 115200 }, (connectionInfo) => {
+        if (connectionInfo) {
+          console.log("connected")
+          console.log(connectionInfo)
+          resolve(connectionInfo.connectionId)
+        } else {
+          console.log("failed to connect")
+          reject()
+        }
+      })
+    })
   }
 
-  disconnect(port, callback) {
-    this.clearCallbacks();
+  disconnect(port) {
+    return new Promise(function (resolve, reject) {
+      this.clearCallbacks();
 
-    chrome.serial.disconnect(port, (success) => {
-      if (success) {
-        console.log("disconnected");
-      } else {
-        console.log("failed to disconnect");
-      }
+      chrome.serial.disconnect(port, (success) => {
+        if (success) {
+          console.log("disconnected");
+        } else {
+          console.log("failed to disconnect");
+        }
 
-      callback()
-    });
+        resolve()
+      });
+    })
   }
 
   rawSendData = (packetBuffer) => {
@@ -94,16 +98,18 @@ class SerialManager {
     });
   }
 
-  getDevices(callback) {
-    chrome.serial.getDevices(function(ports) {
-      ports = _.map(ports, function(port) { return port.path; });
+  getDevices() {
+    return new Promise(function (resolve, reject) {
+      chrome.serial.getDevices(function(ports) {
+        ports = _.map(ports, function(port) { return port.path; });
 
-      ports = _.filter(ports, function(port) {
-        return !port.match(/[Bb]luetooth/) && port.match(/\/dev\/tty/);
+        ports = _.filter(ports, function(port) {
+          return !port.match(/[Bb]luetooth/) && port.match(/\/dev\/tty/);
+        });
+
+        resolve(ports);
       });
-
-      callback(ports);
-    });
+    })
   }
 
   addConnectionStatusListener(listener) {
