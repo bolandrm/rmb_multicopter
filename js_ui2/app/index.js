@@ -1,24 +1,33 @@
-import React from 'react';
-import { render } from 'react-dom';
-import { Provider } from 'react-redux';
-import { Router, hashHistory } from 'react-router';
-import routes from './routes';
-import configureStore from './store/configureStore';
+import 'babel-polyfill'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
+import App from './components/app'
+
+// for debugging
+import * as actions from './actions'
+import store from './store'
+import _ from 'lodash'
+import d3 from 'd3'
+import serial from './serial_manager'
+import SerialCodes from './serial_codes'
+
 import './app.css';
 
-const store = configureStore();
+// for debugging
+window.__serial = serial
+window.__SerialCodes = SerialCodes
+window.__d3 = d3
+window.__store = store
+window.__actions = actions
 
-import serialport from 'serialport'
-
-serialport.list(function(err, ports) {
-  console.log('ok', ports);
+process.on('unhandledRejection', (reason, p) => {
+  console.log("Unhandled Rejection at: Promise ", p, " reason: ", reason);
 });
 
-render(
+ReactDOM.render(
   <Provider store={store}>
-    <Router history={hashHistory}>
-      {routes}
-    </Router>
+    <App />
   </Provider>,
-  document.getElementById('root')
-);
+  document.getElementById('app')
+)

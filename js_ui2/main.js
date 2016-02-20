@@ -21,7 +21,10 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', () => {
-  mainWindow = new BrowserWindow({ width: 1024, height: 728 });
+  var windowWidth = 1500;
+  var windowHeight = 800;
+
+  mainWindow = new BrowserWindow({ width: windowWidth, height: windowHeight });
 
   if (process.env.HOT) {
     mainWindow.loadURL(`file://${__dirname}/app/hot-dev-app.html`);
@@ -39,13 +42,42 @@ app.on('ready', () => {
 
   if (process.platform === 'darwin') {
     template = [{
-      label: 'Electron',
+      label: 'Configurator',
       submenu: [{
         label: 'Quit',
         accelerator: 'Command+Q',
         click() {
           app.quit();
         }
+      }]
+    }, {
+      label: 'Edit',
+      submenu: [{
+        label: 'Undo',
+        accelerator: 'Command+Z',
+        selector: 'undo:'
+      }, {
+        label: 'Redo',
+        accelerator: 'Shift+Command+Z',
+        selector: 'redo:'
+      }, {
+        type: 'separator'
+      }, {
+        label: 'Cut',
+        accelerator: 'Command+X',
+        selector: 'cut:'
+      }, {
+        label: 'Copy',
+        accelerator: 'Command+C',
+        selector: 'copy:'
+      }, {
+        label: 'Paste',
+        accelerator: 'Command+V',
+        selector: 'paste:'
+      }, {
+        label: 'Select All',
+        accelerator: 'Command+A',
+        selector: 'selectAll:'
       }]
     }];
     menu = Menu.buildFromTemplate(template);
