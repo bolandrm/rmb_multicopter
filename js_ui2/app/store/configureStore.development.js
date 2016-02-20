@@ -1,20 +1,12 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import { persistState } from 'redux-devtools';
 import thunk from 'redux-thunk';
 import { hashHistory } from 'react-router';
 import { syncHistory } from 'react-router-redux';
 import rootReducer from '../reducers';
-import DevTools from '../containers/DevTools';
 
 const router = syncHistory(hashHistory);
 const enhancer = compose(
-  applyMiddleware(thunk, router),
-  DevTools.instrument(),
-  persistState(
-    window.location.href.match(
-      /[?&]debug_session=([^&]+)\b/
-    )
-  )
+  applyMiddleware(thunk, router)
 );
 
 export default function configureStore(initialState) {
