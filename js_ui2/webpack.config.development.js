@@ -1,4 +1,3 @@
-/* eslint strict: 0 */
 'use strict';
 
 const webpack = require('webpack');
@@ -24,12 +23,6 @@ config.module.loaders.push({
   loaders: [
     'style-loader',
     'css-loader?sourceMap'
-  ]
-}, {
-  test: /\.module\.css$/,
-  loaders: [
-    'style-loader',
-    'css-loader?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!'
   ]
 });
 
