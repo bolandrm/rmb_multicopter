@@ -19,6 +19,7 @@ export const gotDevices = createAction(t.GOT_DEVICES)
 export const connect = createAction(t.CONNECT)
 export const connected = createAction(t.CONNECTED)
 export const failedToConnect = createAction(t.FAILED_TO_CONNECT)
+export const disconnect = createAction(t.DISCONNECT)
 export const disconnected = createAction(t.DISCONNECTED)
 
 export const refreshDevices = createAction(t.REFRESH_DEVICES)

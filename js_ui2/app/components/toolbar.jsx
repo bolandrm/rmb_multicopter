@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 
 class Toolbar extends React.Component {
   deviceChanged = (e) => {
@@ -9,7 +9,7 @@ class Toolbar extends React.Component {
     const actions = this.props.actions
 
     return (
-      <div className="toolbar">
+      <div className='toolbar'>
         <label>
           Port:
           <select onChange={this.deviceChanged} value={this.props.selectedDevice}>
@@ -19,8 +19,8 @@ class Toolbar extends React.Component {
           </select>
         </label>
         <button onClick={actions.refreshDevices}>Refresh</button>
-        <button onClick={actions.toggleConnection}>
-          {this.props.connected ? "Disconnect" : "Connect"}
+        <button onClick={actions.toggleConnection} disabled={this.props.busy}>
+          {this.props.connected ? 'Disconnect' : 'Connect'}
         </button>
       </div>
     )

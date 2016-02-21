@@ -20,11 +20,11 @@ const comms = function (state = commsInitialState, action) {
     case t.DISCONNECT:
       return { ...state, busy: true }
     case t.CONNECTED:
-      return { ...state, busy: false, connected: true, openPortId: payload }
+      return { ...state, busy: false, connected: true }
     case t.FAILED_TO_CONNECT:
       return { ...state, busy: false, connected: false }
     case t.DISCONNECTED:
-      return { ...state, busy: false, connected: false, openPortId: null }
+      return { ...state, busy: false, connected: false }
     default:
       return state
   }

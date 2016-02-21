@@ -14,22 +14,38 @@ const findDefaultDevice = function (devices) {
 
 const autoconnect = function *(getComms) {
   yield put(actions.refreshDevices())
-  // yield take(t.DEVICE_CHANGED)
+  yield take(t.DEVICE_CHANGED)
 
-  // const selectedDevice = getComms().selectedDevice
-  // if (isDefaultDevice(selectedDevice)) yield put(actions.connect())
+  const selectedDevice = getComms().selectedDevice
+  if (isDefaultDevice(selectedDevice)) yield put(actions.connect())
 }
 
 const connect = function *(getComms) {
-  // yield take(t.CONNECT)
-  // const deviceId = yield call(serial.connect, getComms().selectedDevice)
-  // yield put(actions.connected(deviceId))
+  while (true) {
+    yield take(t.CONNECT)
+    yield call(serial.connect, getComms().selectedDevice)
+    yield put(actions.connected())
+  }
 }
 
 const disconnect = function *() {
-  // yield take(t.DISCONNECT)
-  // const deviceId = yield call(serial.disconnect)
-  // yield put(actions.disconnected())
+  while (true) {
+    yield take(t.DISCONNECT)
+    yield call(serial.disconnect)
+    yield put(actions.disconnected())
+  }
+}
+
+const toggleConnection = function *(getComms) {
+  while (true) {
+    yield take(t.TOGGLE_CONNECTION)
+
+    if (getComms().connected) {
+      yield put(actions.disconnect())
+    } else {
+      yield put(actions.connect())
+    }
+  }
 }
 
 const refreshDevices = function *() {
@@ -43,54 +59,10 @@ const refreshDevices = function *() {
   }
 }
 
-// export const refreshDevices = function (opts = {}) {
-//   serial.getDevices((devices) => {
-//     gotDevices(devices)
-// 
-//     var device;
-//     var autoconnectDevice;
-// 
-//     if (opts.autoconnect) {
-//       autoconnectDevice = getAutoconnectDevice(devices)
-//       device = autoconnectDevice || devices[0];
-//     } else {
-//       device = devices[0];
-//     }
-// 
-//     deviceChanged(device)
-// 
-//     if (opts.autoconnect && autoconnectDevice) connect()
-//   })
-// }
-
-// const connect = function () {
-//   busy()
-// 
-//   serial.connect(getState().comms.selectedDevice, function (portId) {
-//     if (portId) {
-//       connected(portId)
-//     } else {
-//       failedToConnect()
-//     }
-//   })
-// }
-
-
-//  function *autoconnect(getState) {
-//  
-//    const device = autoconnectgetState()
-//    if (
-//  
-//  
-//      const {fullName, requiredFields = []} = yield take(actions.LOAD_REPO_PAGE)
-//  
-//      yield fork(loadRepo, fullName, getRepo(fullName), requiredFields)
-//      yield fork(loadStargazers, fullName, getStargazersByRepo(fullName))
-//  }
-
 export default function* root(getState) {
   yield fork(refreshDevices)
   yield fork(autoconnect, () => getState().comms)
   yield fork(connect, () => getState().comms)
+  yield fork(toggleConnection, () => getState().comms)
   yield fork(disconnect)
 }

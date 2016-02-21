@@ -1,141 +1,117 @@
-import _ from "lodash";
-import SerialReader from "./serial_reader";
-import SerialWriter from "./serial_writer";
-import serialport from 'serialport'
+import _ from 'lodash'
+import SerialReader from './serial_reader'
+import SerialWriter from './serial_writer'
+import SerialPort from 'serialport'
+import store from './store'
+import * as actions from './actions'
 
 class SerialManager {
-  openPortId = -1;
-  connectionListeners = [];
-  callbacks = {};
+  currentSerialPort = null
 
   constructor() {
-    this.reader = new SerialReader(this.dataReceieved);
-    this.writer = new SerialWriter(this.rawSendData);
-    // chrome.serial.onReceive.addListener(this.handleData);
-    // setInterval(this.checkConnectionStatus, 500);
+    this.reader = new SerialReader(this._dataParsed)
+    this.writer = new SerialWriter(this._rawSendData)
   }
 
-  connect(port) {
+  getDevices() {
     return new Promise(function (resolve, reject) {
-      chrome.serial.connect(port, { bitrate: 115200 }, (connectionInfo) => {
-        if (connectionInfo) {
-          console.log("connected")
-          console.log(connectionInfo)
-          resolve(connectionInfo.connectionId)
-        } else {
-          console.log("failed to connect")
+      SerialPort.list(function(error, ports) {
+        if (error) {
           reject()
+        } else {
+          ports = _.map(ports, function(port) { return port.comName })
+
+          ports = _.filter(ports, function(port) {
+            return !port.match(/[Bb]luetooth/) && port.match(/\/dev\/cu/)
+          })
+
+          resolve(ports)
         }
       })
     })
   }
 
-  disconnect(port) {
-    return new Promise(function (resolve, reject) {
-      this.clearCallbacks();
+  connect = (port) => {
+    return new Promise((resolve, reject) => {
+      this.currentSerialPort = new SerialPort.SerialPort(
+        port,
+        {
+          baudRate: 115200,
+          disconnectedCallback: this._onClose
+        },
+        false
+      )
 
-      chrome.serial.disconnect(port, (success) => {
-        if (success) {
-          console.log("disconnected");
+      this.currentSerialPort.on('data', this._onDataReceived)
+      this.currentSerialPort.on('close', this._onClose)
+      this.currentSerialPort.on('error', this._onError)
+
+      this.currentSerialPort.open((error) => {
+        if (error) {
+          console.log('failed to connect')
+          this.currentSerialPort = null
+          reject()
         } else {
-          console.log("failed to disconnect");
+          console.log('connected')
+          resolve()
         }
-
-        resolve()
-      });
+      })
     })
   }
 
-  rawSendData = (packetBuffer) => {
-    if (this.openPortId === -1) {
-      console.log("no ports open");
-      return;
-    }
+  disconnect = () => {
+    return new Promise((resolve, reject) => {
+      if (!this.currentSerialPort) { resolve() }
 
-    chrome.serial.send(this.openPortId, packetBuffer, (sendInfo) => {
-      // console.log(sendInfo);
-      if (sendInfo.error) { this.disconnect(); }
-    });
+      this.currentSerialPort.close((error) => {
+        if (error) { console.log('failed to disconnect') }
+        this.currentSerialPort = null
+        resolve()
+      })
+    })
   }
 
   send = (code, data, callback) => {
-    if (this.openPortId === -1) { return; }
+    if (!this.currentSerialPort) return
 
-    if (callback) {
-      let callbackWrapper = this.callbacks[code];
-
-      if (!callbackWrapper) {
-        callbackWrapper = { handlers: [] }
-        callbackWrapper.timer = setTimeout(() => {
-          console.log(`request timed out: ${code}`);
-        }, 1000);
-        this.callbacks[code] = callbackWrapper;
-      }
-
-      callbackWrapper.handlers.push(callback);
-    }
-
-    this.writer.sendPacket(code, data);
+    this.writer.sendPacket(code, data)
   }
 
-  dataReceieved = (code, data) => {
-    let callback = this.callbacks[code];
-
-    if (callback) {
-      _.each(callback.handlers, function(handler) {
-        handler(data);
-      });
-
-      clearTimeout(callback.timer);
-      this.callbacks = _.omit(this.callbacks, code);
-    }
+  _onClose = () => {
+    console.log('closing or disconnected')
+    store.dispatch(actions.disconnected())
   }
 
-  handleData = (info) => {
-    const data = new Uint8Array(info.data);
+  _onDataReceived = (data) => {
+    var data = new Uint8Array(data)
 
     data.forEach((value) => {
-      this.reader.processCommand(value);
-    });
-  }
-
-  getDevices() {
-    return new Promise(function (resolve, reject) {
-      serialport.list(function(error, ports) {
-        if (error) {
-          reject()
-        } else {
-          ports = _.map(ports, function(port) { return port.comName; })
-
-          console.log(ports)
-
-          ports = _.filter(ports, function(port) {
-            return !port.match(/[Bb]luetooth/) && port.match(/\/dev\/cu/)
-          });
-
-          resolve(ports);
-        }
-      });
+      this.reader.processCommand(value)
     })
   }
 
-  addConnectionStatusListener(listener) {
-    this.connectionListeners.push(listener);
+  _onError = (e) => {
+    console.log('port error', e)
+    this.disconnect()
+    store.dispatch(actions.disconnected())
   }
 
-  checkConnectionStatus = () => {
-    if (this.openPortId === -1) { return; }
-    this.rawSendData(new ArrayBuffer(1));
+  _dataParsed = (code, data) => {
+    console.log('data parsed', code, data)
   }
 
-  clearCallbacks() {
-    _.mapObject(this.callbacks, function(key, callback) {
-      clearTimeout(callback.timer);
-    });
-    this.callbacks = {};
+  _rawSendData = (packetBuffer) => {
+    if (!this.currentSerialPort) {
+      console.log('no ports open')
+      return
+    }
+
+    this.currentSerialPort.write(packetBuffer, (error) => {
+      if (error) this._onError()
+    })
   }
 }
 
-const serial_manager = new SerialManager();
+const serial_manager = new SerialManager()
 
-export default serial_manager;
+export default serial_manager

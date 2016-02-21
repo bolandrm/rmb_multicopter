@@ -41,7 +41,7 @@ class TuningTab extends React.Component {
   }
 
   requestData = () => {
-    serial.send(SerialCodes.REQUEST_GYRO_ACC, null, this.appendData);
+    // serial.send(SerialCodes.REQUEST_GYRO_ACC, null, this.appendData);
   }
 
   createChart() {
