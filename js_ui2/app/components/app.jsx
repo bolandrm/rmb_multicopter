@@ -1,13 +1,13 @@
 import React from "react"
 import ToolbarContainer from "./toolbar_container"
-import TuningTab from "./tuning_tab"
+import TabContentContainer from "./tab_content_container"
 
 class App extends React.Component {
   render() {
     return(
       <div>
         <ToolbarContainer />
-        <TuningTab />
+        <TabContentContainer />
       </div>
     )
   }

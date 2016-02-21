@@ -22,7 +22,7 @@ app.on('window-all-closed', () => {
 
 app.on('ready', () => {
   var windowWidth = 1500;
-  var windowHeight = 800;
+  var windowHeight = 1000;
 
   mainWindow = new BrowserWindow({ width: windowWidth, height: windowHeight });
 

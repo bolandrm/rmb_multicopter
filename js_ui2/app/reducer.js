@@ -30,4 +30,19 @@ const comms = function (state = commsInitialState, action) {
   }
 }
 
-export default combineReducers({comms})
+const metaInitialState = {
+  currentTab: 'GRAPHS'
+}
+
+const meta = function (state = metaInitialState, action) {
+  const payload = action.payload
+
+  switch (action.type) {
+    case t.TAB_SELECTED:
+      return { ...state, currentTab: payload }
+    default:
+      return state
+  }
+}
+
+export default combineReducers({comms, meta})
