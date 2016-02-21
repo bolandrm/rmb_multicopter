@@ -1,0 +1,32 @@
+$web-font-path: "https://fonts.googleapis.com/css?family=Ubuntu:400,700" !default;
+@import url($web-font-path);
+
+@import "bootstrap_custom";
+
+button:focus {
+  outline: none !important;
+}
+
+.toolbar {
+  border-radius: 0;
+  text-align: right;
+  margin-bottom: 10px;
+
+  select, button { margin-left: 10px; }
+}
+
+.line-chart {
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}

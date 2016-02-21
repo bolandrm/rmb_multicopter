@@ -36,18 +36,6 @@ const disconnect = function *() {
   }
 }
 
-const toggleConnection = function *(getComms) {
-  while (true) {
-    yield take(t.TOGGLE_CONNECTION)
-
-    if (getComms().connected) {
-      yield put(actions.disconnect())
-    } else {
-      yield put(actions.connect())
-    }
-  }
-}
-
 const refreshDevices = function *() {
   while (true) {
     yield take(t.REFRESH_DEVICES)
@@ -63,6 +51,5 @@ export default function* root(getState) {
   yield fork(refreshDevices)
   yield fork(autoconnect, () => getState().comms)
   yield fork(connect, () => getState().comms)
-  yield fork(toggleConnection, () => getState().comms)
   yield fork(disconnect)
 }

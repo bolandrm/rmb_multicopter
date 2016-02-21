@@ -18,13 +18,20 @@ config.entry = [
 
 config.output.publicPath = 'http://localhost:3000/dist/';
 
-config.module.loaders.push({
-  test: /^((?!\.module).)*\.css$/,
-  loaders: [
-    'style-loader',
-    'css-loader?sourceMap'
-  ]
-});
+config.module.loaders.push(
+  {
+    test: /\.s?css$/,
+    loaders: [
+      'style-loader',
+      'css-loader?sourceMap',
+      'sass-loader'
+    ]
+  },
+  { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
+  { test: /\.(woff|woff2)$/, loader:'url?prefix=font/&limit=5000' },
+  { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/octet-stream' },
+  { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml' }
+)
 
 
 config.plugins.push(

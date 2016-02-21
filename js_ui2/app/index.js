@@ -12,7 +12,7 @@ import d3 from 'd3'
 import serial from './serial_manager'
 import SerialCodes from './serial_codes'
 
-import './app.css';
+import './styles/app.scss'
 
 // for debugging
 window.__serial = serial
@@ -22,8 +22,8 @@ window.__store = store
 window.__actions = actions
 
 process.on('unhandledRejection', (reason, p) => {
-  console.log("Unhandled Rejection at: Promise ", p, " reason: ", reason);
-});
+  console.log('Unhandled Rejection at: Promise ', p, ' reason: ', reason)
+})
 
 ReactDOM.render(
   <Provider store={store}>
