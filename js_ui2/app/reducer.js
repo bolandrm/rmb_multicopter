@@ -9,8 +9,6 @@ const commsInitialState = {
 }
 
 const comms = function (state = commsInitialState, action) {
-  console.log('Action triggered', action.type, action.payload)
-
   const payload = action.payload
 
   switch (action.type) {

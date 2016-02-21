@@ -38,10 +38,8 @@ const refreshDevices = function *() {
     const devices = yield call(serial.getDevices)
     yield put(actions.gotDevices(devices))
 
-      const selectedDevice = findDefaultDevice(devices) || devices[0]
-      yield put(actions.deviceChanged(selectedDevice))
-      console.log("here1")
-      asdsasdad
+    const selectedDevice = findDefaultDevice(devices) || devices[0]
+    yield put(actions.deviceChanged(selectedDevice))
   }
 }
 
