@@ -5,6 +5,8 @@ import createLogger from 'redux-logger'
 
 import reducer from './reducer'
 import rootSaga from './saga'
+import * as t from './action_types'
+import SerialCodes from './serial_codes'
 
 const filteredActions = [
   'EFFECT_TRIGGERED',
@@ -14,7 +16,12 @@ const filteredActions = [
 
 const logger = createLogger({
   predicate: (getState, action) => {
-    return filteredActions.indexOf(action.type) === -1
+    if (filteredActions.indexOf(action.type) > -1 ||
+        action.type === t.DATA_PARSED && action.payload.code === SerialCodes.REQUEST_GYRO_ACC ) {
+      return false
+    } else {
+      return true
+    }
   }
 })
 

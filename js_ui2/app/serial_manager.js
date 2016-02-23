@@ -71,9 +71,8 @@ class SerialManager {
     })
   }
 
-  send = (code, data, callback) => {
+  send = (code, data) => {
     if (!this.currentSerialPort) return
-
     this.writer.sendPacket(code, data)
   }
 
@@ -97,7 +96,7 @@ class SerialManager {
   }
 
   _dataParsed = (code, data) => {
-    console.log('data parsed', code, data)
+    store.dispatch(actions.dataParsed({code, data}))
   }
 
   _rawSendData = (packetBuffer) => {
