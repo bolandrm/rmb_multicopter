@@ -50,10 +50,11 @@ class SerialManager {
         if (error) {
           console.log('failed to connect')
           this.currentSerialPort = null
-          reject()
+          reject(false)
         } else {
           console.log('connected')
-          resolve()
+          this.currentSerialPort.resume()
+          resolve(true)
         }
       })
     })

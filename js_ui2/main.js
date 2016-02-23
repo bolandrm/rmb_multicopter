@@ -22,9 +22,13 @@ app.on('window-all-closed', () => {
 
 app.on('ready', () => {
   var windowWidth = 1500;
-  var windowHeight = 1000;
+  var windowHeight = 900;
 
-  mainWindow = new BrowserWindow({ width: windowWidth, height: windowHeight });
+  mainWindow = new BrowserWindow({
+    width: windowWidth,
+    height: windowHeight,
+    resizable: false
+  });
 
   if (process.env.HOT) {
     mainWindow.loadURL(`file://${__dirname}/app/hot-dev-app.html`);

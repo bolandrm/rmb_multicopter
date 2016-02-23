@@ -3,6 +3,9 @@ import * as t from './action_types'
 import SerialCodes from "./serial_codes";
 import Utils from "./utils";
 
+import commsReducer from "./reducers/commsReducer.js"
+import metaReducer from "./reducers/metaReducer.js"
+
 const tabReducers = {}
 
 const graphTypes = {
@@ -14,17 +17,15 @@ const initialGraphData = function(type) {
     return { key: key, samples: [], filtered: false }
   })
 
-  return { type, data }
+  return { type, data, sampleCount: 200 }
 }
 
 const graphsTabInitialState = {
   graph1: initialGraphData('angleXFusion')
 }
 
-const SAMPLE_COUNT = 200
-
 const newGraphData = function (state, payload) {
-  var shift = (state.data[0].samples.length >= SAMPLE_COUNT) ? 1 : 0
+  var shift = (state.data[0].samples.length >= state.sampleCount) ? 1 : 0
 
   const data = state.data.map((series, i) => {
     return {
@@ -72,48 +73,8 @@ tabReducers.graphs = function (state = graphsTabInitialState, action) {
 
 const tabs = combineReducers({graphs: tabReducers.graphs})
 
-const commsInitialState = {
-  selectedDevice: null,
-  busy: false,
-  devices: [],
-  connected: false,
-}
-
-const comms = function (state = commsInitialState, action) {
-  const payload = action.payload
-
-  switch (action.type) {
-    case t.DEVICE_CHANGED:
-      return { ...state, selectedDevice: payload }
-    case t.GOT_DEVICES:
-      return { ...state, devices: payload }
-    case t.CONNECT:
-    case t.DISCONNECT:
-      return { ...state, busy: true }
-    case t.CONNECTED:
-      return { ...state, busy: false, connected: true }
-    case t.FAILED_TO_CONNECT:
-      return { ...state, busy: false, connected: false }
-    case t.DISCONNECTED:
-      return { ...state, busy: false, connected: false }
-    default:
-      return state
-  }
-}
-
-const metaInitialState = {
-  currentTab: 'GRAPHS'
-}
-
-const meta = function (state = metaInitialState, action) {
-  const payload = action.payload
-
-  switch (action.type) {
-    case t.TAB_SELECTED:
-      return { ...state, currentTab: payload }
-    default:
-      return state
-  }
-}
-
-export default combineReducers({comms, meta, tabs})
+export default combineReducers({
+  comms: commsReducer,
+  meta: metaReducer,
+  tabs
+})

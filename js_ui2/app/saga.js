@@ -30,8 +30,13 @@ const autoconnect = function *(getComms) {
 const connect = function *(getComms) {
   while (true) {
     yield take(t.CONNECT)
-    yield call(serial.connect, getComms().selectedDevice)
-    yield put(actions.connected())
+    const connected = yield call(serial.connect, getComms().selectedDevice)
+
+    if (connected) {
+      yield put(actions.connected())
+    } else {
+      yield put(actions.failedToConnect())
+    }
   }
 }
 
