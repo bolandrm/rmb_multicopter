@@ -1,4 +1,4 @@
-import Utils from './utils'
+import { highByte, lowByte } from './utils'
 import SerialCodes from './serial_codes'
 
 class SerialWriter {
@@ -19,8 +19,8 @@ class SerialWriter {
     packetView[0] = SerialCodes.PACKET_HEADER1
     packetView[1] = SerialCodes.PACKET_HEADER2
     packetView[2] = code
-    packetView[3] = Utils.lowByte(data.byteLength)
-    packetView[4] = Utils.highByte(data.byteLength)
+    packetView[3] = lowByte(data.byteLength)
+    packetView[4] = highByte(data.byteLength)
 
     crc = packetView[2] ^ packetView[3] ^ packetView[4]
 
