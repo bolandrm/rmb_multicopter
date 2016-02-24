@@ -11,6 +11,18 @@ const Utils = {
     var current=obj; 
     path.split('.').forEach(function(p){ current = current[p]; }); 
     return current;
+  },
+
+  partialCombineReducers: function (mainReducer, reducers) {
+    const combinedReducers = combineReducers(reducers)
+
+    return function (state = {}, action) {
+      return Object.assign(
+        {},
+        mainReducer(state, action),
+        combinedReducers(state, action)
+      )
+    }
   }
 };
 

@@ -1,15 +1,10 @@
-import { combineReducers } from 'redux'
-import * as t from './action_types'
-import SerialCodes from "./serial_codes";
-import Utils from "./utils";
-
-import commsReducer from "./reducers/commsReducer.js"
-import metaReducer from "./reducers/metaReducer.js"
+import Utils from '../utils'
+import * as t from '../action_types'
 
 const tabReducers = {}
 
 const graphTypes = {
-  "angleXFusion": ["accelAngles.x", "gyroAngles.x", "angles.x"]
+  'angleXFusion': ['accelAngles.x', 'gyroAngles.x', 'angles.x']
 }
 
 const initialGraphData = function(type) {
@@ -71,10 +66,3 @@ tabReducers.graphs = function (state = graphsTabInitialState, action) {
   }
 }
 
-const tabs = combineReducers({graphs: tabReducers.graphs})
-
-export default combineReducers({
-  comms: commsReducer,
-  meta: metaReducer,
-  tabs
-})

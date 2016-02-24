@@ -3,7 +3,7 @@ import { createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import createLogger from 'redux-logger'
 
-import reducer from './reducer'
+import rootReducer from './reducers/root'
 import rootSaga from './saga'
 import * as t from './action_types'
 import SerialCodes from './serial_codes'
@@ -28,13 +28,13 @@ const logger = createLogger({
 const sagaMiddleware = createSagaMiddleware(rootSaga)
 
 const store = createStore(
-  reducer,
+  rootReducer,
   applyMiddleware(sagaMiddleware, logger) // logger should be last middleware
 )
 
 if (module.hot) {
-  module.hot.accept('./reducer', () =>
-    store.replaceReducer(require('./reducer'))
+  module.hot.accept('./reducers/root', () =>
+    store.replaceReducer(require('./reducers/root'))
   );
 }
 
