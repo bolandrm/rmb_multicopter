@@ -1,7 +1,7 @@
 import * as t from '../action_types'
 
 const metaInitialState = {
-  currentTab: 'GRAPHS'
+  currentTab: 'TUNING'
 }
 
 export default function (state = metaInitialState, action) {

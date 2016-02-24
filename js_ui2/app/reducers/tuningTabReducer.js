@@ -1,11 +1,11 @@
 import * as t from '../action_types'
 import { initialGraphData, lineGraphReducer } from './lineGraphReducer'
 
-const graphsTabInitialState = {
+const tuningTabInitialState = {
   graph1: initialGraphData('angleYFusion')
 }
 
-export default function (state = graphsTabInitialState, action) {
+export default function (state = tuningTabInitialState, action) {
   const payload = action.payload
 
   switch (action.type) {

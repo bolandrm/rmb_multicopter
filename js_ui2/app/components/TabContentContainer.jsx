@@ -9,7 +9,7 @@ class TabContentContainer extends React.Component {
   render() {
     return (
       <div>
-        {this.props.currentTab === 'GRAPHS' &&
+        {this.props.currentTab === 'TUNING' &&
           <TuningTab {...this.props.tuningTab} actions={this.props.actions} />
         }
 
@@ -29,7 +29,7 @@ export default connect(
     return {
       currentTab: state.meta.currentTab,
       tuningTab: {
-        graph1: tabs.graphs.graph1
+        graph1: tabs.tuning.graph1
       },
       pidsTab: {
       }

@@ -3,11 +3,11 @@ import * as t from '../action_types'
 
 import commsReducer from './commsReducer'
 import metaReducer from './metaReducer'
-import graphsTabReducer from "./graphsTabReducer"
+import tuningTabReducer from "./tuningTabReducer"
 import pidsTabReducer from "./pidsTabReducer"
 
 const tabsReducer = combineReducers({
-  graphs: graphsTabReducer,
+  tuning: tuningTabReducer,
   pids: pidsTabReducer
 })
 

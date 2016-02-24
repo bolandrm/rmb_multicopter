@@ -55,7 +55,7 @@ const periodicDataFetch = function *(getState) {
       continue
     }
 
-    if (getState().meta.currentTab === 'GRAPHS') {
+    if (getState().meta.currentTab === 'TUNING') {
       yield call(serial.send, SerialCodes.REQUEST_GYRO_ACC)
       yield call(delay, 50)
     } else {

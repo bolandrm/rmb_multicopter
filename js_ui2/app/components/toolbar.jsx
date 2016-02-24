@@ -10,7 +10,7 @@ class Toolbar extends React.Component {
   }
 
   tabData = [
-    { key: 'GRAPHS', text: 'Graphs' },
+    { key: 'TUNING', text: 'Tuning' },
     { key: 'PIDS', text: 'PIDs' },
     { key: 'RC', text: 'Remove Control' },
     { key: 'IMU', text: 'IMU' },

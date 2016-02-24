@@ -3,7 +3,7 @@ import { createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import createLogger from 'redux-logger'
 
-import rootReducer from './reducers/root'
+import rootReducer from './reducers/rootReducer'
 import rootSaga from './saga'
 import * as t from './action_types'
 import SerialCodes from './serial_codes'
@@ -33,8 +33,8 @@ const store = createStore(
 )
 
 if (module.hot) {
-  module.hot.accept('./reducers/root', () =>
-    store.replaceReducer(require('./reducers/root'))
+  module.hot.accept('./reducers/rootReducer', () =>
+    store.replaceReducer(require('./reducers/rootReducer'))
   );
 }
 
