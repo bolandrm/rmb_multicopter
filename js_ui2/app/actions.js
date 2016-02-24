@@ -26,3 +26,5 @@ export const toggleConnection = createAction(t.TOGGLE_CONNECTION)
 export const dataParsed = createAction(t.DATA_PARSED)
 
 export const graphFiltered = createAction(t.GRAPH_FILTERED)
+
+export const tabSelected = createAction(t.TAB_SELECTED)

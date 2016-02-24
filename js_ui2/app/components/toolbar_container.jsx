@@ -10,7 +10,8 @@ const ToolbarContainer = connect(
       selectedDevice: state.comms.selectedDevice,
       busy: state.comms.busy,
       connected: state.comms.connected,
-      devices: state.comms.devices
+      devices: state.comms.devices,
+      currentTab: state.meta.currentTab
     }
   },
 

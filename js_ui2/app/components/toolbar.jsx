@@ -5,17 +5,37 @@ class Toolbar extends React.Component {
     this.props.actions.deviceChanged(e.target.value)
   }
 
+  tabSelected = (tab) => {
+    this.props.actions.tabSelected(tab)
+  }
+
+  tabData = [
+    { key: 'GRAPHS', text: 'Graphs' },
+    { key: 'PIDS', text: 'PIDs' },
+    { key: 'RC', text: 'Remove Control' },
+    { key: 'IMU', text: 'IMU' },
+    { key: 'MISC', text: 'Misc' },
+  ]
+
+  tabClass(tab) {
+    return this.props.currentTab === tab ? 'active' : ''
+  }
+
   render() {
     const actions = this.props.actions
 
     return (
       <div className='well toolbar'>
         <ul className="nav nav-tabs">
-          <li className="active"><a href="#">Graphs</a></li>
-          <li><a href="#">PIDs</a></li>
-          <li><a href="#">Remote Control</a></li>
-          <li><a href="#">IMU</a></li>
-          <li><a href="#">Scheduler</a></li>
+          {this.tabData.map((tab, i) => {
+            return (
+              <li className={this.tabClass(tab.key)} key={i}>
+                <a href="#" onClick={this.tabSelected.bind(this, tab.key)}>
+                  {tab.text}
+                </a>
+              </li>
+            )
+          })}
         </ul>
 
         <div className='connection form-inline'>

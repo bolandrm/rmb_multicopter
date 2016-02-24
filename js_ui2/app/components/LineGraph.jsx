@@ -11,14 +11,18 @@ class LineGraph extends React.Component {
     this.updateChart()
   }
 
+  shouldComponentUpdate() {
+    return false
+  }
+
   createChart() {
-    this.el = ReactDOM.findDOMNode(this)
+    const el = ReactDOM.findDOMNode(this)
 
     this.margin = {top: 20, right: 20, bottom: 30, left: 50}
-    this.width = this.el.offsetWidth - this.margin.left - this.margin.right
+    this.width = el.offsetWidth - this.margin.left - this.margin.right
     this.height = 250
 
-    this.svg = d3.select(this.el).append("svg")
+    this.svg = d3.select(el).append("svg")
           .attr("width", this.width + this.margin.left + this.margin.right)
           .attr("height", this.height + this.margin.top + this.margin.bottom)
           .append("g")
@@ -87,14 +91,14 @@ class LineGraph extends React.Component {
     legendEntries.style('opacity', (d) => (d.filtered ? 0.5 : 1))
 
     newEntries.append('rect')
-      .attr('x', this.width - 62)
+      .attr('x', this.width - 92)
       .attr('y', (d, i) => i *  20)
       .attr('width', 10)
       .attr('height', 10)
       .style('fill', (d) => this.color(d.key))
 
     newEntries.append('text')
-      .attr('x', this.width - 50)
+      .attr('x', this.width - 80)
       .attr('y', (d, i) => (i * 20) + 9)
       .text((d) => d.key)
   }

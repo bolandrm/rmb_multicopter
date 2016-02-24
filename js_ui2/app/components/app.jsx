@@ -1,6 +1,6 @@
 import React from "react"
 import ToolbarContainer from "./toolbar_container"
-import TabContentContainer from "./tab_content_container"
+import TabContentContainer from "./TabContentContainer"
 
 class App extends React.Component {
   render() {
