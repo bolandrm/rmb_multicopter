@@ -9,15 +9,17 @@ import * as t from './action_types'
 import SerialCodes from './serial_codes'
 
 const filteredActions = [
+  'SERIAL_GOT_GYRO_ACC',
   'EFFECT_TRIGGERED',
   'EFFECT_RESOLVED',
-  'EFFECT_REJECTED'
+  'EFFECT_REJECTED',
+  'redux-form/FOCUS',
+  'redux-form/BLUR'
 ]
 
 const logger = createLogger({
   predicate: (getState, action) => {
-    if (filteredActions.indexOf(action.type) > -1 ||
-        action.type === t.DATA_PARSED && action.payload.code === SerialCodes.REQUEST_GYRO_ACC ) {
+    if (filteredActions.indexOf(action.type) > -1) {
       return false
     } else {
       return true

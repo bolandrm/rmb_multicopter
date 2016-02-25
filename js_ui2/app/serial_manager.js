@@ -3,6 +3,7 @@ import SerialReader from './serial_reader'
 import SerialWriter from './serial_writer'
 import SerialPort from 'serialport'
 import store from './store'
+import SerialCodes from './serial_codes'
 import * as actions from './actions'
 
 class SerialManager {
@@ -11,6 +12,12 @@ class SerialManager {
   constructor() {
     this.reader = new SerialReader(this._dataParsed)
     this.writer = new SerialWriter(this._rawSendData)
+
+    this.invertedSerialCodes = _.invert(SerialCodes)
+    _.forOwn(this.invertedSerialCodes, (v, k) => {
+      let newVal = this.invertedSerialCodes[k].replace("REQUEST_", "")
+      this.invertedSerialCodes[k] = `SERIAL_GOT_${newVal}`
+    })
   }
 
   getDevices() {
@@ -66,7 +73,6 @@ class SerialManager {
 
       this.currentSerialPort.close((error) => {
         if (error) { console.log('failed to disconnect') }
-        this.currentSerialPort = null
         resolve()
       })
     })
@@ -97,7 +103,8 @@ class SerialManager {
   }
 
   _dataParsed = (code, data) => {
-    store.dispatch(actions.dataParsed({code, data}))
+    const codeName = this.invertedSerialCodes[code]
+    store.dispatch(actions.dataParsed(codeName, data))
   }
 
   _rawSendData = (packetBuffer) => {

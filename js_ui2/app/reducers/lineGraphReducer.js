@@ -1,5 +1,6 @@
 import { deepFetch } from '../utils'
 import * as t from '../action_types'
+import SerialCodes from "../serial_codes";
 
 const SAMPLE_COUNT = 200
 
@@ -20,7 +21,7 @@ export const lineGraphReducer = function (state, action) {
   const payload = action.payload
 
   switch (action.type) {
-    case t.DATA_PARSED:
+    case t.SERIAL_GOT_GYRO_ACC:
       var shift = (state.data[0].samples.length >= state.sampleCount) ? 1 : 0
 
       const data = state.data.map((series, i) => {
@@ -28,7 +29,7 @@ export const lineGraphReducer = function (state, action) {
           ...series,
           samples: [ 
             ...series.samples.slice(shift),
-            deepFetch(payload.data, series.key)
+            deepFetch(payload, series.key)
           ]
         }
       })

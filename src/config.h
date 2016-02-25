@@ -4,11 +4,10 @@
 #include <stdint.h>
 #include "pids.h"
 
-#define CONFIG_VERSION 2
+#define CONFIG_VERSION 3
 
 typedef struct __attribute__((packed)) {
   float kp;
-  float p_max;
   float ki;
   float i_max;
 } pid_config;

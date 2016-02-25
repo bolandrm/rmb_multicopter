@@ -2,13 +2,13 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as actions from '../actions'
-import TuningTab from "./TuningTab"
-import PidsTab from "./PidsTab"
+import TuningTab from './TuningTab'
+import PidsTab from './PidsTab'
 
 class TabContentContainer extends React.Component {
   render() {
     return (
-      <div>
+      <div className='tab-container'>
         {this.props.currentTab === 'TUNING' &&
           <TuningTab {...this.props.tuningTab} actions={this.props.actions} />
         }

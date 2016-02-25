@@ -9,7 +9,7 @@ button:focus {
 
 .toolbar {
   border-radius: 0;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
   padding: 0;
   border: 0;
   position: relative;
@@ -45,4 +45,55 @@ button:focus {
   fill: none;
   stroke: steelblue;
   stroke-width: 1.5px;
+}
+
+.tab-container {
+  padding: 20px;
+}
+
+.pids-tab {
+  .pid-inputs {
+    float: left;
+
+    .row-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .form-group {
+      margin-right: 20px;
+    }
+
+    label {
+      text-align: right;
+      padding-left: 20px;
+      padding-right: 10px;
+    }
+
+    .form-control {
+      width: 100px;
+    }
+
+    .pid-row {
+      margin-bottom: 15px;
+    }
+
+    .pid-group {
+      margin-bottom: 25px;
+    }
+
+    .pid-group-buttons {
+      text-align: center;
+
+      .btn:first-child {
+        margin-right: 10px;
+      }
+    }
+
+    .row-label {
+      width: 50px;
+      display: inline-block;
+      font-weight: bold;
+    }
+  }
 }

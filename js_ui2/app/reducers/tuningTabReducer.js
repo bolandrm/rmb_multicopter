@@ -9,7 +9,7 @@ export default function (state = tuningTabInitialState, action) {
   const payload = action.payload
 
   switch (action.type) {
-    case t.DATA_PARSED:
+    case t.SERIAL_GOT_GYRO_ACC:
     case t.GRAPH_FILTERED:
       return {
         ...state,

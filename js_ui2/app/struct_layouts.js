@@ -57,41 +57,36 @@ export default {
     [ 
       "pid_rate_xy", [
         [ "kp", "f" ],
-        [ "pMax", "f" ],
         [ "ki", "f" ],
-        [ "iMax", "f" ]
+        [ "imax", "f" ]
       ]
     ],
     [ 
       "pid_rate_xy", [
         [ "kp", "f" ],
-        [ "pMax", "f" ],
         [ "ki", "f" ],
-        [ "iMax", "f" ]
+        [ "imax", "f" ]
       ]
     ],
     [
       "pid_rate_z", [
         [ "kp", "f" ],
-        [ "pMax", "f" ],
         [ "ki", "f" ],
-        [ "iMax", "f" ]
+        [ "imax", "f" ]
       ]
     ],
     [
       "pid_angle_xy", [
         [ "kp", "f" ],
-        [ "pMax", "f" ],
         [ "ki", "f" ],
-        [ "iMax", "f" ]
+        [ "imax", "f" ]
       ]
     ],
     [
       "pid_angle_xy", [
         [ "kp", "f" ],
-        [ "pMax", "f" ],
         [ "ki", "f" ],
-        [ "iMax", "f" ]
+        [ "imax", "f" ]
       ]
     ]
   ]

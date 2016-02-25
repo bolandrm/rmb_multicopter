@@ -49,6 +49,7 @@
     "node-libs-browser": ">= 0.4.0 <=0.6.0",
     "node-sass": "^3.4.2",
     "react-addons-test-utils": "^0.14.2",
+    "redux-form": "^4.2.0",
     "sass-loader": "^3.1.2",
     "selenium-webdriver": "^2.48.2",
     "sinon": "^1.17.2",

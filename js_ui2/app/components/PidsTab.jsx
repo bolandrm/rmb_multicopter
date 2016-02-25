@@ -1,10 +1,13 @@
-import React from "react";
+import React from 'react';
 import * as actions from '../actions'
+import PidConfigForm from './PidConfigForm'
 
 class PidsTab extends React.Component {
   render() {
     return (
-      <div></div>
+      <div className='pids-tab'>
+        <PidConfigForm />
+      </div>
     )
   }
 }

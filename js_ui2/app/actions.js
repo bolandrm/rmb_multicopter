@@ -23,8 +23,14 @@ export const disconnect = createAction(t.DISCONNECT)
 export const disconnected = createAction(t.DISCONNECTED)
 export const refreshDevices = createAction(t.REFRESH_DEVICES)
 export const toggleConnection = createAction(t.TOGGLE_CONNECTION)
-export const dataParsed = createAction(t.DATA_PARSED)
+
+export const gotGyroAccData = createAction(t.GOT_GYRO_ACC_DATA)
+export const gotConfigData = createAction(t.GOT_CONFIG_DATA)
 
 export const graphFiltered = createAction(t.GRAPH_FILTERED)
 
 export const tabSelected = createAction(t.TAB_SELECTED)
+
+export const dataParsed = function(type, data) {
+  return { type, payload: data }
+}
