@@ -1,24 +1,30 @@
 #include "imu.h"
-#include "mpu6050.h"
 #include "MedianFilter.h"
+#include "utils.h"
 
 static axis_float_t gyro_angles;
 static axis_float_t accel_angles;
 static axis_float_t accel_filtered;
 static axis_float_t rates;
 static axis_float_t angles;
-static axis_int16_t gyro_raws;
+static axis_int32_t gyro_raws;
 static axis_float_t gyro_sums;
 static int16_t gyro_sum_count = 0;
 static uint32_t gyro_update_timer = 0;
 static uint32_t combination_update_timer = 0;
-static axis_int16_t accel_raws;
+static axis_int32_t accel_raws;
 static median_filter_t accel_x_filter;
 static median_filter_t accel_y_filter;
 static median_filter_t accel_z_filter;
 
+static int32_t accel_max_value = 0;
+static int32_t gyro_max_value = 0;
+
 static uint32_t value_process_timer = 0;
 static uint32_t value_process_dt;
+
+static void record_max_gyro_value();
+static void record_max_accel_value();
 
 static void reset_gyro_sums() {
   gyro_sums.x = 0.0;
@@ -39,6 +45,7 @@ void imu_init() {
 
 static void read_gyro_raws() {
   mpu6050_read_gyro(&gyro_raws);
+  record_max_gyro_value();
 
   gyro_sums.x += gyro_raws.x;
   gyro_sums.y += gyro_raws.y;
@@ -49,6 +56,7 @@ static void read_gyro_raws() {
 
 static void read_accel_raws() {
   mpu6050_read_accel(&accel_raws);
+  record_max_accel_value();
 
   median_filter_in(accel_x_filter, accel_raws.x);
   median_filter_in(accel_y_filter, accel_raws.y);
@@ -60,9 +68,9 @@ static void process_gyro() {
   float rate_avg_y = (gyro_sums.y / gyro_sum_count) - GYRO_Y_OFFSET;
   float rate_avg_z = (gyro_sums.z / gyro_sum_count) - GYRO_Z_OFFSET;
 
-  rates.x = rate_avg_x / MPU6050_GYRO_1000D_SENS;
-  rates.y = rate_avg_y / MPU6050_GYRO_1000D_SENS;
-  rates.z = rate_avg_z / MPU6050_GYRO_1000D_SENS;
+  rates.x = rate_avg_x / GYRO_SENS;
+  rates.y = rate_avg_y / GYRO_SENS;
+  rates.z = rate_avg_z / GYRO_SENS;
 
   reset_gyro_sums();
 
@@ -74,9 +82,9 @@ static void process_gyro() {
 }
 
 static void process_accel() {
-  accel_filtered.x = (float) (median_filter_out(accel_x_filter) - ACCEL_X_OFFSET) / MPU6050_ACCEL_4G_SENS;
-  accel_filtered.y = (float) (median_filter_out(accel_y_filter) - ACCEL_Y_OFFSET) / MPU6050_ACCEL_4G_SENS;
-  accel_filtered.z = (float) (median_filter_out(accel_z_filter) - ACCEL_Z_OFFSET) / MPU6050_ACCEL_4G_SENS;
+  accel_filtered.x = (float) (median_filter_out(accel_x_filter) - ACCEL_X_OFFSET) / ACCEL_SENS;
+  accel_filtered.y = (float) (median_filter_out(accel_y_filter) - ACCEL_Y_OFFSET) / ACCEL_SENS;
+  accel_filtered.z = (float) (median_filter_out(accel_z_filter) - ACCEL_Z_OFFSET) / ACCEL_SENS;
 }
 
 static void combine() {
@@ -106,11 +114,25 @@ void imu_process_values() {
   combine();
 }
 
+static void record_max_gyro_value() {
+  if (abs_c(gyro_raws.x) > gyro_max_value) { gyro_max_value = abs_c(gyro_raws.x); }
+  if (abs_c(gyro_raws.y) > gyro_max_value) { gyro_max_value = abs_c(gyro_raws.y); }
+  if (abs_c(gyro_raws.z) > gyro_max_value) { gyro_max_value = abs_c(gyro_raws.z); }
+}
+
+static void record_max_accel_value() {
+  if (abs_c(accel_raws.x) > accel_max_value) { accel_max_value = abs_c(accel_raws.x); }
+  if (abs_c(accel_raws.y) > accel_max_value) { accel_max_value = abs_c(accel_raws.y); }
+  if (abs_c(accel_raws.z) > accel_max_value) { accel_max_value = abs_c(accel_raws.z); }
+}
+
 axis_float_t imu_rates() { return rates; }
 axis_float_t imu_angles() { return angles; }
 axis_float_t imu_gyro_angles() { return gyro_angles; }
-axis_int16_t imu_gyro_raws() { return gyro_raws; }
-axis_int16_t imu_accel_raws() { return accel_raws; }
+axis_int32_t imu_gyro_raws() { return gyro_raws; }
+axis_int32_t imu_accel_raws() { return accel_raws; }
 axis_float_t imu_accel_angles() { return accel_angles; }
 axis_float_t imu_accel_filtered() { return accel_filtered; }
 uint32_t imu_value_process_dt() { return value_process_dt; }
+float imu_gyro_max_value() { return gyro_max_value / GYRO_SENS; }
+float imu_accel_max_value() { return accel_max_value / ACCEL_SENS; }

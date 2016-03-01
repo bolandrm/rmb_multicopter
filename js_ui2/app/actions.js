@@ -31,6 +31,9 @@ export const graphFiltered = createAction(t.GRAPH_FILTERED)
 
 export const tabSelected = createAction(t.TAB_SELECTED)
 
+export const fetchConfig = createAction(t.FETCH_CONFIG)
+export const writeConfig = createAction(t.WRITE_CONFIG)
+
 export const dataParsed = function(type, data) {
   return { type, payload: data }
 }

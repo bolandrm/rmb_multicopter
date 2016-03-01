@@ -103,9 +103,10 @@ void output_uint16(uint16_t value) {
   output_uint8(highByte(value));
 }
 
-void output_int16(int16_t value) {
-  output_uint8(lowByte(value));
-  output_uint8(highByte(value));
+void output_uint32(uint32_t value) {
+  for (uint8_t i = 0; i < 4; i++) {
+    output_uint8((uint8_t) (value >> (i * 8)));
+  }
 }
 
 void output_float32(float value) {
@@ -161,7 +162,7 @@ void process_serial_data() {
       break;
 
     case REQUEST_GYRO_ACC:
-      packet_head(REQUEST_GYRO_ACC, 72);
+      packet_head(REQUEST_GYRO_ACC, 92);
 
       output_float32(imu_rates().x);
       output_float32(imu_rates().y);
@@ -175,13 +176,13 @@ void process_serial_data() {
       output_float32(imu_gyro_angles().y);
       output_float32(imu_gyro_angles().z);
 
-      output_uint16(imu_gyro_raws().x);
-      output_uint16(imu_gyro_raws().y);
-      output_uint16(imu_gyro_raws().z);
+      output_uint32(imu_gyro_raws().x);
+      output_uint32(imu_gyro_raws().y);
+      output_uint32(imu_gyro_raws().z);
 
-      output_uint16(imu_accel_raws().x);
-      output_uint16(imu_accel_raws().y);
-      output_uint16(imu_accel_raws().z);
+      output_uint32(imu_accel_raws().x);
+      output_uint32(imu_accel_raws().y);
+      output_uint32(imu_accel_raws().z);
 
       output_float32(imu_accel_filtered().x);
       output_float32(imu_accel_filtered().y);
@@ -190,6 +191,9 @@ void process_serial_data() {
       output_float32(imu_accel_angles().x);
       output_float32(imu_accel_angles().y);
       output_float32(imu_accel_angles().z);
+
+      output_float32(imu_gyro_max_value());
+      output_float32(imu_accel_max_value());
 
       packet_tail();
       break;

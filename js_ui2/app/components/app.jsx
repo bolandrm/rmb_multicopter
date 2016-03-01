@@ -1,6 +1,7 @@
 import React from "react"
 import ToolbarContainer from "./toolbar_container"
 import TabContentContainer from "./TabContentContainer"
+import Console from "./Console"
 
 class App extends React.Component {
   render() {
@@ -8,6 +9,7 @@ class App extends React.Component {
       <div>
         <ToolbarContainer />
         <TabContentContainer />
+        <Console />
       </div>
     )
   }

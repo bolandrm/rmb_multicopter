@@ -11,3 +11,19 @@ export const deepFetch = function(obj, path) {
   path.split('.').forEach(function(p) { current = current[p] })
   return current
 }
+
+export const formValues = function formValues(formData) {
+  const data = {}
+
+  _.forOwn(formData, function(value, key) {
+    if (key.match(/^_/)) return
+    
+    if (value.value) {
+      data[key] = value.value
+    } else {
+      data[key] = formValues(value)
+    }
+  })
+
+  return data
+}

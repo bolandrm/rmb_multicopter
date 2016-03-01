@@ -8,7 +8,8 @@ class PidConfigForm extends React.Component {
   render() {
     const {
       fields: { pid_rate_xy, pid_rate_z, pid_angle_xy },
-      connected
+      connected,
+      actions
     } = this.props
 
     return (
@@ -24,8 +25,12 @@ class PidConfigForm extends React.Component {
         </div>
 
         <div className='pid-group pid-group-buttons'>
-          <button disabled={!connected} className='btn btn-default'>Fetch Config</button>
-          <button disabled={!connected} className='btn btn-success'>Write Config</button>
+          <button disabled={!connected} onClick={actions.fetchConfig} className='btn btn-default'>
+            Fetch Config
+          </button>
+          <button disabled={!connected} onClick={actions.writeConfig} className='btn btn-success'>
+            Write Config
+          </button>
         </div>
       </div>
     )
@@ -50,7 +55,10 @@ export default reduxForm(
   },
 
   (state) => {
-    return { connected: state.comms.connected }
+    return {
+      connected: state.comms.connected,
+      initialValues: state.meta.remoteConfigData
+    }
   },
 
   (dispatch) => {

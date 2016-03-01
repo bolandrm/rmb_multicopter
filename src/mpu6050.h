@@ -2,6 +2,7 @@
 #define MPU6050_H
 
 #include <stdint.h>
+#include "imu.h"
 
 #define MPU6050_I2C_ADDRESS 0x68
 #define MPU6050_GYRO_500D_SENS 65.5
@@ -65,8 +66,20 @@
 #define BIT_I2C_IF_DIS              0x10
 #define BIT_INT_STATUS_DATA         0x01
 
+typedef struct {
+  int16_t x, y, z;
+} axis_int16_t;
+
+typedef struct {
+  int16_t x, y, z;
+} axis_int32_t;
+
+typedef struct {
+  float x, y, z;
+} axis_float_t;
+
 void mpu6050_init();
-void mpu6050_read_gyro(axis_int16_t *gyro_rates);
-void mpu6050_read_accel(axis_int16_t *accel_raws);
+void mpu6050_read_gyro(axis_int32_t *gyro_rates);
+void mpu6050_read_accel(axis_int32_t *accel_raws);
 
 #endif

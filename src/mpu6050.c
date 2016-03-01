@@ -22,7 +22,7 @@ static int mpu6050_test_connection() {
   return mpu6050_read_byte(MPUREG_WHOAMI) == 0x68;
 }
 
-void mpu6050_read_gyro(axis_int16_t *gyro_rates) {
+void mpu6050_read_gyro(axis_int32_t *gyro_rates) {
   int16_t gyro_x = mpu6050_read_word(MPUREG_GYRO_XOUT_H);
   int16_t gyro_y = mpu6050_read_word(MPUREG_GYRO_YOUT_H);
   int16_t gyro_z = mpu6050_read_word(MPUREG_GYRO_ZOUT_H);
@@ -32,7 +32,7 @@ void mpu6050_read_gyro(axis_int16_t *gyro_rates) {
   gyro_rates->z = gyro_z;
 }
 
-void mpu6050_read_accel(axis_int16_t *accel_raws) {
+void mpu6050_read_accel(axis_int32_t *accel_raws) {
   int16_t accel_x = mpu6050_read_word(MPUREG_ACCEL_XOUT_H);
   int16_t accel_y = mpu6050_read_word(MPUREG_ACCEL_YOUT_H);
   int16_t accel_z = mpu6050_read_word(MPUREG_ACCEL_ZOUT_H);
@@ -43,7 +43,7 @@ void mpu6050_read_accel(axis_int16_t *accel_raws) {
 }
 
 void calibrate_gyro() {
-  axis_int16_t gyro_raws;
+  axis_int32_t gyro_raws;
   axis_float_t gyro_sums = { 0.0, 0.0, 0.0 };
 
   delay(5000);
@@ -63,7 +63,7 @@ void calibrate_gyro() {
 }
 
 void calibrate_accel() {
-  axis_int16_t accel_raws;
+  axis_int32_t accel_raws;
   axis_float_t accel_sums = { 0.0, 0.0, 0.0 };
 
   delay(5000);

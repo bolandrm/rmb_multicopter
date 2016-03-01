@@ -19,7 +19,8 @@ class LineGraph extends React.Component {
     const el = ReactDOM.findDOMNode(this)
 
     this.margin = {top: 20, right: 20, bottom: 30, left: 50}
-    this.width = el.offsetWidth - this.margin.left - this.margin.right
+    this.width = 1450 - this.margin.left - this.margin.right
+    console.log("width", this.width, el.offsetWidth)
     this.height = 250
 
     this.svg = d3.select(el).append("svg")

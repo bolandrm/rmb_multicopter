@@ -40,7 +40,7 @@ void debugger_indicate_emergency() {
 }
 
 void text_debug() {
-  serial_printf("\033[2J\033[1;1H");
+  // serial_printf("\033[2J\033[1;1H");
 
   // serial_printf("pid_rate_kp: %8.3f", CONFIG.data.pids[PID_RATE_X].kp);
   // serial_printf("\t pid_rate_ki: %8.3f", pid(PID_RATE_X)->ki);
@@ -80,6 +80,9 @@ void text_debug() {
   serial_printlnf("");
 
   serial_printlnf("value process dt: %d", imu_value_process_dt());
+
+  serial_printlnf("max accel: %8.3f", imu_accel_max_value());
+  serial_printlnf("max gyro: %8.3f", imu_gyro_max_value());
 }
 
 void print_debug() {

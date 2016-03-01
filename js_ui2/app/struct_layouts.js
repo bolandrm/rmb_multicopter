@@ -23,16 +23,16 @@ export default {
     ],
     [ 
       "gyroRaws", [
-        [ "x", "h" ],
-        [ "y", "h" ],
-        [ "z", "h" ]
+        [ "x", "i" ],
+        [ "y", "i" ],
+        [ "z", "i" ]
       ]
     ],
     [ 
       "accelRaws", [
-        [ "x", "h" ],
-        [ "y", "h" ],
-        [ "z", "h" ]
+        [ "x", "i" ],
+        [ "y", "i" ],
+        [ "z", "i" ]
       ]
     ],
     [ 
@@ -48,7 +48,9 @@ export default {
         [ "y", "f" ],
         [ "z", "f" ]
       ]
-    ]
+    ],
+    [ "gyroMaxValue", "f" ],
+    [ "accelMaxValue", "f" ]
   ],
 
   config: [

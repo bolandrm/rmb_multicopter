@@ -3,6 +3,8 @@
 
 #define constrain_c(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
 
+#define abs_c(x) ((x)>0?(x):-(x))
+
 void serial_printf(const char *format, ...);
 void serial_printlnf(const char *format, ...);
 void support_printing_floats();
