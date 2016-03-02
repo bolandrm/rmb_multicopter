@@ -1,18 +1,18 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import { observer } from 'mobx-react'
+import { autorun } from 'mobx'
 import d3 from "d3"
 
+@observer
 class LineGraph extends React.Component {
   componentDidMount() {
     this.createChart()
+    this.stopUpdating = autorun(this.updateChart)
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.updateChart()
-  }
-
-  shouldComponentUpdate() {
-    return false
+  componentWillUnmount() {
+    this.stopUpdating()
   }
 
   createChart() {
@@ -20,7 +20,6 @@ class LineGraph extends React.Component {
 
     this.margin = {top: 20, right: 20, bottom: 30, left: 50}
     this.width = 1450 - this.margin.left - this.margin.right
-    console.log("width", this.width, el.offsetWidth)
     this.height = 250
 
     this.svg = d3.select(el).append("svg")
@@ -43,18 +42,18 @@ class LineGraph extends React.Component {
   }
 
   legendClick = (series) => {
-    this.props.actions.graphFiltered({ graph: this.props.graph, key: series.key})
+    this.props.graph.graphFiltered(series.key)
     this.updateChart()
   }
 
-  updateChart() {
-    const data = this.props.data
+  updateChart = () => {
+    const data = this.props.graph.data
     const filteredData = data.filter((d) => !d.filtered)
 
     var max = d3.max(filteredData, (d) => d3.max(d.samples))
     var min = d3.min(filteredData, (d) => d3.min(d.samples))
 
-		var x = d3.scale.linear().domain([0, this.props.sampleCount]).range([0, this.width])
+		var x = d3.scale.linear().domain([0, this.props.graph.sampleCount]).range([0, this.width])
     var y = d3.scale.linear().domain([min - 5, max + 5]).range([this.height, 0])
 
 		var line = d3.svg.line()

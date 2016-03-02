@@ -11,6 +11,7 @@ class SerialManager {
   @observable connected = false
   @observable busy = false
   currentSerialPort = null
+  callbacks = {}
 
   constructor() {
     this.reader = new SerialReader(this._dataParsed)
@@ -40,7 +41,7 @@ class SerialManager {
 
         if (defaultDevice) {
           this.portSelected = defaultDevice
-          if (autoconnect) this.connect()
+          if (autoconnect === true) this.connect()
         } else {
           this.portSelected = this.ports[0]
         }
@@ -88,13 +89,29 @@ class SerialManager {
     })
   }
 
-  send = (code, data) => {
-    if (!this.currentSerialPort) return
+  send = (code, data, callback) => {
+    if (!this.connected) return
+
+    if (callback) {
+      let callbackWrapper = this.callbacks[code];
+
+      if (!callbackWrapper) {
+        callbackWrapper = { handlers: [] }
+        callbackWrapper.timer = setTimeout(() => {
+          console.log(`request timed out: ${code}`);
+        }, 1000);
+        this.callbacks[code] = callbackWrapper;
+      }
+
+      callbackWrapper.handlers.push(callback);
+    }
+
     this.writer.sendPacket(code, data)
   }
 
   _onClose = () => {
     console.log('closing or disconnected')
+    this._clearCallbacks()
     this.connected = false
   }
 
@@ -112,13 +129,22 @@ class SerialManager {
   }
 
   _dataParsed = (code, data) => {
-    // const codeName = this.invertedSerialCodes[code]
-    // store.dispatch(actions.dataParsed(codeName, data))
     console.log('data parsed', code, data)
+
+    let callback = this.callbacks[code];
+
+    if (callback) {
+      _.each(callback.handlers, function(handler) {
+        handler(data);
+      });
+
+      clearTimeout(callback.timer);
+      this.callbacks = _.omit(this.callbacks, code);
+    }
   }
 
   _rawSendData = (packetBuffer) => {
-    if (!this.currentSerialPort) {
+    if (!this.connected) {
       console.log('no ports open')
       return
     }
@@ -126,6 +152,13 @@ class SerialManager {
     this.currentSerialPort.write(packetBuffer, (error) => {
       if (error) this._onError()
     })
+  }
+
+  _clearCallbacks() {
+    _.forOwn(this.callbacks, function(key, callback) {
+      clearTimeout(callback.timer);
+    });
+    this.callbacks = {};
   }
 }
 

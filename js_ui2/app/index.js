@@ -7,7 +7,7 @@ import App from './components/app'
 import './styles/app.scss'
 
 // for debugging
-import store from './store'
+import * as stores from './store'
 import _ from 'lodash'
 import d3 from 'd3'
 import serial from './serialManager'
@@ -16,7 +16,7 @@ import SerialCodes from './serial_codes'
 window.__serial = serial
 window.__SerialCodes = SerialCodes
 window.__d3 = d3
-window.__store = store
+window.__stores = stores
 
 process.on('unhandledRejection', (reason, p) => {
   console.log('Unhandled Rejection at: Promise ', p, ' reason: ', reason)

@@ -8,7 +8,8 @@ class App extends React.Component {
     return(
       <div>
         <Toolbar />
-        {/* <TabContentContainer /> <Console /> */}
+        <TabContentContainer />
+        {/*<Console /> */}
       </div>
     )
   }
