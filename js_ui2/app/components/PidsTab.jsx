@@ -1,7 +1,8 @@
 import React from 'react';
-import * as actions from '../actions'
 import PidConfigForm from './PidConfigForm'
+import { observer } from 'mobx-react'
 
+@observer
 class PidsTab extends React.Component {
   render() {
     return (

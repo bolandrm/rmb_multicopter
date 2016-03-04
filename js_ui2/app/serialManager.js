@@ -106,6 +106,8 @@ class SerialManager {
       callbackWrapper.handlers.push(callback);
     }
 
+    console.log('sending packet', code, data)
+
     this.writer.sendPacket(code, data)
   }
 
@@ -129,7 +131,7 @@ class SerialManager {
   }
 
   _dataParsed = (code, data) => {
-    console.log('data parsed', code, data)
+    if (code != SerialCodes.REQUEST_GYRO_ACC) console.log('data parsed', code, data)
 
     let callback = this.callbacks[code];
 

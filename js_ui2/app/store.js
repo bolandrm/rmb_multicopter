@@ -1,5 +1,9 @@
-import { observable, autorun } from 'mobx'
+import { observable, toJSON } from 'mobx'
 import { deepFetch } from './utils'
+import serial from './serialManager'
+import SerialCodes from './serial_codes'
+import StructLayouts from './struct_layouts'
+import Struct from './struct'
 
 class MetaStore {
   @observable currentTab = 'TUNING';
@@ -64,7 +68,6 @@ class LineGraphStore {
   }
 }
 
-
 class TuningTabStore {
   constructor() {
     this.graph1 = new LineGraphStore()
@@ -72,3 +75,31 @@ class TuningTabStore {
 }
 
 export const tuningTabStore = new TuningTabStore()
+
+class ConfigStore {
+  @observable fetchedOnce = false
+  @observable data = {
+    pid_rate_xy: { kp: 0, ki: 0, imax: 0 },
+    pid_rate_z: { kp: 0, ki: 0, imax: 0 },
+    pid_angle_xy: { kp: 0, ki: 0, imax: 0 },
+  }
+
+  fetchConfig = () => {
+    serial.send(SerialCodes.REQUEST_CONFIG, null, (config) => {
+      this.data = config
+      this.fetchedOnce = true
+    })
+  }
+
+  writeConfig = () => {
+    if (!this.fetchedOnce) return 
+
+    let plainData = toJSON(this.data)
+    plainData.version = 3
+    const struct = Struct.build(plainData, StructLayouts.config)
+
+    serial.send(SerialCodes.SET_CONFIG, struct)
+  }
+}
+
+export const configStore = new ConfigStore()

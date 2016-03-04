@@ -1,16 +1,17 @@
 import React from 'react'
-import { reduxForm } from 'redux-form'
-import { bindActionCreators } from 'redux'
-import * as actions from '../actions'
 import PidRow from './PidConfigFormRow'
+import { configStore } from '../store'
+import serial from '../serialManager'
+import SerialCodes from '../serial_codes'
+import { observer } from 'mobx-react'
 
+@observer
 class PidConfigForm extends React.Component {
   render() {
     const {
-      fields: { pid_rate_xy, pid_rate_z, pid_angle_xy },
-      connected,
-      actions
-    } = this.props
+      data: { pid_rate_xy, pid_rate_z, pid_angle_xy },
+      fetchConfig, writeConfig, fetchedOnce
+    } = configStore
 
     return (
       <div className='pid-inputs form-inline'>
@@ -25,10 +26,10 @@ class PidConfigForm extends React.Component {
         </div>
 
         <div className='pid-group pid-group-buttons'>
-          <button disabled={!connected} onClick={actions.fetchConfig} className='btn btn-default'>
+          <button disabled={!serial.connected} onClick={fetchConfig} className='btn btn-default'>
             Fetch Config
           </button>
-          <button disabled={!connected} onClick={actions.writeConfig} className='btn btn-success'>
+          <button disabled={!serial.connected || !fetchedOnce} onClick={writeConfig} className='btn btn-success'>
             Write Config
           </button>
         </div>
@@ -37,32 +38,4 @@ class PidConfigForm extends React.Component {
   }
 }
 
-export default reduxForm(
-  {
-    form: 'config',
-    fields: [
-      'pid_rate_xy.kp',
-      'pid_rate_xy.ki',
-      'pid_rate_xy.imax',
-      'pid_rate_z.kp',
-      'pid_rate_z.ki',
-      'pid_rate_z.imax',
-      'pid_angle_xy.kp',
-      'pid_angle_xy.ki',
-      'pid_angle_xy.imax'
-    ],
-    destroyOnUnmount: false
-  },
-
-  (state) => {
-    return {
-      connected: state.comms.connected,
-      initialValues: state.meta.remoteConfigData
-    }
-  },
-
-  (dispatch) => {
-    return { actions: bindActionCreators(actions, dispatch) }
-  }
-
-)(PidConfigForm)
+export default PidConfigForm
