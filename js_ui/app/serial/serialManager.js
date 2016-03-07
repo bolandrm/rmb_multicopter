@@ -2,10 +2,10 @@ import _ from 'lodash'
 import { observable } from 'mobx'
 import SerialPort from 'serialport'
 import childProcess from 'child_process'
-import SerialReader from './serial_reader'
-import SerialWriter from './serial_writer'
+import SerialReader from './SerialReader'
+import SerialWriter from './SerialWriter'
 import * as serialCodes from './serialCodes'
-import { metaStore } from './store'
+import { metaStore } from '../store'
 
 class SerialManager {
   @observable ports = []
@@ -83,7 +83,7 @@ class SerialManager {
   }
 
   _forkWorker() {
-    this.worker = childProcess.fork('./app/serialWorker.js', { silent: false })
+    this.worker = childProcess.fork('./app/serial/serialWorker.js', { silent: false })
     this.worker.on('message', this._receivedWorkerMessage)
     this.worker.on('exit', this._workerExited)
     process.on('exit', () => this.worker.kill())

@@ -1,9 +1,9 @@
 import { observable, toJSON } from 'mobx'
 import { deepFetch } from './utils'
-import serial from './serialManager'
+import serial from './serial/serialManager'
 import moment from 'moment'
 import * as structLayouts from "./serial/structLayouts";
-import { buildStruct } from './struct'
+import { buildStruct } from './serial/struct'
 
 class MetaStore {
   @observable currentTab = 'TUNING'

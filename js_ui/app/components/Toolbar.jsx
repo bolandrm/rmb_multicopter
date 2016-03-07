@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import serial from '../serialManager'
+import serial from '../serial/serialManager'
 import { metaStore } from '../store'
 
 @observer

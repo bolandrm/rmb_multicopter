@@ -9,7 +9,7 @@ import './styles/app.scss'
 import * as stores from './store'
 import _ from 'lodash'
 import d3 from 'd3'
-import serial from './serialManager'
+import serial from './serial/serialManager'
 
 window.__serial = serial
 window.__d3 = d3

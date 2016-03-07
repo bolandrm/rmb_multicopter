@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from 'mobx-react'
 import LineGraph from './LineGraph'
 import { tuningTabStore } from '../store'
-import serial from '../serialManager'
+import serial from '../serial/serialManager'
 
 @observer
 class TuningTab extends React.Component {

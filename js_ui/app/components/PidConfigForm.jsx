@@ -1,7 +1,7 @@
 import React from 'react'
 import PidRow from './PidConfigFormRow'
 import { configStore } from '../store'
-import serial from '../serialManager'
+import serial from '../serial/serialManager'
 import { observer } from 'mobx-react'
 
 @observer

@@ -1,4 +1,4 @@
-import { highByte, lowByte } from './utils'
+import { highByte, lowByte } from '../utils'
 import * as serialCodes from './serialCodes'
 
 class SerialWriter {
