@@ -1,5 +1,5 @@
 import { highByte, lowByte } from './utils'
-import SerialCodes from './serial_codes'
+import * as serialCodes from './serialCodes'
 
 class SerialWriter {
   constructor(send) {
@@ -16,8 +16,8 @@ class SerialWriter {
     let packetBuffer = new ArrayBuffer(size)
     let packetView = new Uint8Array(packetBuffer) 
 
-    packetView[0] = SerialCodes.PACKET_HEADER1
-    packetView[1] = SerialCodes.PACKET_HEADER2
+    packetView[0] = serialCodes.PACKET_HEADER1
+    packetView[1] = serialCodes.PACKET_HEADER2
     packetView[2] = code
     packetView[3] = lowByte(data.byteLength)
     packetView[4] = highByte(data.byteLength)

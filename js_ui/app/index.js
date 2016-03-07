@@ -10,10 +10,8 @@ import * as stores from './store'
 import _ from 'lodash'
 import d3 from 'd3'
 import serial from './serialManager'
-import SerialCodes from './serial_codes'
 
 window.__serial = serial
-window.__SerialCodes = SerialCodes
 window.__d3 = d3
 window.__stores = stores
 

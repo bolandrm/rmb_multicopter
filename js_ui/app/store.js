@@ -1,7 +1,6 @@
 import { observable, toJSON } from 'mobx'
 import { deepFetch } from './utils'
 import serial from './serialManager'
-import SerialCodes from './serial_codes'
 import StructLayouts from './struct_layouts'
 import Struct from './struct'
 import moment from 'moment'
@@ -94,7 +93,7 @@ class ConfigStore {
   }
 
   fetchConfig = () => {
-    serial.send(SerialCodes.REQUEST_CONFIG, null, (config) => {
+    serial.send(serial.codes.REQUEST_CONFIG, null, (config) => {
       this.data = config
       this.fetchedOnce = true
     })
@@ -107,7 +106,7 @@ class ConfigStore {
     plainData.version = 3
     const struct = Struct.build(plainData, StructLayouts.config)
 
-    serial.send(SerialCodes.SET_CONFIG, struct)
+    serial.send(serial.codes.SET_CONFIG, struct)
   }
 }
 

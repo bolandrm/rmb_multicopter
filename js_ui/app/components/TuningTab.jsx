@@ -4,7 +4,6 @@ import * as actions from '../actions'
 import LineGraph from './LineGraph'
 import { tuningTabStore } from '../store'
 import serial from '../serialManager'
-import SerialCodes from '../serial_codes'
 
 @observer
 class TuningTab extends React.Component {
@@ -17,7 +16,7 @@ class TuningTab extends React.Component {
   }
 
   fetchData = () => {
-    serial.send(SerialCodes.REQUEST_GYRO_ACC, null, tuningTabStore.graph1.addSample)
+    serial.send(serial.codes.REQUEST_GYRO_ACC, null, tuningTabStore.graph1.addSample)
   }
 
   render() {

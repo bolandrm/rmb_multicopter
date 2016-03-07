@@ -1,4 +1,4 @@
-import SerialCodes from "./serial_codes";
+import * as serialCodes from './serialCodes'
 import Struct from "./struct";
 import StructLayouts from "./struct_layouts";
 
@@ -18,13 +18,13 @@ class SerialReader {
   processCommand(data) {
     switch(this.state) {
       case 0:
-        if (data === SerialCodes.PACKET_HEADER1) {
+        if (data === serialCodes.PACKET_HEADER1) {
           this.state++;
           this.log("got header 1");
         }
         break;
       case 1:
-        if (data === SerialCodes.PACKET_HEADER2) {
+        if (data === serialCodes.PACKET_HEADER2) {
           this.state++;
           this.log("got header 2");
         } else {
@@ -67,16 +67,16 @@ class SerialReader {
           var response;
 
           switch(this.code) {
-            case SerialCodes.REQUEST_CONFIG:
+            case serialCodes.REQUEST_CONFIG:
               response = Struct.parse(this.dataBuffer, StructLayouts.config);
               break;
-            case SerialCodes.REQUEST_GYRO_ACC:
+            case serialCodes.REQUEST_GYRO_ACC:
               response = Struct.parse(this.dataBuffer, StructLayouts.gyroAcc);
               break;
-            case SerialCodes.INFO_SUCCESS:
+            case serialCodes.INFO_SUCCESS:
               console.log("controller responded with success!");
               break;
-            case SerialCodes.INFO_FAILURE:
+            case serialCodes.INFO_FAILURE:
               console.log("controller responded with failure");
               break;
             default:

@@ -4,7 +4,7 @@ import SerialPort from 'serialport'
 import childProcess from 'child_process'
 import SerialReader from './serial_reader'
 import SerialWriter from './serial_writer'
-import SerialCodes from './serial_codes'
+import * as serialCodes from './serialCodes'
 import { metaStore } from './store'
 
 class SerialManager {
@@ -12,6 +12,7 @@ class SerialManager {
   @observable portSelected
   @observable connected = false
   @observable busy = false
+  codes = serialCodes
   currentSerialPort = null
   callbacks = {}
 
@@ -75,7 +76,7 @@ class SerialManager {
       callbackWrapper.handlers.push(callback);
     }
 
-    if (code !== SerialCodes.REQUEST_GYRO_ACC)
+    if (code !== serialCodes.REQUEST_GYRO_ACC)
       console.log('sending packet', code, data)
 
     this.writer.sendPacket(code, data)
@@ -130,17 +131,17 @@ class SerialManager {
   }
 
   _dataParsed = (code, data) => {
-    if (code !== SerialCodes.REQUEST_GYRO_ACC)
+    if (code !== serialCodes.REQUEST_GYRO_ACC)
       console.log('data parsed', code, data)
 
     switch(code) {
-      case SerialCodes.REQUEST_CONFIG:
+      case serialCodes.REQUEST_CONFIG:
         metaStore.consoleMessage('Config data loaded')
         break
-      case SerialCodes.INFO_SUCCESS:
+      case serialCodes.INFO_SUCCESS:
         metaStore.consoleMessage('Controller responded with success')
         break
-      case SerialCodes.INFO_FAILURE:
+      case serialCodes.INFO_FAILURE:
         metaStore.consoleMessage('Controller responded with failure')
         break
     }
