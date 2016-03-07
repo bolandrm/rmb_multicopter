@@ -4,9 +4,11 @@ import serial from './serialManager'
 import SerialCodes from './serial_codes'
 import StructLayouts from './struct_layouts'
 import Struct from './struct'
+import moment from 'moment'
 
 class MetaStore {
-  @observable currentTab = 'TUNING';
+  @observable currentTab = 'TUNING'
+  @observable consoleMessages = []
 
   tabData = [
     { key: 'TUNING', text: 'Tuning' },
@@ -18,6 +20,13 @@ class MetaStore {
 
   tabSelected(tab) {
     this.currentTab = tab
+  }
+
+  consoleMessage = (message) => {
+    const time = moment().format("HH:mm:ss.SSS")
+    this.consoleMessages.push({ text: message, time })
+
+    while (this.consoleMessages.length > 30) this.consoleMessages.shift()
   }
 }
 

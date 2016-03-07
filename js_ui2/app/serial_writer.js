@@ -32,7 +32,7 @@ class SerialWriter {
     packetView[size-1] = crc
 
     // console.log('sending packet', packetView)
-    this.send(packetBuffer)
+    this.send(packetView)
   }
 }
 

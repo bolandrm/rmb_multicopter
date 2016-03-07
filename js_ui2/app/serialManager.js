@@ -1,9 +1,11 @@
 import _ from 'lodash'
 import { observable } from 'mobx'
+import SerialPort from 'serialport'
+import childProcess from 'child_process'
 import SerialReader from './serial_reader'
 import SerialWriter from './serial_writer'
-import SerialPort from 'serialport'
 import SerialCodes from './serial_codes'
+import { metaStore } from './store'
 
 class SerialManager {
   @observable ports = []
@@ -17,18 +19,14 @@ class SerialManager {
     this.reader = new SerialReader(this._dataParsed)
     this.writer = new SerialWriter(this._rawSendData)
 
+    this._forkWorker()
+
     this.refreshPorts(true)
   }
 
-  isDefaultDevice(device) {
-    return device.match(/usbmodem/)
-  }
-
-  findDefaultDevice(devices) {
-    return _.find(devices, (device) => this.isDefaultDevice(device))
-  }
-
   refreshPorts = (autoconnect = false) => {
+    if (!_.isBoolean(autoconnect)) autoconnect = false
+
     SerialPort.list((error, ports) => {
       if (error) {
         console.log('failed to get devices')
@@ -37,7 +35,7 @@ class SerialManager {
         ports = _.filter(ports, (port) => !port.match(/[Bb]luetooth/) && port.match(/\/dev\/cu/))
         this.ports = ports
 
-        let defaultDevice = this.findDefaultDevice(this.ports)
+        let defaultDevice = this._findDefaultDevice(this.ports)
 
         if (defaultDevice) {
           this.portSelected = defaultDevice
@@ -51,42 +49,13 @@ class SerialManager {
 
   connect = () => {
     this.busy = true
-
-    this.currentSerialPort = new SerialPort.SerialPort(
-      this.portSelected,
-      {
-        baudRate: 115200,
-        disconnectedCallback: this._onClose
-      },
-      false
-    )
-
-    this.currentSerialPort.on('data', this._onDataReceived)
-    this.currentSerialPort.on('close', this._onClose)
-    this.currentSerialPort.on('error', this._onError)
-
-    this.currentSerialPort.open((error) => {
-      if (error) {
-        console.log('failed to connect')
-        this.currentSerialPort = null
-        this.connected = false
-      } else {
-        console.log('connected')
-        this.currentSerialPort.resume()
-        this.connected = true
-      }
-
-      this.busy = false
-    })
+    this._forkWorker()
+    this.worker.send(['connect', { port: this.portSelected }])
   }
 
   disconnect = () => {
-    if (!this.currentSerialPort) { return this.connected = false }
-
-    this.currentSerialPort.close((error) => {
-      if (error) { console.log('failed to disconnect') }
-      this.connected = false
-    })
+    this.busy = true
+    this.worker.send(['disconnect'])
   }
 
   send = (code, data, callback) => {
@@ -106,15 +75,50 @@ class SerialManager {
       callbackWrapper.handlers.push(callback);
     }
 
-    console.log('sending packet', code, data)
+    if (code !== SerialCodes.REQUEST_GYRO_ACC)
+      console.log('sending packet', code, data)
 
     this.writer.sendPacket(code, data)
   }
 
-  _onClose = () => {
-    console.log('closing or disconnected')
+  _forkWorker() {
+    this.worker = childProcess.fork('./app/serialWorker.js', { silent: false })
+    this.worker.on('message', this._receivedWorkerMessage)
+    this.worker.on('exit', this._workerExited)
+    process.on('exit', () => this.worker.kill())
+  }
+
+  _workerExited = () => {
     this._clearCallbacks()
     this.connected = false
+    this.busy = false
+  }
+
+  _isDefaultDevice(device) {
+    return device.match(/usbmodem/)
+  }
+
+  _findDefaultDevice(devices) {
+    return _.find(devices, (device) => this._isDefaultDevice(device))
+  }
+
+  _receivedWorkerMessage = (payload) => {
+    const type = payload[0]
+    const params = payload[1]
+
+    switch(type) {
+      case 'connect':
+        this.connected = true
+        this.busy = false
+        break
+
+      case 'data':
+        this._onDataReceived(params.buffer.data)
+        break
+
+      default:
+        console.log('unknown', type, params)
+    }
   }
 
   _onDataReceived = (data) => {
@@ -125,13 +129,21 @@ class SerialManager {
     })
   }
 
-  _onError = (e) => {
-    console.log('port error', e)
-    this.disconnect()
-  }
-
   _dataParsed = (code, data) => {
-    if (code != SerialCodes.REQUEST_GYRO_ACC) console.log('data parsed', code, data)
+    if (code !== SerialCodes.REQUEST_GYRO_ACC)
+      console.log('data parsed', code, data)
+
+    switch(code) {
+      case SerialCodes.REQUEST_CONFIG:
+        metaStore.consoleMessage('Config data loaded')
+        break
+      case SerialCodes.INFO_SUCCESS:
+        metaStore.consoleMessage('Controller responded with success')
+        break
+      case SerialCodes.INFO_FAILURE:
+        metaStore.consoleMessage('Controller responded with failure')
+        break
+    }
 
     let callback = this.callbacks[code];
 
@@ -150,10 +162,8 @@ class SerialManager {
       console.log('no ports open')
       return
     }
-
-    this.currentSerialPort.write(packetBuffer, (error) => {
-      if (error) this._onError()
-    })
+    const dataArray = Array.prototype.slice.call(packetBuffer)
+    this.worker.send(['send', { data: dataArray }])
   }
 
   _clearCallbacks() {

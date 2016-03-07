@@ -9,7 +9,7 @@ class App extends React.Component {
       <div>
         <Toolbar />
         <TabContentContainer />
-        {/*<Console /> */}
+        <Console />
       </div>
     )
   }
