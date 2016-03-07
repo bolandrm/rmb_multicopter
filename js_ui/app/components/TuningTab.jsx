@@ -1,6 +1,5 @@
 import React from "react";
 import { observer } from 'mobx-react'
-import * as actions from '../actions'
 import LineGraph from './LineGraph'
 import { tuningTabStore } from '../store'
 import serial from '../serialManager'

@@ -1,6 +1,6 @@
 import * as serialCodes from './serialCodes'
 import { parseStruct } from "./struct";
-import StructLayouts from "./struct_layouts";
+import * as structLayouts from "./serial/structLayouts";
 
 class SerialReader {
   code = 0;

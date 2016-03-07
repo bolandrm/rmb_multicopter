@@ -1,9 +1,9 @@
 import { observable, toJSON } from 'mobx'
 import { deepFetch } from './utils'
 import serial from './serialManager'
-import StructLayouts from './struct_layouts'
-import { buildStruct } from './struct'
 import moment from 'moment'
+import * as structLayouts from "./serial/structLayouts";
+import { buildStruct } from './struct'
 
 class MetaStore {
   @observable currentTab = 'TUNING'
@@ -104,7 +104,7 @@ class ConfigStore {
 
     let plainData = toJSON(this.data)
     plainData.version = 3
-    const struct = buildStruct(plainData, StructLayouts.config)
+    const struct = buildStruct(plainData, structLayouts.config)
 
     serial.send(serial.codes.SET_CONFIG, struct)
   }
