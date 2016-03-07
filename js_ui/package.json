@@ -50,7 +50,6 @@
     "node-libs-browser": ">= 0.4.0 <=0.6.0",
     "node-sass": "^3.4.2",
     "react-addons-test-utils": "^0.14.2",
-    "redux-form": "^4.2.0",
     "sass-loader": "^3.1.2",
     "selenium-webdriver": "^2.48.2",
     "sinon": "^1.17.2",
@@ -73,10 +72,6 @@
     "moment": "^2.11.2",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
-    "react-redux": "^4.0.5",
-    "redux": "^3.2.1",
-    "redux-logger": "^2.5.2",
-    "redux-saga": "^0.8.2",
     "serialport": "^2.0.6"
   },
   "devEngines": {
