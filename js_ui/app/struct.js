@@ -14,14 +14,14 @@ const dataTypes = {
   //   d	  double64
 };
 
-const parseStruct = function(dataView, structLayout, parsedStruct, i = 0) {
+const _parseStruct = function(dataView, structLayout, parsedStruct, i = 0) {
   structLayout.forEach(function(entry) {
     const field = entry[0];
     const type = entry[1];
 
     if (_.isArray(type)) {
       parsedStruct[field] = {};
-      i = parseStruct(dataView, type, parsedStruct[field], i);
+      i = _parseStruct(dataView, type, parsedStruct[field], i);
     } else {
       const method = `get${dataTypes[type].type}`;
       parsedStruct[field] = dataView[method](i, true);
@@ -49,13 +49,13 @@ const structSize = function(structLayout) {
   return size;
 };
 
-const buildStruct = function(dataView, structLayout, dataObject, i = 0) {
+const _buildStruct = function(dataView, structLayout, dataObject, i = 0) {
   structLayout.forEach(function(entry) {
     const field = entry[0];
     const type = entry[1];
 
     if (_.isArray(type)) {
-      i = buildStruct(dataView, type, dataObject[field], i);
+      i = _buildStruct(dataView, type, dataObject[field], i);
     } else {
       const method = `set${dataTypes[type].type}`;
       const value = dataObject[field];
@@ -67,22 +67,20 @@ const buildStruct = function(dataView, structLayout, dataObject, i = 0) {
   return i;
 };
 
-const parse = function(buffer, structLayout) {
+export const parseStruct = function(buffer, structLayout) {
   const dataView = new DataView(buffer);
   const parsedStruct = {};
 
-  parseStruct(dataView, structLayout, parsedStruct);
+  _parseStruct(dataView, structLayout, parsedStruct);
 
   return parsedStruct;
 };
 
-const build = function(dataObject, structLayout) {
+export const buildStruct = function(dataObject, structLayout) {
   const buffer = new ArrayBuffer(structSize(structLayout));
   const dataView = new DataView(buffer);
 
-  buildStruct(dataView, structLayout, dataObject);
+  _buildStruct(dataView, structLayout, dataObject);
 
   return buffer;
 }
-
-export default { parse: parse, build: build };

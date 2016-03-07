@@ -1,5 +1,5 @@
 import * as serialCodes from './serialCodes'
-import Struct from "./struct";
+import { parseStruct } from "./struct";
 import StructLayouts from "./struct_layouts";
 
 class SerialReader {
@@ -68,10 +68,10 @@ class SerialReader {
 
           switch(this.code) {
             case serialCodes.REQUEST_CONFIG:
-              response = Struct.parse(this.dataBuffer, StructLayouts.config);
+              response = parseStruct(this.dataBuffer, StructLayouts.config);
               break;
             case serialCodes.REQUEST_GYRO_ACC:
-              response = Struct.parse(this.dataBuffer, StructLayouts.gyroAcc);
+              response = parseStruct(this.dataBuffer, StructLayouts.gyroAcc);
               break;
             case serialCodes.INFO_SUCCESS:
               console.log("controller responded with success!");
