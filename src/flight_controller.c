@@ -106,19 +106,14 @@ void fc_safety_check() {
     last_gyro_value = imu_rates().x;
   }
 
-  if (ANGLE_SAFETY_STOP && (imu_angles().x > 45.0 || imu_angles().x < -45.0
-                             || imu_angles().y > 45.0 || imu_angles().y < -45.0)) {
+  if (ANGLE_SAFETY_STOP && (imu_angles().x > SAFE_ANGLE || imu_angles().x < -SAFE_ANGLE
+                             || imu_angles().y > SAFE_ANGLE || imu_angles().y < -SAFE_ANGLE)) {
     serial_printlnf("angles too high");
     fc_emergency_stop();
   }
 }
 
 void compute_motor_outputs() {
-  // float m1_r_out = rc_get(RC_THROTTLE) - pid(PID_RATE_X)->output - pid(PID_RATE_Z)->output;
-  // float m2_l_out = rc_get(RC_THROTTLE) + pid(PID_RATE_X)->output - pid(PID_RATE_Z)->output;
-  // float m3_f_out = rc_get(RC_THROTTLE) - pid(PID_RATE_Y)->output + pid(PID_RATE_Z)->output;
-  // float m4_b_out = rc_get(RC_THROTTLE) + pid(PID_RATE_Y)->output + pid(PID_RATE_Z)->output;
-
   float m1_fr_out = rc_get(RC_THROTTLE) - pid(PID_RATE_X)->output
                                         - pid(PID_RATE_Y)->output
                                         - pid(PID_RATE_Z)->output;
