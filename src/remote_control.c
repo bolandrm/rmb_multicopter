@@ -1,24 +1,17 @@
 #include "remote_control.h"
 #include "flight_controller.h"
 #include "utils.h"
+#include "config.h"
 
-static int16_t rc_in_min[] = { RC_CH1_IN_MIN, RC_CH2_IN_MIN, RC_CH3_IN_MIN,
-                               RC_CH4_IN_MIN, RC_CH5_IN_MIN, RC_CH6_IN_MIN };
-static int16_t rc_in_max[] = { RC_CH1_IN_MAX, RC_CH2_IN_MAX, RC_CH3_IN_MAX,
-                               RC_CH4_IN_MAX, RC_CH5_IN_MAX, RC_CH6_IN_MAX };
-static int16_t rc_out_min[] = { RC_CH1_OUT_MIN, RC_CH2_OUT_MIN, RC_CH3_OUT_MIN,
-                                RC_CH4_OUT_MIN, RC_CH5_OUT_MIN, RC_CH6_OUT_MIN };
-static int16_t rc_out_max[] = { RC_CH1_OUT_MAX, RC_CH2_OUT_MAX, RC_CH3_OUT_MAX,
-                                RC_CH4_OUT_MAX, RC_CH5_OUT_MAX, RC_CH6_OUT_MAX };
-static int16_t rc_offset[] = { RC_CH1_OFFSET, RC_CH2_OFFSET, RC_CH3_OFFSET,
-                               RC_CH4_OFFSET, RC_CH5_OFFSET, RC_CH6_OFFSET };
-
+static uint8_t functions_to_channels[RC_NUM_CHANNELS];
 static uint32_t last_update_time = 0;
-static uint16_t rc_values[NUM_CHANNELS] = {1500};
-static uint32_t rc_start[NUM_CHANNELS];
-static int16_t rc_out_values[NUM_CHANNELS] = {0};
-static volatile uint16_t rc_shared[NUM_CHANNELS] = {1500};
-static void process_channel_value(int channel);
+static uint16_t rc_values[RC_NUM_CHANNELS] = { 1500 };
+static uint32_t rc_start[RC_NUM_CHANNELS];
+static float rc_out_values[RC_NUM_CHANNELS] = { 0 };
+static float out_min_values[RC_NUM_CHANNELS] = { 0 };
+static float out_max_values[RC_NUM_CHANNELS] = { 0 };
+static volatile uint16_t rc_shared[RC_NUM_CHANNELS] = { 1500 };
+static void process_channel_value(uint8_t channel);
 
 void rc_read_values() {
   noInterrupts();
@@ -28,55 +21,58 @@ void rc_read_values() {
   if (millis() - last_update_time > RC_TIMEOUT) {
     // If we don't get an input for RC_TIMEOUT, set all vals to 0
     fc_disarm();
-    for (int i = 0; i < NUM_CHANNELS; i++) {
+    for (int i = 0; i < RC_NUM_CHANNELS; i++) {
       rc_out_values[i] = 0;
     }
   } else {
-    for (int i = 0; i < NUM_CHANNELS; i++) {
+    for (int i = 0; i < RC_NUM_CHANNELS; i++) {
       process_channel_value(i);
     }
   }
 }
 
-static void process_channel_value(int channel) {
-  int16_t value = rc_values[channel];
+static void process_channel_value(uint8_t channel) {
+  config_rc_channel channel_config = CONFIG.data.rc_channels[channel];
+  uint8_t function = channel_config.function;
+  float value = rc_values[channel];
 
-  if (channel == RC_CH3) {
-    if (value < 1070) {
-      value = 0;
-    } else if (value > 1070) {
-      value = constrain_c(value, rc_in_min[channel], rc_in_max[channel]);
-      value = map_c(value, rc_in_min[channel], rc_in_max[channel], rc_out_min[channel], rc_out_max[channel]);
-    }
+  if ((function == RC_YAW || function == RC_PITCH || function == RC_ROLL) &&
+      ((value <= 1510 && value >= 1500) || (value >= 1490 && value <= 1500))) {
+    value = 0.0;
+  } else if (function == RC_THROTTLE && value < 1125) {
+    value = 0.0;
   } else {
-    value = constrain_c(value, rc_in_min[channel], rc_in_max[channel]);
-    value = map_c(value, rc_in_min[channel], rc_in_max[channel], rc_out_min[channel], rc_out_max[channel]);
+    value = constrain_c(value, channel_config.min, channel_config.max);
 
-    // workaround ... bug here
-    if (channel == RC_CH4 && value == -100) {
-      value = 0;
-    }
-
-    if ((channel == RC_CH1 || channel == RC_CH2 || channel == RC_CH4)
-         && ((value > 0 && value < 2) || (value < 0 && value > -2)) ) {
-      value = 0;
-    }
-
-    if (channel == RC_CH4) {
-      value = -value; // invert yaw
-    }
+    value = map_c(
+      value,
+      channel_config.min, channel_config.max,
+      out_min_values[function], out_max_values[function]
+    );
   }
 
-  value += rc_offset[channel];
+  if (channel_config.invert) value = -value;
 
-  rc_out_values[channel] = value;
+  rc_out_values[function] = value;
 }
 
-int16_t rc_get(int channel) {
-  return rc_out_values[channel];
+float rc_get(uint8_t function) {
+  return rc_out_values[function];
 }
 
-static void calc_input(int channel, int input_pin) {
+float rc_out_max(uint8_t function) {
+  return out_max_values[function];
+}
+
+float rc_out_min(uint8_t function) {
+  return out_min_values[function];
+}
+
+int16_t rc_get_raw(uint8_t function) {
+  return rc_values[functions_to_channels[function]];
+}
+
+static void calc_input(uint8_t channel, uint8_t input_pin) {
   if (digitalRead(input_pin) == HIGH) {
     rc_start[channel] = micros();
   } else {
@@ -85,6 +81,32 @@ static void calc_input(int channel, int input_pin) {
   }
 
   last_update_time = millis();
+}
+
+void rc_config_updated() {
+  for (int i = 0; i < RC_NUM_CHANNELS; i++) {
+    config_rc_channel channel_config = CONFIG.data.rc_channels[i];
+    uint8_t function = channel_config.function;
+
+    float out_max = 100.0;
+    float out_min = 0.0;
+
+    if (function == RC_THROTTLE) {
+      out_max = RC_THROTTLE_MAX;
+      out_min = RC_THROTTLE_MIN;
+    } else if (function == RC_PITCH || function == RC_ROLL) {
+      out_max = RC_PITCH_ROLL_BASE * RC_PITCH_ROLL_SENS / 100.0;
+      out_min = -1 * out_max;
+    } else if (function == RC_YAW) {
+      out_max = RC_YAW_BASE * RC_YAW_SENS / 100.0;
+      out_min = -1 * out_max;
+    }
+
+    // store variables based on config data
+    functions_to_channels[function] = i;
+    out_max_values[function] = out_max;
+    out_min_values[function] = out_min;
+  }
 }
 
 static void calc_ch_1() { calc_input(RC_CH1, RC_CH1_INPUT); }

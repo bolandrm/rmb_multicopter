@@ -3,6 +3,7 @@ export const PACKET_HEADER2 = 0xB5
 
 export const REQUEST_CONFIG = 1
 export const REQUEST_GYRO_ACC = 2
+export const REQUEST_RC = 3
 
 export const SET_CONFIG = 101
 

@@ -2,6 +2,7 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import TuningTab from './TuningTab'
 import PidsTab from './PidsTab'
+import RCTab from './RCTab'
 import { metaStore } from '../store'
 
 @observer
@@ -14,6 +15,9 @@ class TabContentContainer extends React.Component {
         }
         {metaStore.currentTab === 'PIDS' &&
           <PidsTab />
+        }
+        {metaStore.currentTab === 'RC' &&
+          <RCTab />
         }
       </div>
     )

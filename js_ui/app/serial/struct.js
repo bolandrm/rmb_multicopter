@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 const dataTypes = {
   //   b	  int8
-  //   B	  uint8
+  B: { type: 'Uint8', byteSize: 1 },
   //   ?	  bool8
   h: { type: 'Int16', byteSize: 2 },
   H: { type: 'Uint16', byteSize: 2 },

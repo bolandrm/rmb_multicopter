@@ -5,9 +5,10 @@
 
 #define abs_c(x) ((x)>0?(x):-(x))
 
+#define map_c(x, in_min, in_max, out_min, out_max) ((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
+
 void serial_printf(const char *format, ...);
 void serial_printlnf(const char *format, ...);
 void support_printing_floats();
-long map_c(long x, long in_min, long in_max, long out_min, long out_max);
 
 #endif

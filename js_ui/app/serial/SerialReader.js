@@ -73,6 +73,9 @@ class SerialReader {
             case serialCodes.REQUEST_GYRO_ACC:
               response = parseStruct(this.dataBuffer, structLayouts.gyroAcc);
               break;
+            case serialCodes.REQUEST_RC:
+              response = parseStruct(this.dataBuffer, structLayouts.rcData);
+              break;
             case serialCodes.INFO_SUCCESS:
               console.log("controller responded with success!");
               break;

@@ -8,7 +8,7 @@
 #include "utils.h"
 #include <stdbool.h>
 
-#define ANGLE_SAFETY_STOP 0
+#define ANGLE_SAFETY_STOP true
 
 void fc_safety_check();
 void compute_pids();
@@ -19,8 +19,8 @@ uint16_t gyro_freeze_counter = 0;
 float last_gyro_value = 0.0;
 bool emergency_stopped = false;
 uint8_t safety_mode = UNARMED;
-//uint8_t flight_mode = RATE;
-uint8_t flight_mode = STABILIZE;
+uint8_t flight_mode = RATE;
+// uint8_t flight_mode = STABILIZE;
 bool on_ground = true;
 
 void fc_init() {
@@ -83,11 +83,14 @@ void compute_pids() {
 }
 
 void fc_safety_check() {
-  if (rc_get(RC_THROTTLE) == 0 && rc_get(RC_YAW) > RC_CH4_OUT_MAX/2-10) {
+  float yaw = rc_get(RC_YAW);
+  float yaw_max = rc_out_max(RC_YAW);
+
+  if (rc_get(RC_THROTTLE) == 0 && yaw < yaw_max * -0.9) {
     fc_disarm();
   }
 
-  if (rc_get(RC_THROTTLE) == 0 && rc_get(RC_YAW) < RC_CH4_OUT_MIN/2+10) {
+  if (rc_get(RC_THROTTLE) == 0 && yaw > yaw_max * 0.9) {
     fc_arm();
   }
 
@@ -136,7 +139,7 @@ void compute_motor_outputs() {
 }
 
 bool min_throttle() {
-  return rc_get(RC_THROTTLE) >= 1070;
+  return rc_get(RC_THROTTLE) >= RC_THROTTLE_MIN;
 }
 
 void fc_arm() {

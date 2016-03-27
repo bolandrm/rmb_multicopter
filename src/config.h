@@ -2,20 +2,30 @@
 #define CONFIG_H
 
 #include <stdint.h>
+#include <stdbool.h>
 #include "pids.h"
+#include "remote_control.h"
 
-#define CONFIG_VERSION 3
+#define CONFIG_VERSION 4
+
+typedef struct __attribute__((packed)) {
+  uint8_t function;
+  uint16_t min;
+  uint16_t max;
+  bool invert;
+} config_rc_channel;
 
 typedef struct __attribute__((packed)) {
   float kp;
   float ki;
   float i_max;
-} pid_config;
+} config_pid;
 
 typedef struct __attribute__((packed)) {
   uint16_t version;
 
-  pid_config pids[NUM_PIDS];
+  config_rc_channel rc_channels[RC_NUM_CHANNELS];
+  config_pid pids[NUM_PIDS];
 
 } CONFIG_struct;
 

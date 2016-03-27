@@ -5,6 +5,7 @@
 
 #define REQUEST_CONFIG 1
 #define REQUEST_GYRO_ACC 2
+#define REQUEST_RC 3
 
 #define SET_CONFIG 101
 
@@ -194,6 +195,22 @@ void process_serial_data() {
 
       output_float32(imu_gyro_max_value());
       output_float32(imu_accel_max_value());
+
+      packet_tail();
+      break;
+
+    case REQUEST_RC:
+      packet_head(REQUEST_RC, 15 * RC_NUM_CHANNELS);
+
+      for (int i = 0; i < RC_NUM_CHANNELS; i++) {
+        uint8_t function = CONFIG.data.rc_channels[i].function;
+
+        output_uint8(function);
+        output_uint16(rc_get_raw(function));
+        output_float32(rc_get(function));
+        output_float32(rc_out_min(function));
+        output_float32(rc_out_max(function));
+      }
 
       packet_tail();
       break;

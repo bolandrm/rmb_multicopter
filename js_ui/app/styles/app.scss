@@ -122,3 +122,41 @@ button:focus {
     margin-right: 10px;
   }
 }
+
+.rc-tab {
+  .progress {
+    width: 250px;
+    float: left;
+    margin-right: 10px;
+    position: relative;
+  }
+
+  .progress-bar {
+    transition: none;
+    position: relative;
+  }
+
+  .progress-bar-divider {
+    position: absolute;
+    left: calc(50% - 1px);
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background-color: #CCC;
+  }
+
+  .channel-col {
+    width: 150px;
+  }
+  .function-col {
+    width: 150px;
+  }
+  .raw-value-col {
+    width: 440px;
+  }
+  .value-col {
+    width: 440px;
+  }
+  .endpoints-col {
+  }
+}

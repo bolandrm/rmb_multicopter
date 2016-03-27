@@ -15,6 +15,10 @@ class SerialManager {
   codes = serialCodes
   currentSerialPort = null
   callbacks = {}
+  spammyCodes = [
+    serialCodes.REQUEST_GYRO_ACC,
+    serialCodes.REQUEST_RC
+  ]
 
   constructor() {
     this.reader = new SerialReader(this._dataParsed)
@@ -76,7 +80,7 @@ class SerialManager {
       callbackWrapper.handlers.push(callback);
     }
 
-    if (code !== serialCodes.REQUEST_GYRO_ACC)
+    if (this.spammyCodes.indexOf(code) === -1)
       console.log('sending packet', code, data)
 
     this.writer.sendPacket(code, data)
@@ -131,7 +135,7 @@ class SerialManager {
   }
 
   _dataParsed = (code, data) => {
-    if (code !== serialCodes.REQUEST_GYRO_ACC)
+    if (this.spammyCodes.indexOf(code) === -1)
       console.log('data parsed', code, data)
 
     switch(code) {

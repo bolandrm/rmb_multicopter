@@ -22,7 +22,7 @@ class LineGraph extends React.Component {
     this.width = 1450 - this.margin.left - this.margin.right
     this.height = 250
 
-    this.svg = d3.select(el).append("svg")
+    this.svg = d3.select(el).select(".line-chart").append("svg")
           .attr("width", this.width + this.margin.left + this.margin.right)
           .attr("height", this.height + this.margin.top + this.margin.bottom)
           .append("g")
@@ -104,7 +104,16 @@ class LineGraph extends React.Component {
   }
 
   render() {
-    return <div className="line-chart" />
+    const graph = this.props.graph
+
+    return (
+      <div>
+        <div className="line-chart" />
+        <a className="btn btn-default" onClick={graph.pausedOrUnpaused}>
+          { graph.paused ? "Unpause" : "Pause" }
+        </a>
+      </div>
+    )
   }
 }
 
