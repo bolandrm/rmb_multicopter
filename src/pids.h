@@ -17,12 +17,18 @@ typedef struct {
 
   float setpoint;
   float input;
-  float integrator;
   float output;
-  float last_input;
+
+  float integrator;
+  float last_error;
+
+  float delta;
+  float delta1;
+  float delta2;
 
   float p_term;
   float i_term;
+  float d_term;
 } m_pid_t;
 
 void pids_init();

@@ -36,7 +36,8 @@ export const rcData = [
 const pidConfig = [
   [ "kp", "f" ],
   [ "ki", "f" ],
-  [ "imax", "f" ]
+  [ "imax", "f" ],
+  [ "kd", "f" ]
 ]
 
 const rcConfig = [

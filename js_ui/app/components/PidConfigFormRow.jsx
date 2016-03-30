@@ -28,6 +28,10 @@ class PidConfigFormRow extends React.Component {
           <label>I Max</label>
           <input type='text' className='form-control' {...this.fieldProps('imax')} />
         </div>
+        <div className='form-group'>
+          <label>D</label>
+          <input type='text' className='form-control' {...this.fieldProps('kd')} />
+        </div>
       </div>
     )
   }

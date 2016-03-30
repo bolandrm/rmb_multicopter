@@ -6,7 +6,7 @@
 #include "pids.h"
 #include "remote_control.h"
 
-#define CONFIG_VERSION 4
+#define CONFIG_VERSION 5
 
 typedef struct __attribute__((packed)) {
   uint8_t function;
@@ -19,6 +19,7 @@ typedef struct __attribute__((packed)) {
   float kp;
   float ki;
   float i_max;
+  float kd;
 } config_pid;
 
 typedef struct __attribute__((packed)) {
@@ -37,6 +38,7 @@ typedef union {
 extern CONFIG_union CONFIG;
 
 void config_init();
+void config_init_from_default();
 void config_set();
 
 #endif

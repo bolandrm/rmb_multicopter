@@ -3,7 +3,7 @@ USER_LIB_PATH = ./libraries
 OBJDIR        = ./.build-$(BOARD_TAG)
 
 BOARD_TAG    = teensy31
-ARDUINO_LIBS = i2c_t3 MedianFilter
+ARDUINO_LIBS = i2c_t3 MedianFilter EEPROM
 
 MONITOR_BAUDRATE  = 115200
 MONITOR_PORT      = /dev/tty.usbmodem*

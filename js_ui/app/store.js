@@ -114,7 +114,7 @@ class ConfigStore {
     if (!this.fetchedOnce) return 
 
     let plainData = this.plainData()
-    plainData.version = 4
+    plainData.version = 5
     const struct = buildStruct(plainData, structLayouts.config)
 
     serial.send(serial.codes.SET_CONFIG, struct)

@@ -22,6 +22,7 @@ void pid_compute(int8_t pid_number) {
   float kp = CONFIG.data.pids[pid_number].kp;
   float ki = CONFIG.data.pids[pid_number].ki;
   float i_max = CONFIG.data.pids[pid_number].i_max;
+  float kd = 0.0f;
 
   float dt = (float) (micros() - pid->last_compute_time) / 1000000.0f;
   pid->last_compute_time = micros();
@@ -31,11 +32,20 @@ void pid_compute(int8_t pid_number) {
   pid->integrator += ki * error * dt;
   pid->integrator = constrain_c(pid->integrator, -i_max, i_max);
 
+  pid->delta = (error - pid->last_error) / dt;
+
+  // moving average filter
+  float delta_sum = pid->delta + pid->delta1 + pid->delta2;
+  pid->delta2 = pid->delta1;
+  pid->delta1 = pid->delta;
+  pid->delta = delta_sum / 3.0f;
+
   pid->p_term = kp * error;
   pid->i_term = pid->integrator;
+  pid->d_term = kd * pid->delta;
 
-  pid->last_input = pid->input;
-  pid->output = pid->p_term + pid->i_term;
+  pid->last_error = error;
+  pid->output = pid->p_term + pid->i_term + pid->d_term;
 }
 
 void pids_reset_i() {
