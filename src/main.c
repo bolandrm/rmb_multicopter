@@ -25,15 +25,15 @@ void setup() {
 void loop() {
   if (schedule(TASK_1000HZ)) {
     imu_read_raw_values();
+    imu_process_values();
+    fc_process();
 
-    if (schedule(TASK_50HZ)) {
-      rc_read_values();
+    if (schedule(TASK_100HZ)) {
       serial_commands_process();
     }
 
-    if (schedule(TASK_500HZ)) {
-      imu_process_values();
-      fc_process();
+    if (schedule(TASK_50HZ)) {
+      rc_read_values();
     }
 
     if (schedule(TASK_2HZ)) {

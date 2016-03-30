@@ -8,8 +8,6 @@ static axis_float_t accel_filtered;
 static axis_float_t rates;
 static axis_float_t angles;
 static axis_int32_t gyro_raws;
-static axis_float_t gyro_sums;
-static int16_t gyro_sum_count = 0;
 static uint32_t gyro_update_timer = 0;
 static uint32_t combination_update_timer = 0;
 static axis_int32_t accel_raws;
@@ -26,19 +24,10 @@ static uint32_t value_process_dt;
 static void record_max_gyro_value();
 static void record_max_accel_value();
 
-static void reset_gyro_sums() {
-  gyro_sums.x = 0.0;
-  gyro_sums.y = 0.0;
-  gyro_sums.z = 0.0;
-  gyro_sum_count = 0;
-}
-
 void imu_init() {
   accel_x_filter = median_filter_new(11, 0);
   accel_y_filter = median_filter_new(11, 0);
   accel_z_filter = median_filter_new(11, 0);
-
-  reset_gyro_sums();
 
   mpu6050_init();
 }
@@ -46,12 +35,6 @@ void imu_init() {
 static void read_gyro_raws() {
   mpu6050_read_gyro(&gyro_raws);
   record_max_gyro_value();
-
-  gyro_sums.x += gyro_raws.x;
-  gyro_sums.y += gyro_raws.y;
-  gyro_sums.z += gyro_raws.z;
-
-  gyro_sum_count += 1;
 }
 
 static void read_accel_raws() {
@@ -64,15 +47,9 @@ static void read_accel_raws() {
 }
 
 static void process_gyro() {
-  float rate_avg_x = (gyro_sums.x / gyro_sum_count) - GYRO_X_OFFSET;
-  float rate_avg_y = (gyro_sums.y / gyro_sum_count) - GYRO_Y_OFFSET;
-  float rate_avg_z = (gyro_sums.z / gyro_sum_count) - GYRO_Z_OFFSET;
-
-  rates.x = rate_avg_x / GYRO_SENS;
-  rates.y = rate_avg_y / GYRO_SENS;
-  rates.z = rate_avg_z / GYRO_SENS;
-
-  reset_gyro_sums();
+  rates.x = (gyro_raws.x - GYRO_X_OFFSET) / GYRO_SENS;
+  rates.y = (gyro_raws.y - GYRO_Y_OFFSET) / GYRO_SENS;
+  rates.z = (gyro_raws.z - GYRO_Z_OFFSET) / GYRO_SENS;
 
   // Integration of gyro rates to get the angles for debugging only
   gyro_angles.x += rates.x * (float)(micros() - gyro_update_timer) / 1000000;
