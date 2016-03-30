@@ -5,13 +5,24 @@
 
 CONFIG_union CONFIG;
 
+void config_after_update() {
+  // any functions that need to be called (recalculations) after config is updated
+  rc_config_updated();
+}
+
+void config_load_from_eeprom() {
+  for (int i = 0; i < sizeof(CONFIG); i++) {
+    CONFIG.raw[i] = eeprom_read(i);
+  }
+
+  config_after_update();
+}
+
 void config_init() {
   if (eeprom_read(0) == 255) {
     config_init_from_default();
   } else {
-    for (int i = 0; i < sizeof(CONFIG); i++) {
-      CONFIG.raw[i] = eeprom_read(i);
-    }
+    config_load_from_eeprom();
 
     if (CONFIG.data.version != CONFIG_VERSION) {
       config_init_from_default();
@@ -20,7 +31,7 @@ void config_init() {
 }
 
 void config_update_eeprom() {
-  for (int i = 0; i < sizeof(CONFIG); i++) {
+  for (uint16_t i = 0; i < sizeof(CONFIG); i++) {
     eeprom_update(i, CONFIG.raw[i]);
   }
 }
@@ -31,8 +42,7 @@ void config_set(uint8_t data_buffer[]) {
   }
 
   config_update_eeprom();
-
-  rc_config_updated();
+  config_after_update();
 }
 
 void config_init_from_default() {
@@ -90,5 +100,5 @@ void config_init_from_default() {
   CONFIG.data.rc_channels[RC_CH5].function = RC_POT_A;
   CONFIG.data.rc_channels[RC_CH6].function = RC_POT_B;
 
-  rc_config_updated();
+  config_after_update();
 }
