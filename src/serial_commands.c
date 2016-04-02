@@ -6,6 +6,7 @@
 #define REQUEST_CONFIG 1
 #define REQUEST_GYRO_ACC 2
 #define REQUEST_RC 3
+#define REQUEST_MOTORS 4
 
 #define SET_CONFIG 101
 
@@ -18,6 +19,7 @@
 #include "pids.h"
 #include "imu.h"
 #include "flight_controller.h"
+#include "motors.h"
 #include "utils.h"
 #include <usb_serial.h>
 
@@ -202,7 +204,7 @@ void process_serial_data() {
     case REQUEST_RC:
       packet_head(REQUEST_RC, 15 * RC_NUM_CHANNELS);
 
-      for (int i = 0; i < RC_NUM_CHANNELS; i++) {
+      for (uint8_t i = 0; i < RC_NUM_CHANNELS; i++) {
         uint8_t function = CONFIG.data.rc_channels[i].function;
 
         output_uint8(function);
@@ -210,6 +212,16 @@ void process_serial_data() {
         output_float32(rc_get(function));
         output_float32(rc_out_min(function));
         output_float32(rc_out_max(function));
+      }
+
+      packet_tail();
+      break;
+
+    case REQUEST_MOTORS:
+      packet_head(REQUEST_MOTORS, 8);
+
+      for (uint8_t i = 0; i < NUM_MOTORS; i++) {
+        output_uint16(motor_level(i));
       }
 
       packet_tail();

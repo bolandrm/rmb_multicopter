@@ -6,7 +6,7 @@
 #include "pids.h"
 #include "remote_control.h"
 
-#define CONFIG_VERSION 5
+#define CONFIG_VERSION 6
 
 typedef struct __attribute__((packed)) {
   uint8_t function;

@@ -16,6 +16,13 @@ export const gyroAcc = [
   [ "accelMaxValue", "f" ]
 ]
 
+export const motorData = [
+  [ "m1", "H" ],
+  [ "m2", "H" ],
+  [ "m3", "H" ],
+  [ "m4", "H" ]
+]
+
 const rcChannelData = [
   [ "function", "B" ],
   [ "rawValue", "H" ],
