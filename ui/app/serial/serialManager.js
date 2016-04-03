@@ -17,7 +17,8 @@ class SerialManager {
   callbacks = {}
   spammyCodes = [
     serialCodes.REQUEST_GYRO_ACC,
-    serialCodes.REQUEST_RC
+    serialCodes.REQUEST_RC,
+    serialCodes.REQUEST_MOTORS,
   ]
 
   constructor() {
@@ -66,24 +67,28 @@ class SerialManager {
   send = (code, data, callback) => {
     if (!this.connected) return
 
+    let callbackWrapper = this.callbacks[code];
+    const alreadySent = !!callbackWrapper
+
+    if (!callbackWrapper) {
+      callbackWrapper = { handlers: [] }
+      callbackWrapper.timer = setTimeout(() => {
+        console.log(`request timed out: ${code}`);
+        this.callbacks = _.omit(this.callbacks, code);
+      }, 1000);
+      this.callbacks[code] = callbackWrapper;
+    }
+
     if (callback) {
-      let callbackWrapper = this.callbacks[code];
-
-      if (!callbackWrapper) {
-        callbackWrapper = { handlers: [] }
-        callbackWrapper.timer = setTimeout(() => {
-          console.log(`request timed out: ${code}`);
-        }, 1000);
-        this.callbacks[code] = callbackWrapper;
-      }
-
       callbackWrapper.handlers.push(callback);
     }
 
-    if (this.spammyCodes.indexOf(code) === -1)
-      console.log('sending packet', code, data)
+    if (!alreadySent) {
+      if (this.spammyCodes.indexOf(code) === -1)
+        console.log('sending packet', code, data)
 
-    this.writer.sendPacket(code, data)
+      this.writer.sendPacket(code, data)
+    }
   }
 
   _forkWorker() {

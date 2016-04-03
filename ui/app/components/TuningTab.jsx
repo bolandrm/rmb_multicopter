@@ -1,6 +1,7 @@
 import React from "react";
 import { observer } from 'mobx-react'
 import LineGraph from './LineGraph'
+import MotorChart from './MotorChart'
 import { tuningTabStore } from '../store'
 import serial from '../serial/serialManager'
 
@@ -15,13 +16,15 @@ class TuningTab extends React.Component {
   }
 
   fetchData = () => {
-    serial.send(serial.codes.REQUEST_GYRO_ACC, null, tuningTabStore.graph1.addSample)
+    serial.send(tuningTabStore.graph1.requestCode(), null, tuningTabStore.graph1.addSample)
+    serial.send(serial.codes.REQUEST_MOTORS, null, tuningTabStore.addMotorChartSample)
   }
 
   render() {
     return (
       <div>
         <LineGraph graph={tuningTabStore.graph1} />
+        <MotorChart data={tuningTabStore.motorChartValues} />
       </div>
     )
   }

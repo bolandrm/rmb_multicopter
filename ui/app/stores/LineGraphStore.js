@@ -1,13 +1,20 @@
 import { observable } from 'mobx'
 import { deepFetch } from '../utils'
+import * as serialCodes from '../serial/serialCodes'
 
 export const graphTypes = {
-  'angleXFusion': ['accelAngles.x', 'gyroAngles.x', 'angles.x'],
-  'angleYFusion': ['accelAngles.y', 'gyroAngles.y', 'angles.y']
-}
-
-const initialGraphData = function(type) {
-  return { type, data }
+  'angleXFusion': {
+    requestCode: serialCodes.REQUEST_GYRO_ACC,
+    dataPoints: ['accelAngles.x', 'gyroAngles.x', 'angles.x']
+  },
+  'angleYFusion': {
+    requestCode: serialCodes.REQUEST_GYRO_ACC,
+    dataPoints: ['accelAngles.y', 'gyroAngles.y', 'angles.y']
+  },
+  'motors': {
+    requestCode: serialCodes.REQUEST_MOTORS,
+    dataPoints: ['m1', 'm2', 'm3', 'm4']
+  }
 }
 
 export class LineGraphStore {
@@ -17,13 +24,17 @@ export class LineGraphStore {
   sampleCount = 200
 
   constructor() {
-    this.seedData(this.type)
+    this.seedData()
   }
 
-  seedData(type) {
-    graphTypes[type].forEach((key, i) => {
+  seedData() {
+    graphTypes[this.type].dataPoints.forEach((key, i) => {
       this.data.push({ key: key, samples: [], filtered: false })
     })
+  }
+
+  requestCode = () => {
+    return graphTypes[this.type].requestCode
   }
 
   addSample = (sample) => {

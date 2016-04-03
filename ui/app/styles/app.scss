@@ -160,3 +160,69 @@ button:focus {
   .endpoints-col {
   }
 }
+
+.motor-chart-2d {
+  width: 250px;
+  height: 250px;
+  position: relative;
+
+  .arm1, .arm2 {
+    border-radius: 7px;
+    width: 14px;
+    height: 230px;
+    background-color: #333;
+    position: absolute;
+  }
+
+  .arm1 {
+    transform: rotate(45deg);
+    top: 8px;
+    left: 120px;
+  }
+
+  .arm2 {
+    transform: rotate(-45deg);
+    top: 8px;
+    right: 120px;
+  }
+
+  .fl {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .fr {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .bl {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+
+  .br {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
+  svg {
+    z-index: 10;
+    width: 100px; height: 100px;
+    transform: rotate(-90deg);
+    border-radius: 50%;
+  }
+
+  circle {
+    fill: #D62728;
+    fill-opacity: 0.25;
+    stroke: #D62728;
+    stroke-width: 32;
+    stroke-dasharray: 25 100;
+    stroke-opacity: 0.75;
+  }
+}
