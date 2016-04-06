@@ -29,7 +29,7 @@ void mpu6050_read_gyro(axis_int32_t *gyro_rates) {
 
   gyro_rates->x = gyro_x;
   gyro_rates->y = gyro_y;
-  gyro_rates->z = gyro_z;
+  gyro_rates->z = -1 * gyro_z;
 }
 
 void mpu6050_read_accel(axis_int32_t *accel_raws) {
@@ -57,9 +57,14 @@ void calibrate_gyro() {
     delay(1);
   }
 
-  serial_printlnf("x avg: %f", gyro_sums.x / 10000);
-  serial_printlnf("y avg: %f", gyro_sums.y / 10000);
-  serial_printlnf("z avg: %f", gyro_sums.z / 10000);
+  for(;;) {
+    serial_printlnf("Gyro calibrated:");
+    serial_printlnf("x avg: %f", gyro_sums.x / 10000);
+    serial_printlnf("y avg: %f", gyro_sums.y / 10000);
+    serial_printlnf("z avg: %f", gyro_sums.z / 10000);
+    serial_printlnf("--------------");
+    delay(5000);
+  }
 }
 
 void calibrate_accel() {

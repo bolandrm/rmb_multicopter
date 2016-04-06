@@ -116,16 +116,16 @@ void fc_safety_check() {
 void compute_motor_outputs() {
   float m1_fr_out = rc_get(RC_THROTTLE) - pid(PID_RATE_X)->output
                                         - pid(PID_RATE_Y)->output
-                                        - pid(PID_RATE_Z)->output;
+                                        + pid(PID_RATE_Z)->output;
   float m2_bl_out = rc_get(RC_THROTTLE) + pid(PID_RATE_X)->output
                                         + pid(PID_RATE_Y)->output
-                                        - pid(PID_RATE_Z)->output;
+                                        + pid(PID_RATE_Z)->output;
   float m3_fl_out = rc_get(RC_THROTTLE) - pid(PID_RATE_Y)->output
                                         + pid(PID_RATE_X)->output
-                                        + pid(PID_RATE_Z)->output;
+                                        - pid(PID_RATE_Z)->output;
   float m4_br_out = rc_get(RC_THROTTLE) + pid(PID_RATE_Y)->output
                                         - pid(PID_RATE_X)->output
-                                        + pid(PID_RATE_Z)->output;
+                                        - pid(PID_RATE_Z)->output;
 
   motors_set_output(M1, (int16_t)(m1_fr_out + 0.5));
   motors_set_output(M2, (int16_t)(m2_bl_out + 0.5));

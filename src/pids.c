@@ -22,7 +22,7 @@ void pid_compute(int8_t pid_number) {
   float kp = CONFIG.data.pids[pid_number].kp;
   float ki = CONFIG.data.pids[pid_number].ki;
   float i_max = CONFIG.data.pids[pid_number].i_max;
-  float kd = 0.0f;
+  float kd = CONFIG.data.pids[pid_number].kd;
 
   float dt = (float) (micros() - pid->last_compute_time) / 1000000.0f;
   pid->last_compute_time = micros();

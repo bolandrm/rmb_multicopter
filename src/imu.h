@@ -4,9 +4,9 @@
 #include <stdint.h>
 #include "mpu6050.h"
 
-#define GYRO_X_OFFSET (-68.94)
-#define GYRO_Y_OFFSET (-46.81)
-#define GYRO_Z_OFFSET 54.23
+#define GYRO_X_OFFSET (-103.87)
+#define GYRO_Y_OFFSET (-34.90)
+#define GYRO_Z_OFFSET (-47.83)
 
 #define ACCEL_X_OFFSET (-30.40)
 #define ACCEL_Y_OFFSET (-91.63)

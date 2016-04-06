@@ -19,7 +19,7 @@ export const graphTypes = {
 
 export class LineGraphStore {
   @observable data = []
-  @observable type = 'angleXFusion'
+  @observable type = 'motors'
   @observable paused = false
   sampleCount = 200
 
