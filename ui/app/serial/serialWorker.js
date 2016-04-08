@@ -28,7 +28,7 @@ process.on('message', function(payload) {
       currentSerialPort = new SerialPort.SerialPort(
         params.port,
         {
-          baudRate: 115200,
+          baudRate: 57600,
           disconnectedCallback: onClose
         },
         false

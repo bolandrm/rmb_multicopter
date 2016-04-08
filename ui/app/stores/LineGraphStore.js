@@ -14,12 +14,21 @@ export const graphTypes = {
   'motors': {
     requestCode: serialCodes.REQUEST_MOTORS,
     dataPoints: ['m1', 'm2', 'm3', 'm4']
+  },
+  'ratePidOutput': {
+    requestCode: serialCodes.REQUEST_RATE_PIDS,
+    dataPoints: [
+      'pidRateX.output',
+      'pidRateX.pTerm',
+      'pidRateX.iTerm',
+      'pidRateX.dTerm'
+    ]
   }
 }
 
 export class LineGraphStore {
   @observable data = []
-  @observable type = 'motors'
+  @observable type = 'ratePidOutput'
   @observable paused = false
   sampleCount = 200
 

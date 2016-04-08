@@ -48,10 +48,10 @@ void fc_process() {
   }
 }
 
-void fc_emergency_stop() {
+void fc_emergency_stop(char *reason) {
   emergency_stopped = true;
   motors_command_all_off();
-  for(;;) debugger_indicate_emergency();
+  for(;;) debugger_indicate_emergency(reason);
 }
 
 void compute_pids() {
@@ -98,8 +98,7 @@ void fc_safety_check() {
   if (imu_rates().x == last_gyro_value) {
     gyro_freeze_counter++;
     if (gyro_freeze_counter == 500) {
-      serial_printlnf("gyro freeze");
-      fc_emergency_stop();
+      fc_emergency_stop("gyro freeze");
     }
   } else {
     gyro_freeze_counter = 0;
@@ -108,8 +107,7 @@ void fc_safety_check() {
 
   if (ANGLE_SAFETY_STOP && (imu_angles().x > SAFE_ANGLE || imu_angles().x < -SAFE_ANGLE
                              || imu_angles().y > SAFE_ANGLE || imu_angles().y < -SAFE_ANGLE)) {
-    serial_printlnf("angles too high");
-    fc_emergency_stop();
+    fc_emergency_stop("angles too high");
   }
 }
 

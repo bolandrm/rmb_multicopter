@@ -29,7 +29,11 @@ void imu_init() {
   accel_y_filter = median_filter_new(11, 0);
   accel_z_filter = median_filter_new(11, 0);
 
+  delay(300);
+
   mpu6050_init();
+
+  delay(300);
 }
 
 static void read_gyro_raws() {

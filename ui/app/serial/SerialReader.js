@@ -79,6 +79,9 @@ class SerialReader {
             case serialCodes.REQUEST_MOTORS:
               response = parseStruct(this.dataBuffer, structLayouts.motorData);
               break;
+            case serialCodes.REQUEST_RATE_PIDS:
+              response = parseStruct(this.dataBuffer, structLayouts.ratePidData);
+              break;
             case serialCodes.INFO_SUCCESS:
               console.log("controller responded with success!");
               break;

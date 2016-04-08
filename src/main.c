@@ -1,4 +1,4 @@
-#define SERIAL_PORT_SPEED 115200
+#define SERIAL_PORT_SPEED 57600
 
 #include "WProgram.h"
 #include "i2c_helpers.h"
@@ -13,7 +13,7 @@
 
 void setup() {
   support_printing_floats();
-  serial2_begin(SERIAL_PORT_SPEED);
+  serial2_begin(BAUD2DIV2(SERIAL_PORT_SPEED));
   i2c_begin();
   config_init();
   imu_init();

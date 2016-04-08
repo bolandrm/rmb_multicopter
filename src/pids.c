@@ -32,17 +32,22 @@ void pid_compute(int8_t pid_number) {
   pid->integrator += ki * error * dt;
   pid->integrator = constrain_c(pid->integrator, -i_max, i_max);
 
-  pid->delta = (error - pid->last_error) / dt;
+  // d term moving average filter
+  // pid->delta = (error - pid->last_error) / dt;
+  // float delta_sum = pid->delta + pid->delta1 + pid->delta2;
+  // pid->delta2 = pid->delta1;
+  // pid->delta1 = pid->delta;
+  // pid->delta = delta_sum / 3.0f;
 
-  // moving average filter
-  float delta_sum = pid->delta + pid->delta1 + pid->delta2;
-  pid->delta2 = pid->delta1;
-  pid->delta1 = pid->delta;
-  pid->delta = delta_sum / 3.0f;
+  // d term frequency filter
+  float new_delta = (error - pid->last_error) / dt;
+  uint8_t f_cut = 14; // Hz
+  float rc = 1.0f / (2.0f * (float)M_PI * f_cut);
+  pid->delta = pid->delta + dt / (rc + dt) * (new_delta - pid->delta);
 
   pid->p_term = kp * error;
   pid->i_term = pid->integrator;
-  pid->d_term = kd * pid->delta;
+  pid->d_term = constrain_c(kd * pid->delta, -200.0f, 200.0f);
 
   pid->last_error = error;
   pid->output = pid->p_term + pid->i_term + pid->d_term;

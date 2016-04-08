@@ -8,6 +8,7 @@
 #include "flight_controller.h"
 #include "serial_commands.h"
 
+void text_debug();
 int32_t debug_timer = 0;
 
 void debugger_leds_init() {
@@ -27,7 +28,7 @@ void debugger_leds() {
   }
 }
 
-void debugger_indicate_emergency() {
+void debugger_indicate_emergency(char *reason) {
   digitalWrite(15, LOW);
 
   if (digitalRead(14)) {
@@ -35,6 +36,9 @@ void debugger_indicate_emergency() {
   } else {
     digitalWrite(14, HIGH);
   }
+
+  serial_printlnf("EMERGENCY STOP: %s", reason);
+  text_debug();
 
   delay(500);
 }
@@ -53,6 +57,7 @@ void text_debug() {
   serial_printf("\t pid_x_out: %8.3f", pid(PID_RATE_X)->output);
   serial_printf("\t pid_x_p: %8.3f", pid(PID_RATE_X)->p_term);
   serial_printf("\t pid_x_i: %8.3f", pid(PID_RATE_X)->i_term);
+  serial_printf("\t pid_x_d: %8.3f", pid(PID_RATE_X)->d_term);
   serial_printf("\t rc_x: %8.3f", rc_get(RC_ROLL));
   serial_printf("\t angle_x: %8.3f", imu_angles().x);
   serial_printlnf("");
@@ -61,6 +66,7 @@ void text_debug() {
   serial_printf("\t pid_y_out: %8.3f", pid(PID_RATE_Y)->output);
   serial_printf("\t pid_y_p: %8.3f", pid(PID_RATE_Y)->p_term);
   serial_printf("\t pid_y_i: %8.3f", pid(PID_RATE_Y)->i_term);
+  serial_printf("\t pid_y_d: %8.3f", pid(PID_RATE_Y)->d_term);
   serial_printf("\t rc_y: %8.3f", rc_get(RC_PITCH));
   serial_printf("\t angle_y: %8.3f", imu_angles().y);
   serial_printlnf("");

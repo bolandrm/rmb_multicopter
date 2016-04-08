@@ -5,6 +5,7 @@ export const REQUEST_CONFIG = 1
 export const REQUEST_GYRO_ACC = 2
 export const REQUEST_RC = 3
 export const REQUEST_MOTORS = 4
+export const REQUEST_RATE_PIDS = 5
 
 export const SET_CONFIG = 101
 

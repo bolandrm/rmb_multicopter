@@ -1,7 +1,7 @@
 const axisFloatType = [
-  [ "x", "f" ],
-  [ "y", "f" ],
-  [ "z", "f" ]
+  [ "x", "f32" ],
+  [ "y", "f32" ],
+  [ "z", "f32" ]
 ]
 
 export const gyroAcc = [
@@ -12,23 +12,23 @@ export const gyroAcc = [
   [ "accelRaws", axisFloatType ],
   [ "accelFiltered", axisFloatType ],
   [ "accelAngles", axisFloatType ],
-  [ "gyroMaxValue", "f" ],
-  [ "accelMaxValue", "f" ]
+  [ "gyroMaxValue", "f32" ],
+  [ "accelMaxValue", "f32" ]
 ]
 
 export const motorData = [
-  [ "m1", "H" ],
-  [ "m2", "H" ],
-  [ "m3", "H" ],
-  [ "m4", "H" ]
+  [ "m1", "uint16" ],
+  [ "m2", "uint16" ],
+  [ "m3", "uint16" ],
+  [ "m4", "uint16" ]
 ]
 
 const rcChannelData = [
-  [ "function", "B" ],
-  [ "rawValue", "H" ],
-  [ "value", "f" ],
-  [ "valueMin", "f" ],
-  [ "valueMax", "f" ]
+  [ "function", "uint8" ],
+  [ "rawValue", "uint16" ],
+  [ "value", "f32" ],
+  [ "valueMin", "f32" ],
+  [ "valueMax", "f32" ]
 ]
 
 export const rcData = [
@@ -40,22 +40,37 @@ export const rcData = [
   [ "ch6", rcChannelData ]
 ]
 
+const pidData = [
+  [ "setpoint", "f32" ],
+  [ "input", "f32" ],
+  [ "output", "f32" ],
+  [ "pTerm", "f32" ],
+  [ "iTerm", "f32" ],
+  [ "dTerm", "f32" ]
+]
+
+export const ratePidData = [
+  [ "pidRateX", pidData ],
+  [ "pidRateY", pidData ],
+  [ "pidRateZ", pidData ]
+]
+
 const pidConfig = [
-  [ "kp", "f" ],
-  [ "ki", "f" ],
-  [ "imax", "f" ],
-  [ "kd", "f" ]
+  [ "kp", "f32" ],
+  [ "ki", "f32" ],
+  [ "imax", "f32" ],
+  [ "kd", "f32" ]
 ]
 
 const rcConfig = [
-  [ "function", "B" ],
-  [ "min", "H" ],
-  [ "max", "H" ],
-  [ "invert", "B" ],
+  [ "function", "uint8" ],
+  [ "min", "uint16" ],
+  [ "max", "uint16" ],
+  [ "invert", "uint8" ],
 ]
 
 export const config = [
-  [ "version", "H" ],
+  [ "version", "uint16" ],
 
   [ "ch1", rcConfig ],
   [ "ch2", rcConfig ],

@@ -7,6 +7,7 @@
 #define REQUEST_GYRO_ACC 2
 #define REQUEST_RC 3
 #define REQUEST_MOTORS 4
+#define REQUEST_RATE_PIDS 5
 
 #define SET_CONFIG 101
 
@@ -36,9 +37,24 @@ static uint16_t data_expected_length;
 static uint16_t data_received_length;
 static uint8_t data_buffer[200];
 
+int generic_serial_available() {
+  //return usb_serial_available();
+  return serial2_available();
+}
+
+int generic_serial_getchar() {
+  //return usb_serial_getchar();
+  return serial2_getchar();
+}
+
+void generic_serial_putchar(uint32_t c) {
+  //usb_serial_putchar(c);
+  serial2_putchar(c);
+}
+
 void serial_commands_process() {
-  while (usb_serial_available()) {
-    uint8_t data = usb_serial_getchar();
+  while (generic_serial_available()) {
+    uint8_t data = generic_serial_getchar();
     read_serial_data(data);
   }
 }
@@ -97,7 +113,7 @@ void read_serial_data(uint8_t data) {
 }
 
 void output_uint8(uint8_t value) {
-  usb_serial_putchar(value);
+  generic_serial_putchar(value);
   outgoing_crc ^= value;
 }
 
@@ -121,8 +137,8 @@ void output_float32(float value) {
 }
 
 void packet_head(uint8_t code, uint16_t size) {
-  usb_serial_putchar(PACKET_HEADER1);
-  usb_serial_putchar(PACKET_HEADER2);
+  generic_serial_putchar(PACKET_HEADER1);
+  generic_serial_putchar(PACKET_HEADER2);
 
   outgoing_crc = 0;
 
@@ -131,7 +147,7 @@ void packet_head(uint8_t code, uint16_t size) {
 }
 
 void packet_tail() {
-  usb_serial_putchar(outgoing_crc);
+  generic_serial_putchar(outgoing_crc);
 }
 
 void send_code_without_data(uint8_t code) {
@@ -222,6 +238,23 @@ void process_serial_data() {
 
       for (uint8_t i = 0; i < NUM_MOTORS; i++) {
         output_uint16(motor_level(i));
+      }
+
+      packet_tail();
+      break;
+
+    case REQUEST_RATE_PIDS:
+      packet_head(REQUEST_RATE_PIDS, 72);
+
+      uint8_t rate_pids[3] = { PID_RATE_X, PID_RATE_Y, PID_RATE_Z };
+
+      for (uint8_t i = 0; i < 3; i++) {
+        output_float32(pid(rate_pids[i])->setpoint);
+        output_float32(pid(rate_pids[i])->input);
+        output_float32(pid(rate_pids[i])->output);
+        output_float32(pid(rate_pids[i])->p_term);
+        output_float32(pid(rate_pids[i])->i_term);
+        output_float32(pid(rate_pids[i])->d_term);
       }
 
       packet_tail();

@@ -53,8 +53,7 @@ void adjust_for_bounds() {
 void motors_safety_check() {
   for(int i = 0; i < NUM_MOTORS; i++) {
     if (outputs[i] > INDOOR_SAFE_MOTOR_SPEED) {
-      serial_printlnf("motors too high");
-      fc_emergency_stop();
+      fc_emergency_stop("motors too high");
     }
   }
 }

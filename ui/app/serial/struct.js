@@ -2,15 +2,15 @@ import _ from 'lodash';
 
 const dataTypes = {
   //   b	  int8
-  B: { type: 'Uint8', byteSize: 1 },
+  uint8: { type: 'Uint8', byteSize: 1 },
   //   ?	  bool8
-  h: { type: 'Int16', byteSize: 2 },
-  H: { type: 'Uint16', byteSize: 2 },
-  i: { type: 'Int32', byteSize: 4 },
+  int16: { type: 'Int16', byteSize: 2 },
+  uint16: { type: 'Uint16', byteSize: 2 },
+  int32: { type: 'Int32', byteSize: 4 },
   //   I	  uint32
   //   q	  int64
   //   Q	  uint64
-  f: { type: 'Float32', byteSize: 4 },
+  f32: { type: 'Float32', byteSize: 4 },
   //   d	  double64
 };
 
