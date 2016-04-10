@@ -6,10 +6,10 @@
 #define  RC_NUM_CHANNELS   6
 #define  RC_TIMEOUT        1000  // milliseconds
 
-#define RC_PITCH_ROLL_BASE 25.0
+#define RC_PITCH_ROLL_BASE 35.0
 #define RC_PITCH_ROLL_SENS 100.0
 
-#define RC_YAW_BASE 40.0
+#define RC_YAW_BASE 60.0
 #define RC_YAW_SENS 100.0
 
 #define  RC_THROTTLE_MIN    1070.0
