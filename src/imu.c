@@ -36,12 +36,12 @@ void imu_init() {
   delay(300);
 }
 
-static void read_gyro_raws() {
+void imu_read_gyro_raws() {
   mpu6050_read_gyro(&gyro_raws);
   record_max_gyro_value();
 }
 
-static void read_accel_raws() {
+void imu_read_accel_raws() {
   mpu6050_read_accel(&accel_raws);
   record_max_accel_value();
 
@@ -79,11 +79,6 @@ static void combine() {
 
   angles.x = GYRO_PART * (angles.x + (rates.x * dt)) + ACC_PART * accel_angles.x;
   angles.y = GYRO_PART * (angles.y + (rates.y * dt)) + ACC_PART * accel_angles.y;
-}
-
-void imu_read_raw_values() {
-  read_gyro_raws();
-  read_accel_raws();
 }
 
 void imu_process_values() {

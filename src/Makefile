@@ -1,4 +1,4 @@
-ARDUINO_DIR   = /Applications/Arduino.app/Contents/Resources/Java
+ARDUINO_DIR   = /Applications/Arduino.app/Contents/Java
 USER_LIB_PATH = ./libraries
 OBJDIR        = ./.build-$(BOARD_TAG)
 
@@ -14,7 +14,8 @@ NO_CORE_MAIN_CPP = true
 # LOCAL_CPP_SRCS = $(wildcard *.cpp) $(wildcard ./hardware/*.cpp)
 # CPPFLAGS = -I./hardware -I.
 
-CFLAGS += -std=c99
+CFLAGS += -std=c99 -D__MK20DX256__ -DTEENSYDUINO=128
+CPPFLAGS += -D__MK20DX256__ -DTEENSYDUINO=128
 
 include ~/hardware/Arduino-Makefile/Teensy.mk
 

@@ -82,9 +82,14 @@ void calibrate_accel() {
     delay(1);
   }
 
-  serial_printlnf("x avg: %f", accel_sums.x / 10000);
-  serial_printlnf("y avg: %f", accel_sums.y / 10000);
-  serial_printlnf("z avg: %f", accel_sums.z / 10000);
+  for(;;) {
+    serial_printlnf("Accel calibrated:");
+    serial_printlnf("x avg: %f", accel_sums.x / 10000);
+    serial_printlnf("y avg: %f", accel_sums.y / 10000);
+    serial_printlnf("z avg: %f", accel_sums.z / 10000);
+    serial_printlnf("--------------");
+    delay(5000);
+  }
 }
 
 void mpu6050_init() {

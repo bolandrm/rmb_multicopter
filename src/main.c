@@ -24,7 +24,8 @@ void setup() {
 
 void loop() {
   if (schedule(TASK_1000HZ)) {
-    imu_read_raw_values();
+    imu_read_gyro_raws();
+    imu_read_accel_raws();
     imu_process_values();
     fc_process();
 
