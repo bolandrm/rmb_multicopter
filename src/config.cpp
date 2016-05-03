@@ -1,7 +1,7 @@
+#include <EEPROM.h>
 #include "config.h"
 #include "remote_control.h"
 #include "utils.h"
-#include "eeprom_helpers.h"
 
 CONFIG_union CONFIG;
 
@@ -11,15 +11,15 @@ void config_after_update() {
 }
 
 void config_load_from_eeprom() {
-  for (int i = 0; i < sizeof(CONFIG); i++) {
-    CONFIG.raw[i] = eeprom_read(i);
+  for (uint16_t i = 0; i < sizeof(CONFIG); i++) {
+    CONFIG.raw[i] = EEPROM.read(i);
   }
 
   config_after_update();
 }
 
 void config_init() {
-  if (eeprom_read(0) == 255) {
+  if (EEPROM.read(0) == 255) {
     config_init_from_default();
   } else {
     config_load_from_eeprom();
@@ -32,7 +32,7 @@ void config_init() {
 
 void config_update_eeprom() {
   for (uint16_t i = 0; i < sizeof(CONFIG); i++) {
-    eeprom_update(i, CONFIG.raw[i]);
+    EEPROM.update(i, CONFIG.raw[i]);
   }
 }
 

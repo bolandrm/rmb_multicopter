@@ -244,21 +244,23 @@ void process_serial_data() {
       break;
 
     case REQUEST_RATE_PIDS:
-      packet_head(REQUEST_RATE_PIDS, 72);
+      {
+        packet_head(REQUEST_RATE_PIDS, 72);
 
-      uint8_t rate_pids[3] = { PID_RATE_X, PID_RATE_Y, PID_RATE_Z };
+        uint8_t rate_pids[3] = { PID_RATE_X, PID_RATE_Y, PID_RATE_Z };
 
-      for (uint8_t i = 0; i < 3; i++) {
-        output_float32(pid(rate_pids[i])->setpoint);
-        output_float32(pid(rate_pids[i])->input);
-        output_float32(pid(rate_pids[i])->output);
-        output_float32(pid(rate_pids[i])->p_term);
-        output_float32(pid(rate_pids[i])->i_term);
-        output_float32(pid(rate_pids[i])->d_term);
+        for (uint8_t i = 0; i < 3; i++) {
+          output_float32(pid(rate_pids[i])->setpoint);
+          output_float32(pid(rate_pids[i])->input);
+          output_float32(pid(rate_pids[i])->output);
+          output_float32(pid(rate_pids[i])->p_term);
+          output_float32(pid(rate_pids[i])->i_term);
+          output_float32(pid(rate_pids[i])->d_term);
+        }
+
+        packet_tail();
+        break;
       }
-
-      packet_tail();
-      break;
 
     case SET_CONFIG:
       if (data_received_length == sizeof(CONFIG)) {

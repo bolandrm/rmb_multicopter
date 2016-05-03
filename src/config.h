@@ -1,5 +1,4 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#pragma once
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -39,6 +38,4 @@ extern CONFIG_union CONFIG;
 
 void config_init();
 void config_init_from_default();
-void config_set();
-
-#endif
+void config_set(uint8_t data_buffer[]);

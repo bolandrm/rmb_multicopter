@@ -1,7 +1,6 @@
-#ifndef IMU_H
-#define IMU_H
+#pragma once
 
-#include <stdint.h>
+#include "types.h"
 #include "mpu6050.h"
 
 #define GYRO_X_OFFSET (-103.87)
@@ -33,5 +32,3 @@ axis_float_t imu_accel_angles();
 uint32_t imu_value_process_dt();
 float imu_gyro_max_value();
 float imu_accel_max_value();
-
-#endif

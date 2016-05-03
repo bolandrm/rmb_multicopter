@@ -1,7 +1,7 @@
+#include "Arduino.h"
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-#include <usb_serial.h>
 
 void support_printing_floats() {
   // make printf and friends support floats
@@ -17,7 +17,7 @@ void serial_printf(const char *format, ...) {
   va_start(args, format);
   vsprintf(buffer, format, args);
 
-  usb_serial_write(buffer, strlen(buffer));
+  Serial.write(buffer, strlen(buffer));
 
   va_end(args);
 }
@@ -32,7 +32,7 @@ void serial_printlnf(const char *format, ...) {
   char newline_buffer[256];
   sprintf(newline_buffer, "%s\r\n", buffer);
 
-  usb_serial_write(newline_buffer, strlen(newline_buffer));
+  Serial.write(newline_buffer, strlen(newline_buffer));
 
   va_end(args);
 }

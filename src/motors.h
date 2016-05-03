@@ -1,5 +1,4 @@
-#ifndef MOTORS_H
-#define MOTORS_H
+#pragma once
 
 #include <Arduino.h>
 
@@ -26,5 +25,3 @@ void motors_command_all_off();
 void motors_init();
 void motors_set_output(int8_t motor_number, int16_t output);
 int16_t motor_level(int8_t motor_number);
-
-#endif

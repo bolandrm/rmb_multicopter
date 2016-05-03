@@ -1,6 +1,6 @@
 #define SERIAL_PORT_SPEED 57600
 
-#include "WProgram.h"
+#include "Arduino.h"
 #include "i2c_helpers.h"
 #include "flight_controller.h"
 #include "debugger.h"

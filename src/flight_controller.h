@@ -1,5 +1,4 @@
-#ifndef FLIGHT_CONTROLLER_H
-#define FLIGHT_CONTROLLER_H
+#pragma once
 
 #define RATE 0
 #define STABILIZE 1
@@ -16,5 +15,3 @@ void fc_process();
 void fc_emergency_stop(char *reason);
 uint8_t fc_armed();
 int8_t fc_mode();
-
-#endif

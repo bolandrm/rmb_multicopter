@@ -1,5 +1,4 @@
-#ifndef PIDS_H
-#define PIDS_H
+#pragma once
 
 #include "stdint.h"
 #include <Arduino.h>
@@ -35,5 +34,3 @@ void pids_init();
 m_pid_t *pid(int8_t);
 void pid_compute(int8_t);
 void pids_reset_i();
-
-#endif

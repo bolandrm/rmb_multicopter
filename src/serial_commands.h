@@ -1,8 +1,5 @@
-#ifndef SERIAL_COMMANDS_H
-#define SERIAL_COMMANDS_H
+#pragma once
 
 #include <Arduino.h>
 
 void serial_commands_process();
-
-#endif

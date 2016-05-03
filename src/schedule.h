@@ -1,5 +1,4 @@
-#ifndef SCHEDULE_H
-#define SCHEDULE_H
+#pragma once
 
 #include <Arduino.h>
 
@@ -12,5 +11,3 @@
 
 int8_t schedule(uint16_t interval);
 void schedule_end();
-
-#endif

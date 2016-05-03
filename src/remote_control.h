@@ -1,5 +1,4 @@
-#ifndef REMOTE_CONTROL_H
-#define REMOTE_CONTROL_H
+#pragma once
 
 #include <Arduino.h>
 
@@ -43,5 +42,3 @@ int16_t rc_get_raw(uint8_t function);
 float rc_out_max(uint8_t function);
 float rc_out_min(uint8_t function);
 void rc_config_updated();
-
-#endif
