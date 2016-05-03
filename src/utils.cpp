@@ -3,13 +3,6 @@
 #include <stdio.h>
 #include <string.h>
 
-void support_printing_floats() {
-  // make printf and friends support floats
-  __asm__(".global _printf_float");
-  __asm__(".global _sprintf_float");
-  __asm__(".global _vsprintf_float");
-}
-
 void serial_printf(const char *format, ...) {
   char buffer[256];
 

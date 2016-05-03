@@ -6,4 +6,4 @@
 void debugger_print();
 void debugger_leds();
 void debugger_leds_init();
-void debugger_indicate_emergency(char *reason);
+void debugger_indicate_emergency(const char *reason);

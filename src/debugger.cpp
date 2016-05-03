@@ -28,7 +28,7 @@ void debugger_leds() {
   }
 }
 
-void debugger_indicate_emergency(char *reason) {
+void debugger_indicate_emergency(const char *reason) {
   digitalWrite(15, LOW);
 
   if (digitalRead(14)) {

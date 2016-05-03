@@ -30,7 +30,7 @@ void pid_compute(int8_t pid_number) {
   float error = pid->setpoint - pid->input;
 
   pid->integrator += ki * error * dt;
-  pid->integrator = constrain_c(pid->integrator, -i_max, i_max);
+  pid->integrator = constrain(pid->integrator, -i_max, i_max);
 
   // d term moving average filter
   // pid->delta = (error - pid->last_error) / dt;
@@ -47,7 +47,7 @@ void pid_compute(int8_t pid_number) {
 
   pid->p_term = kp * error;
   pid->i_term = pid->integrator;
-  pid->d_term = constrain_c(kd * pid->delta, -200.0f, 200.0f);
+  pid->d_term = constrain(kd * pid->delta, -200.0f, 200.0f);
 
   pid->last_error = error;
   pid->output = pid->p_term + pid->i_term + pid->d_term;

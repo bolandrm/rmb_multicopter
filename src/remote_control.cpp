@@ -42,9 +42,9 @@ static void process_channel_value(uint8_t channel) {
   } else if (function == RC_THROTTLE && value < 1125) {
     value = 0.0;
   } else {
-    value = constrain_c(value, channel_config.min, channel_config.max);
+    value = constrain(value, channel_config.min, channel_config.max);
 
-    value = map_c(
+    value = map(
       value,
       channel_config.min, channel_config.max,
       out_min_values[function], out_max_values[function]

@@ -91,15 +91,15 @@ void imu_process_values() {
 }
 
 static void record_max_gyro_value() {
-  if (abs_c(gyro_raws.x) > gyro_max_value) { gyro_max_value = abs_c(gyro_raws.x); }
-  if (abs_c(gyro_raws.y) > gyro_max_value) { gyro_max_value = abs_c(gyro_raws.y); }
-  if (abs_c(gyro_raws.z) > gyro_max_value) { gyro_max_value = abs_c(gyro_raws.z); }
+  if (abs(gyro_raws.x) > gyro_max_value) { gyro_max_value = abs(gyro_raws.x); }
+  if (abs(gyro_raws.y) > gyro_max_value) { gyro_max_value = abs(gyro_raws.y); }
+  if (abs(gyro_raws.z) > gyro_max_value) { gyro_max_value = abs(gyro_raws.z); }
 }
 
 static void record_max_accel_value() {
-  if (abs_c(accel_raws.x) > accel_max_value) { accel_max_value = abs_c(accel_raws.x); }
-  if (abs_c(accel_raws.y) > accel_max_value) { accel_max_value = abs_c(accel_raws.y); }
-  if (abs_c(accel_raws.z) > accel_max_value) { accel_max_value = abs_c(accel_raws.z); }
+  if (abs(accel_raws.x) > accel_max_value) { accel_max_value = abs(accel_raws.x); }
+  if (abs(accel_raws.y) > accel_max_value) { accel_max_value = abs(accel_raws.y); }
+  if (abs(accel_raws.z) > accel_max_value) { accel_max_value = abs(accel_raws.z); }
 }
 
 axis_float_t imu_rates() { return rates; }

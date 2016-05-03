@@ -6,7 +6,6 @@
 #include "motors.h"
 #include "debugger.h"
 #include "utils.h"
-#include <stdbool.h>
 
 #define ANGLE_SAFETY_STOP true
 
@@ -48,7 +47,7 @@ void fc_process() {
   }
 }
 
-void fc_emergency_stop(char *reason) {
+void fc_emergency_stop(const char *reason) {
   emergency_stopped = true;
   motors_command_all_off();
   for(;;) debugger_indicate_emergency(reason);
