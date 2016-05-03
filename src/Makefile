@@ -5,6 +5,8 @@ OBJDIR        = ./.build-$(BOARD_TAG)
 BOARD_TAG    = teensy31
 ARDUINO_LIBS = i2c_t3 MedianFilter EEPROM
 
+OPTIMIZATION_LEVEL = 1
+
 MONITOR_BAUDRATE  = 115200
 MONITOR_PORT      = /dev/tty.usbmodem*
 
