@@ -2,7 +2,7 @@
 #define IMU_H
 
 #include <stdint.h>
-#include "mpu6050.h"
+#include "mpu.h"
 
 #define GYRO_X_OFFSET (-103.87)
 #define GYRO_Y_OFFSET (-34.90)
