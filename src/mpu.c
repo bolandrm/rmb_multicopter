@@ -1,6 +1,6 @@
 #include "imu.h"
 #include "i2c_helpers.h"
-#include "mpu6050.h"
+#include "mpu.h"
 #include "utils.h"
 
 static void mpu6050_write_reg(uint16_t addr, uint8_t data) {
@@ -19,7 +19,7 @@ static uint16_t mpu6050_read_word(uint16_t addr) {
 }
 
 static int mpu6050_test_connection() {
-  return mpu6050_read_byte(MPUREG_WHOAMI) == 0x68;
+  return mpu6050_read_byte(MPUREG_WHOAMI) == MPU_WHOAMI_CODE;
 }
 
 void mpu6050_read_gyro(axis_int32_t *gyro_rates) {

@@ -9,6 +9,14 @@
 #define MPU6050_GYRO_1000D_SENS 32.8
 #define MPU6050_ACCEL_4G_SENS 8192.0
 
+// #define MPU9250 // uncomment to use with MPU9250
+
+#ifdef MPU9250
+#define MPU_WHOAMI_CODE 0x71
+#else
+#define MPU_WHOAMI_CODE 0x68
+#endif
+
 // MPU 6000 registers
 #define MPUREG_WHOAMI         0x75
 #define MPUREG_SMPLRT_DIV     0x19
