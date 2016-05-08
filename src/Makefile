@@ -19,7 +19,7 @@ NO_CORE_MAIN_CPP = true
 CFLAGS += -std=c99 -D__MK20DX256__ -DTEENSYDUINO=128
 CPPFLAGS += -D__MK20DX256__ -DTEENSYDUINO=128
 
-include ~/hardware/Arduino-Makefile/Teensy.mk
+include ../build_scripts/Teensy.mk
 
 TEENSY_LOADER_CLI = ~/hardware/teensy_loader_cli/teensy_loader_cli
 REBOOT_TEENSY = stty -f $(MONITOR_PORT) 134
