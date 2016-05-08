@@ -21,7 +21,7 @@ CPPFLAGS += -D__MK20DX256__ -DTEENSYDUINO=128
 
 include ../build_scripts/Teensy.mk
 
-TEENSY_LOADER_CLI = ~/hardware/teensy_loader_cli/teensy_loader_cli
+TEENSY_LOADER_CLI = ../teensy_loader_cli/teensy_loader_cli
 REBOOT_TEENSY = stty -f $(MONITOR_PORT) 134
 
 burn:
