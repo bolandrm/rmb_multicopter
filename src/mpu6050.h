@@ -3,6 +3,8 @@
 #include "types.h"
 #include "imu.h"
 
+#define MPU_DATA_READY_INTERRUPT_PIN 17
+
 #define MPU6050_I2C_ADDRESS 0x68
 #define MPU6050_GYRO_500D_SENS 65.5
 #define MPU6050_GYRO_1000D_SENS 32.8
@@ -66,5 +68,6 @@
 #define BIT_INT_STATUS_DATA         0x01
 
 void mpu6050_init();
+bool mpu6050_new_data_available();
 void mpu6050_read_gyro(axis_int32_t *gyro_rates);
 void mpu6050_read_accel(axis_int32_t *accel_raws);

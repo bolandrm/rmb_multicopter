@@ -3,6 +3,8 @@
 #include "mpu6050.h"
 #include "utils.h"
 
+static bool data_ready = false;
+
 static void mpu6050_write_reg(uint16_t addr, uint8_t data) {
   i2c_update_register(MPU6050_I2C_ADDRESS, addr, data);
   delay(1);
@@ -92,7 +94,20 @@ void calibrate_accel() {
   }
 }
 
+void mpu6050_data_ready() {
+  data_ready = true;
+}
+
+bool mpu6050_new_data_available() {
+  bool new_data_available = data_ready;
+  data_ready = false;
+  return new_data_available;
+}
+
 void mpu6050_init() {
+  pinMode(MPU_DATA_READY_INTERRUPT_PIN, INPUT);
+  attachInterrupt(MPU_DATA_READY_INTERRUPT_PIN, mpu6050_data_ready, RISING);
+
   mpu6050_write_reg(MPUREG_PWR_MGMT_1, BIT_H_RESET);
   delay(100);  // Startup time delay
 
@@ -100,8 +115,8 @@ void mpu6050_init() {
   mpu6050_write_reg(MPUREG_PWR_MGMT_1, MPU_CLK_SEL_PLLGYROZ);
   mpu6050_write_reg(MPUREG_PWR_MGMT_2, 0);
 
-  // SAMPLE RATE
   mpu6050_write_reg(MPUREG_SMPLRT_DIV, 0x00);     // Sample rate = 1kHz
+  mpu6050_write_reg(MPUREG_INT_ENABLE, 0x01);     // Enable data ready interrupt
 
   // FS & DLPF   FS=1000º/s, DLPF = 42Hz (low pass filter)
   mpu6050_write_reg(MPUREG_CONFIG, BITS_DLPF_CFG_42HZ);

@@ -44,7 +44,7 @@ void debugger_indicate_emergency(const char *reason) {
 }
 
 void text_debug() {
-  // serial_printf("\033[2J\033[1;1H");
+  serial_printf("\033[2J\033[1;1H");
 
   // serial_printf("pid_rate_kp: %8.3f", CONFIG.data.pids[PID_RATE_X].kp);
   // serial_printf("\t pid_rate_ki: %8.3f", pid(PID_RATE_X)->ki);
@@ -79,10 +79,10 @@ void text_debug() {
   serial_printlnf("");
 
   serial_printf("rc_throttle: %8.3f", rc_get(RC_THROTTLE));
-  serial_printf("\t m1: %8.3f", motor_level(M1));
-  serial_printf("\t m2: %8.3f", motor_level(M2));
-  serial_printf("\t m3: %8.3f", motor_level(M3));
-  serial_printf("\t m4: %8.3f", motor_level(M4));
+  serial_printf("\t m1: %d", motor_level(M1));
+  serial_printf("\t m2: %d", motor_level(M2));
+  serial_printf("\t m3: %d", motor_level(M3));
+  serial_printf("\t m4: %d", motor_level(M4));
   serial_printlnf("");
 
   serial_printlnf("value process dt: %d", imu_value_process_dt());

@@ -32,3 +32,4 @@ axis_float_t imu_accel_angles();
 uint32_t imu_value_process_dt();
 float imu_gyro_max_value();
 float imu_accel_max_value();
+bool imu_new_data_available();

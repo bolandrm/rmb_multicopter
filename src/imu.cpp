@@ -112,3 +112,4 @@ axis_float_t imu_accel_filtered() { return accel_filtered; }
 uint32_t imu_value_process_dt() { return value_process_dt; }
 float imu_gyro_max_value() { return gyro_max_value / GYRO_SENS; }
 float imu_accel_max_value() { return accel_max_value / ACCEL_SENS; }
+bool imu_new_data_available() { return mpu6050_new_data_available(); }
