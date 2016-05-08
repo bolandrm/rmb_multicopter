@@ -4,7 +4,6 @@
 #include "i2c_helpers.h"
 #include "flight_controller.h"
 #include "debugger.h"
-#include "utils.h"
 #include "schedule.h"
 #include "imu.h"
 #include "remote_control.h"
