@@ -9,7 +9,7 @@
 #include "serial_commands.h"
 
 void text_debug();
-int32_t debug_timer = 0;
+uint32_t debug_timer = 0;
 
 void debugger_leds_init() {
   pinMode(14, OUTPUT);
@@ -20,11 +20,11 @@ void debugger_leds_init() {
 
 void debugger_leds() {
   if (fc_armed()) {          // red steady, green off
-    digitalWrite(14, HIGH);
-    digitalWrite(15, LOW);
+    digitalWriteFast(14, HIGH);
+    digitalWriteFast(15, LOW);
   } else {                   // green steady, red off
-    digitalWrite(14, LOW);
-    digitalWrite(15, HIGH);
+    digitalWriteFast(14, LOW);
+    digitalWriteFast(15, HIGH);
   }
 }
 
@@ -37,14 +37,14 @@ void debugger_indicate_emergency(const char *reason) {
     digitalWrite(14, HIGH);
   }
 
-  serial_printlnf("EMERGENCY STOP: %s", reason);
   text_debug();
+  serial_printlnf("EMERGENCY STOP: %s", reason);
 
   delay(500);
 }
 
 void text_debug() {
-  serial_printf("\033[2J\033[1;1H");
+  //serial_printf("\033[2J\033[1;1H");
 
   // serial_printf("pid_rate_kp: %8.3f", CONFIG.data.pids[PID_RATE_X].kp);
   // serial_printf("\t pid_rate_ki: %8.3f", pid(PID_RATE_X)->ki);
@@ -85,19 +85,13 @@ void text_debug() {
   serial_printf("\t m4: %d", motor_level(M4));
   serial_printlnf("");
 
-  serial_printlnf("value process dt: %d", imu_value_process_dt());
+  serial_printf("value process dt: %d", imu_value_process_dt);
+  serial_printlnf("\t max value process dt: %d", imu_max_value_process_dt);
 
-  serial_printlnf("max accel: %8.3f", imu_accel_max_value());
-  serial_printlnf("max gyro: %8.3f", imu_gyro_max_value());
-}
-
-void print_debug() {
-  text_debug();
+  serial_printf("max accel: %8.3f", imu_accel_max_value());
+  serial_printlnf("\t max gyro: %8.3f", imu_gyro_max_value());
 }
 
 void debugger_print() {
-  if (DEBUG && millis() - debug_timer > DEBUG_RATE_MILLIS) {
-    print_debug();
-    debug_timer = millis();
-  }
+  text_debug();
 }

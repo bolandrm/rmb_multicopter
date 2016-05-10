@@ -6,6 +6,7 @@
 #include "motors.h"
 #include "debugger.h"
 #include "utils.h"
+#include "watchdog.h"
 
 #define ANGLE_SAFETY_STOP true
 
@@ -50,6 +51,7 @@ void fc_process() {
 void fc_emergency_stop(const char *reason) {
   emergency_stopped = true;
   motors_command_all_off();
+  watchdog_disable();
   for(;;) debugger_indicate_emergency(reason);
 }
 

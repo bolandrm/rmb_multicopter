@@ -19,7 +19,8 @@ static int32_t accel_max_value = 0;
 static int32_t gyro_max_value = 0;
 
 static uint32_t value_process_timer = 0;
-static uint32_t value_process_dt;
+uint32_t imu_value_process_dt;
+uint32_t imu_max_value_process_dt;
 
 static void record_max_gyro_value();
 static void record_max_accel_value();
@@ -81,10 +82,22 @@ static void combine() {
   angles.y = GYRO_PART * (angles.y + (rates.y * dt)) + ACC_PART * accel_angles.y;
 }
 
-void imu_process_values() {
-  value_process_dt = micros() - value_process_timer;  // for benchmarking
-  value_process_timer = micros();
+void imu_benchmark() {
+  static uint32_t start_time = millis();
 
+  if (millis() - start_time > 2000) { // wait a few seconds because the initial few loops are slow
+    if (value_process_timer == 0) { value_process_timer = micros(); }
+
+    imu_value_process_dt = micros() - value_process_timer;  // for benchmarking
+    value_process_timer = micros();
+    if (imu_value_process_dt > imu_max_value_process_dt) {
+      imu_max_value_process_dt = imu_value_process_dt;
+    }
+  }
+}
+
+void imu_process_values() {
+  imu_benchmark();
   process_gyro();
   process_accel();
   combine();
@@ -109,7 +122,6 @@ axis_int32_t imu_gyro_raws() { return gyro_raws; }
 axis_int32_t imu_accel_raws() { return accel_raws; }
 axis_float_t imu_accel_angles() { return accel_angles; }
 axis_float_t imu_accel_filtered() { return accel_filtered; }
-uint32_t imu_value_process_dt() { return value_process_dt; }
 float imu_gyro_max_value() { return gyro_max_value / GYRO_SENS; }
 float imu_accel_max_value() { return accel_max_value / ACCEL_SENS; }
 bool imu_new_data_available() { return mpu6050_new_data_available(); }

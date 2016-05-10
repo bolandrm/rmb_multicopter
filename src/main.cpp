@@ -9,6 +9,9 @@
 #include "remote_control.h"
 #include "serial_commands.h"
 #include "config.h"
+#include "watchdog.h"
+
+#include "utils.h"
 
 void setup() {
   serial2_begin(BAUD2DIV2(SERIAL_PORT_SPEED));
@@ -18,6 +21,7 @@ void setup() {
   rc_init();
   fc_init();
   debugger_leds_init();
+  watchdog_enable();
 }
 
 void loop() {
@@ -37,12 +41,12 @@ void loop() {
 
     if (schedule(TASK_2HZ)) {
       debugger_leds();
+      debugger_print();
     }
 
     schedule_end();
+    watchdog_reset();
   }
-
-  debugger_print();
 }
 
 int main(void) {
