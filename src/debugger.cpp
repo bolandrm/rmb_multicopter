@@ -12,29 +12,29 @@ void text_debug();
 uint32_t debug_timer = 0;
 
 void debugger_leds_init() {
-  pinMode(14, OUTPUT);
-  digitalWrite(14, HIGH);
-  pinMode(15, OUTPUT);
-  digitalWrite(15, HIGH);
+  pinMode(RED_LED_PIN, OUTPUT);
+  digitalWrite(RED_LED_PIN, HIGH);
+  pinMode(GREEN_LED_PIN, OUTPUT);
+  digitalWrite(GREEN_LED_PIN, HIGH);
 }
 
 void debugger_leds() {
   if (fc_armed()) {          // red steady, green off
-    digitalWriteFast(14, HIGH);
-    digitalWriteFast(15, LOW);
+    digitalWriteFast(RED_LED_PIN, HIGH);
+    digitalWriteFast(GREEN_LED_PIN, LOW);
   } else {                   // green steady, red off
-    digitalWriteFast(14, LOW);
-    digitalWriteFast(15, HIGH);
+    digitalWriteFast(RED_LED_PIN, LOW);
+    digitalWriteFast(GREEN_LED_PIN, HIGH);
   }
 }
 
 void debugger_indicate_emergency(const char *reason) {
-  digitalWrite(15, LOW);
+  digitalWrite(GREEN_LED_PIN, LOW);
 
-  if (digitalRead(14)) {
-    digitalWrite(14, LOW);
+  if (digitalRead(RED_LED_PIN)) {
+    digitalWrite(RED_LED_PIN, LOW);
   } else {
-    digitalWrite(14, HIGH);
+    digitalWrite(RED_LED_PIN, HIGH);
   }
 
   text_debug();

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "types.h"
-#include "mpu6050.h"
+#include "mpu9250.h"
 
 #define GYRO_X_OFFSET (-103.87)
 #define GYRO_Y_OFFSET (-34.90)
@@ -14,8 +14,8 @@
 #define GYRO_PART 0.994
 #define ACC_PART (1.0 - GYRO_PART)
 
-#define ACCEL_SENS  MPU6050_ACCEL_4G_SENS
-#define GYRO_SENS   MPU6050_GYRO_1000D_SENS
+#define ACCEL_SENS  MPU_ACCEL_4G_SENS
+#define GYRO_SENS   MPU_GYRO_1000D_SENS
 
 void imu_init();
 void imu_read_gyro_raws();

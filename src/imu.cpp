@@ -32,18 +32,18 @@ void imu_init() {
 
   delay(300);
 
-  mpu6050_init();
+  mpu9250_init();
 
   delay(300);
 }
 
 void imu_read_gyro_raws() {
-  mpu6050_read_gyro(&gyro_raws);
+  mpu9250_read_gyro(&gyro_raws);
   record_max_gyro_value();
 }
 
 void imu_read_accel_raws() {
-  mpu6050_read_accel(&accel_raws);
+  mpu9250_read_accel(&accel_raws);
   record_max_accel_value();
 
   median_filter_in(accel_x_filter, accel_raws.x);
@@ -124,4 +124,4 @@ axis_float_t imu_accel_angles() { return accel_angles; }
 axis_float_t imu_accel_filtered() { return accel_filtered; }
 float imu_gyro_max_value() { return gyro_max_value / GYRO_SENS; }
 float imu_accel_max_value() { return accel_max_value / ACCEL_SENS; }
-bool imu_new_data_available() { return mpu6050_new_data_available(); }
+bool imu_new_data_available() { return mpu9250_new_data_available(); }

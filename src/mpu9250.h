@@ -3,12 +3,13 @@
 #include "types.h"
 #include "imu.h"
 
-#define MPU_DATA_READY_INTERRUPT_PIN 17
+#define MPU_DATA_READY_INTERRUPT_PIN 31
+#define MPU_WHOAMI_IDENTIFIER 0x71
 
-#define MPU6050_I2C_ADDRESS 0x68
-#define MPU6050_GYRO_500D_SENS 65.5
-#define MPU6050_GYRO_1000D_SENS 32.8
-#define MPU6050_ACCEL_4G_SENS 8192.0
+#define MPU_I2C_ADDRESS 0x68
+#define MPU_GYRO_500D_SENS 65.5
+#define MPU_GYRO_1000D_SENS 32.8
+#define MPU_ACCEL_4G_SENS 8192.0
 
 // MPU 6000 registers
 #define MPUREG_WHOAMI         0x75
@@ -67,7 +68,7 @@
 #define BIT_I2C_IF_DIS              0x10
 #define BIT_INT_STATUS_DATA         0x01
 
-void mpu6050_init();
-bool mpu6050_new_data_available();
-void mpu6050_read_gyro(axis_int32_t *gyro_rates);
-void mpu6050_read_accel(axis_int32_t *accel_raws);
+void mpu9250_init();
+bool mpu9250_new_data_available();
+void mpu9250_read_gyro(axis_int32_t *gyro_rates);
+void mpu9250_read_accel(axis_int32_t *accel_raws);

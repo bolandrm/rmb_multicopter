@@ -15,7 +15,7 @@
 
 void setup() {
   serial2_begin(BAUD2DIV2(SERIAL_PORT_SPEED));
-  i2c_begin();
+  i2c1_begin();
   config_init();
   imu_init();
   rc_init();
