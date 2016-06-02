@@ -8,8 +8,6 @@
 #include "utils.h"
 #include "watchdog.h"
 
-#define ANGLE_SAFETY_STOP true
-
 void fc_safety_check();
 void compute_pids();
 void compute_motor_outputs();

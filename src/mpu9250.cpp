@@ -30,8 +30,8 @@ void mpu9250_read_gyro(axis_int32_t *gyro_rates) {
   int16_t gyro_z = mpu9250_read_word(MPUREG_GYRO_ZOUT_H);
 
   gyro_rates->x = gyro_x;
-  gyro_rates->y = gyro_y;
-  gyro_rates->z = -1 * gyro_z;
+  gyro_rates->y = -1 * gyro_y;
+  gyro_rates->z = gyro_z;
 }
 
 void mpu9250_read_accel(axis_int32_t *accel_raws) {
@@ -40,8 +40,8 @@ void mpu9250_read_accel(axis_int32_t *accel_raws) {
   int16_t accel_z = mpu9250_read_word(MPUREG_ACCEL_ZOUT_H);
 
   accel_raws->x = accel_x;
-  accel_raws->y = accel_y;
-  accel_raws->z = accel_z;
+  accel_raws->y = -1 * accel_y;
+  accel_raws->z = -1 * accel_z;
 }
 
 void calibrate_gyro() {

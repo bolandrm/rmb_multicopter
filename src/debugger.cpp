@@ -44,7 +44,7 @@ void debugger_indicate_emergency(const char *reason) {
 }
 
 void text_debug() {
-  //serial_printf("\033[2J\033[1;1H");
+  serial_printf("\033[2J\033[1;1H");
 
   // serial_printf("pid_rate_kp: %8.3f", CONFIG.data.pids[PID_RATE_X].kp);
   // serial_printf("\t pid_rate_ki: %8.3f", pid(PID_RATE_X)->ki);
@@ -52,6 +52,14 @@ void text_debug() {
   // serial_printf("\t pid_angle_kp: %8.3f", pid(PID_ANGLE_X)->kp);
   // serial_printf("\t pid_angle_ki: %8.3f", pid(PID_ANGLE_X)->ki);
   // serial_printlnf("");
+
+  serial_printf("gyro_x_raw: %i", imu_gyro_raws().x);
+  serial_printf("\tgyro_y_raw: %i", imu_gyro_raws().y);
+  serial_printf("\tgyro_z_raw: %i", imu_gyro_raws().z);
+  serial_printlnf("");
+  serial_printf("accel_x_raw: %i", imu_accel_raws().x);
+  serial_printf("\taccel_y_raw: %i", imu_accel_raws().y);
+  serial_printlnf("");
 
   serial_printf("gyro_x: %8.3f", imu_rates().x);
   serial_printf("\t pid_x_out: %8.3f", pid(PID_RATE_X)->output);
