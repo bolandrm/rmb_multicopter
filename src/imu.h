@@ -3,13 +3,13 @@
 #include "types.h"
 #include "mpu9250.h"
 
-#define GYRO_X_OFFSET (-103.87)
-#define GYRO_Y_OFFSET (-34.90)
-#define GYRO_Z_OFFSET (-47.83)
+#define GYRO_X_OFFSET (32.22)
+#define GYRO_Y_OFFSET (29.647)
+#define GYRO_Z_OFFSET (-34.29)
 
-#define ACCEL_X_OFFSET (-80.05)
-#define ACCEL_Y_OFFSET (40.97)
-#define ACCEL_Z_OFFSET (-100.12)
+#define ACCEL_X_OFFSET (-200.575)
+#define ACCEL_Y_OFFSET (-174.646)
+#define ACCEL_Z_OFFSET (32.383)
 
 #define GYRO_PART 0.994
 #define ACC_PART (1.0 - GYRO_PART)
