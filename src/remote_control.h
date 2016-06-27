@@ -31,9 +31,9 @@
 #define  RC_CH1_INPUT  2
 #define  RC_CH2_INPUT  3
 #define  RC_CH3_INPUT  4
-#define  RC_CH4_INPUT  5
-#define  RC_CH5_INPUT  17
-#define  RC_CH6_INPUT  14
+#define  RC_CH4_INPUT  27
+#define  RC_CH5_INPUT  26
+#define  RC_CH6_INPUT  24
 
 void rc_init();
 void rc_read_values();

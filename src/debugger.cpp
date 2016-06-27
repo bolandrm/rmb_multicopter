@@ -7,6 +7,7 @@
 #include "motors.h"
 #include "flight_controller.h"
 #include "serial_commands.h"
+#include "battery_monitor.h"
 
 void text_debug();
 uint32_t debug_timer = 0;
@@ -98,6 +99,10 @@ void text_debug() {
 
   serial_printf("max accel: %8.3f", imu_accel_max_value());
   serial_printlnf("\t max gyro: %8.3f", imu_gyro_max_value());
+
+  serial_printf("battery pin voltage: %8.3f", battery_monitor_pin_voltage);
+  serial_printlnf("\t battery voltage: %8.3f", battery_monitor_battery_voltage);
+
 }
 
 void debugger_print() {

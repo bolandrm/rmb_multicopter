@@ -3,7 +3,7 @@
 #include "types.h"
 #include "imu.h"
 
-#define MPU_DATA_READY_INTERRUPT_PIN 31
+#define MPU_DATA_READY_INTERRUPT_PIN 17
 #define MPU_WHOAMI_IDENTIFIER 0x71
 
 #define MPU_I2C_ADDRESS 0x68

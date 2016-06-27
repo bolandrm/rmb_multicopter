@@ -6,18 +6,18 @@
 static bool data_ready = false;
 
 static void mpu9250_write_reg(uint16_t addr, uint8_t data) {
-  i2c1_update_register(MPU_I2C_ADDRESS, addr, data);
+  i2c_update_register(MPU_I2C_ADDRESS, addr, data);
   delay(1);
 }
 
 static uint8_t mpu9250_read_byte(uint16_t addr) {
-  i2c1_send_byte(MPU_I2C_ADDRESS, addr);
-  return i2c1_read_byte(MPU_I2C_ADDRESS);
+  i2c_send_byte(MPU_I2C_ADDRESS, addr);
+  return i2c_read_byte(MPU_I2C_ADDRESS);
 }
 
 static uint16_t mpu9250_read_word(uint16_t addr) {
-  i2c1_send_byte(MPU_I2C_ADDRESS, addr);
-  return i2c1_read_word(MPU_I2C_ADDRESS);
+  i2c_send_byte(MPU_I2C_ADDRESS, addr);
+  return i2c_read_word(MPU_I2C_ADDRESS);
 }
 
 static int mpu9250_test_connection() {
@@ -29,9 +29,9 @@ void mpu9250_read_gyro(axis_int32_t *gyro_rates) {
   int16_t gyro_y = mpu9250_read_word(MPUREG_GYRO_YOUT_H);
   int16_t gyro_z = mpu9250_read_word(MPUREG_GYRO_ZOUT_H);
 
-  gyro_rates->x = gyro_x;
-  gyro_rates->y = -1 * gyro_y;
-  gyro_rates->z = gyro_z;
+  gyro_rates->x = gyro_y;
+  gyro_rates->y = -1 * gyro_x;
+  gyro_rates->z = -1 * gyro_z;
 }
 
 void mpu9250_read_accel(axis_int32_t *accel_raws) {
@@ -39,9 +39,9 @@ void mpu9250_read_accel(axis_int32_t *accel_raws) {
   int16_t accel_y = mpu9250_read_word(MPUREG_ACCEL_YOUT_H);
   int16_t accel_z = mpu9250_read_word(MPUREG_ACCEL_ZOUT_H);
 
-  accel_raws->x = accel_x;
-  accel_raws->y = -1 * accel_y;
-  accel_raws->z = -1 * accel_z;
+  accel_raws->x = accel_y;
+  accel_raws->y = -1 * accel_x;
+  accel_raws->z = accel_z;
 }
 
 void calibrate_gyro() {

@@ -6,7 +6,7 @@
 #define ARMED 1
 #define UNARMED 0
 
-#define ANGLE_SAFETY_STOP true
+#define ANGLE_SAFETY_STOP false
 #define SAFE_ANGLE 60.0
 
 void fc_init();
