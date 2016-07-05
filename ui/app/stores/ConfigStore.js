@@ -1,4 +1,4 @@
-import { observable, toJSON } from 'mobx'
+import { observable, toJS } from 'mobx'
 import serial from '../serial/serialManager'
 import * as structLayouts from "../serial/structLayouts"
 import { buildStruct } from '../serial/struct'
@@ -14,7 +14,7 @@ export default class ConfigStore {
   }
 
   plainData = () => {
-    return toJSON(this.data)
+    return toJS(this.data)
   }
 
   fetchConfig = () => {

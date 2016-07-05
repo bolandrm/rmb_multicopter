@@ -16,6 +16,13 @@ export const gyroAcc = [
   [ "accelMaxValue", "f32" ]
 ]
 
+export const flightData = [
+  [ "armed", "uint8" ],
+  [ "mode", "uint8" ],
+  [ "loopTime", "uint32" ],
+  [ "batteryVoltage", "f32" ],
+]
+
 export const motorData = [
   [ "m1", "uint16" ],
   [ "m2", "uint16" ],

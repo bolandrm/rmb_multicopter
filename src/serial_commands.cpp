@@ -8,6 +8,7 @@
 #define REQUEST_RC 3
 #define REQUEST_MOTORS 4
 #define REQUEST_RATE_PIDS 5
+#define REQUEST_FLIGHT_DATA 6
 
 #define SET_CONFIG 101
 
@@ -22,6 +23,7 @@
 #include "flight_controller.h"
 #include "motors.h"
 #include "utils.h"
+#include "battery_monitor.h"
 #include <usb_serial.h>
 
 void read_serial_data(uint8_t data);
@@ -261,6 +263,17 @@ void process_serial_data() {
         packet_tail();
         break;
       }
+
+    case REQUEST_FLIGHT_DATA:
+      packet_head(REQUEST_FLIGHT_DATA, 10);
+
+      output_uint8(fc_armed());
+      output_uint8(fc_mode());
+      output_uint32(imu_value_process_dt);
+      output_float32(battery_monitor_battery_voltage);
+
+      packet_tail();
+      break;
 
     case SET_CONFIG:
       if (data_received_length == sizeof(CONFIG)) {

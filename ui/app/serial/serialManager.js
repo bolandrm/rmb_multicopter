@@ -20,6 +20,7 @@ class SerialManager {
     serialCodes.REQUEST_RC,
     serialCodes.REQUEST_MOTORS,
     serialCodes.REQUEST_RATE_PIDS,
+    serialCodes.REQUEST_FLIGHT_DATA,
   ]
 
   constructor() {
@@ -106,7 +107,8 @@ class SerialManager {
   }
 
   _isDefaultDevice(device) {
-    return device.match(/usbmodem/)
+    //return device.match(/usbmodem/)
+    return device.match(/SLAB_USB/)
   }
 
   _findDefaultDevice(devices) {

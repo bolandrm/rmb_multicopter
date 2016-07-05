@@ -20,6 +20,7 @@ void battery_monitor_update() {
   battery_monitor_battery_voltage = battery_monitor_pin_voltage / (BATTERY_R2_VAL / (BATTERY_R1_VAL + BATTERY_R2_VAL));
 
   if (battery_monitor_battery_voltage < 9.0) { // no battery connected
+    battery_monitor_battery_voltage = 0;
     noTone(BATTERY_ALERT_BUZZER_PIN);
     buzzer_on = false;
 

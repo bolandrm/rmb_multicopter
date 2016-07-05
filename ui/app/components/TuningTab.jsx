@@ -8,16 +8,20 @@ import serial from '../serial/serialManager'
 @observer
 class TuningTab extends React.Component {
   componentDidMount() {
-    this.intervalID = setInterval(this.fetchData, 50)
+    this.intervalIDs = [
+      setInterval(() => {
+        serial.send(tuningTabStore.graph1.requestCode(), null, tuningTabStore.graph1.addSample)
+        serial.send(serial.codes.REQUEST_MOTORS, null, tuningTabStore.addMotorChartSample)
+      }, 50),
+
+      setInterval(() => {
+        serial.send(serial.codes.REQUEST_FLIGHT_DATA, null, tuningTabStore.updateFlightControllerData)
+      }, 200),
+    ]
   }
 
   componentWillUnmount() {
-    clearInterval(this.intervalID)
-  }
-
-  fetchData = () => {
-    serial.send(tuningTabStore.graph1.requestCode(), null, tuningTabStore.graph1.addSample)
-    serial.send(serial.codes.REQUEST_MOTORS, null, tuningTabStore.addMotorChartSample)
+    this.intervalIDs.forEach((id) => clearInterval(id))
   }
 
   render() {
@@ -25,6 +29,19 @@ class TuningTab extends React.Component {
       <div>
         <LineGraph graph={tuningTabStore.graph1} />
         <MotorChart data={tuningTabStore.motorChartValues} />
+        <div>
+          Mode: {tuningTabStore.flightData.mode}
+          <br />
+          {tuningTabStore.flightData.armed}
+          <br />
+          Battery: {tuningTabStore.flightData.batteryVoltage.toFixed(2)}v
+          <br />
+          Loop Time: {tuningTabStore.flightData.loopTime}μs
+        </div>
+        orientation,
+        calibration,
+        reboot,
+        test ping
       </div>
     )
   }

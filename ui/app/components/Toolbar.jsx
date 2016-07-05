@@ -16,7 +16,7 @@ class Toolbar extends React.Component {
   render() {
     return (
       <div className='well toolbar'>
-        <ul className="nav nav-tabs">
+        <ul className={`nav nav-tabs ${serial.connected ? 'connected' : ''}`}>
           {metaStore.tabData.map((tab, i) => {
             return (
               <li className={this.tabClass(tab.key)} key={i}>

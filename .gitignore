@@ -6,3 +6,4 @@ node_modules
 dist
 ui_js/.gitignore
 .hgignore
+npm-debug.log

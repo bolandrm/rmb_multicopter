@@ -3,10 +3,10 @@
 #define RATE 0
 #define STABILIZE 1
 
-#define ARMED 1
 #define UNARMED 0
+#define ARMED 1
 
-#define ANGLE_SAFETY_STOP false
+#define ANGLE_SAFETY_STOP true
 #define SAFE_ANGLE 60.0
 
 void fc_init();

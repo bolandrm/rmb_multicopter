@@ -27,6 +27,12 @@ button:focus {
   .nav {
     padding-left: 20px;
     padding-top: 12px;
+
+    border-top: 2px solid $brand-primary;
+
+    &.connected {
+      border-top-color: $brand-success;
+    }
   }
 }
 

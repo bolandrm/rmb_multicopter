@@ -2,13 +2,13 @@ import _ from 'lodash'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { observer } from 'mobx-react'
-import { toJSON } from 'mobx'
+import { toJS } from 'mobx'
 
 
 @observer
 class MotorChart extends React.Component {
   render() {
-    const data = toJSON(this.props.data)
+    const data = toJS(this.props.data)
     const motorPositions = ['fr', 'bl', 'fl', 'br']
 
     return (

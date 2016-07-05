@@ -4,9 +4,11 @@ import { LineGraphStore } from './LineGraphStore'
 
 export default class TuningTabStore {
   @observable motorChartValues = { m1: 0, m2: 0, m3: 0, m4: 0 }
+  @observable flightData = {}
 
   constructor() {
     this.graph1 = new LineGraphStore()
+    this.flightData = { batteryVoltage: 0.0 }
   }
 
   addMotorChartSample = (sample) => {
@@ -21,5 +23,9 @@ export default class TuningTabStore {
 
       this.motorChartValues[key] = value
     })
+  }
+
+  updateFlightControllerData = (data) => {
+    this.flightData = data
   }
 }

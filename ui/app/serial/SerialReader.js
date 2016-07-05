@@ -82,6 +82,10 @@ class SerialReader {
             case serialCodes.REQUEST_RATE_PIDS:
               response = parseStruct(this.dataBuffer, structLayouts.ratePidData);
               break;
+            case serialCodes.REQUEST_FLIGHT_DATA:
+              response = parseStruct(this.dataBuffer, structLayouts.flightData);
+              response = this.interpretFlightData(response)
+              break;
             case serialCodes.INFO_SUCCESS:
               console.log("controller responded with success!");
               break;
@@ -89,7 +93,7 @@ class SerialReader {
               console.log("controller responded with failure");
               break;
             default:
-              console.log(`unknown code ${this.code}`);
+              console.log(`unhandled code ${this.code}`);
           }
 
           this.dataReceived(this.code, response);
@@ -112,6 +116,15 @@ class SerialReader {
   log(text) {
     return;
     console.log(text);
+  }
+
+  interpretFlightData(response) {
+    const FLIGHT_MODES = [ "rate", "stabilize" ]
+    const FLIGHT_ARMED_STATUS = [ "unarmed", "armed" ]
+
+    response.armed = FLIGHT_ARMED_STATUS[response.armed]
+    response.mode = FLIGHT_MODES[response.mode]
+    return response
   }
 }
 

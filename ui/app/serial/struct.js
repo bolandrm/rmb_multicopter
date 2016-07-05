@@ -7,7 +7,7 @@ const dataTypes = {
   int16: { type: 'Int16', byteSize: 2 },
   uint16: { type: 'Uint16', byteSize: 2 },
   int32: { type: 'Int32', byteSize: 4 },
-  //   I	  uint32
+  uint32: { type: 'Uint32', byteSize: 4 },
   //   q	  int64
   //   Q	  uint64
   f32: { type: 'Float32', byteSize: 4 },
