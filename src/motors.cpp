@@ -11,11 +11,6 @@
 // M2 FTM0_CH6 - PTD6 - 21  FTM0_C6V PORTD_PCR6
 //    FTM0_CH7 - PTD7 - 5   FTM0_C7V PORTD_PCR7
 
-#define M1_OUTPUT_REG FTM0_C5V
-#define M2_OUTPUT_REG FTM0_C6V
-#define M3_OUTPUT_REG FTM0_C0V
-#define M4_OUTPUT_REG FTM0_C1V
-
 uint16_t outputs[NUM_MOTORS];
 void _motors_command();
 
@@ -71,25 +66,25 @@ void motors_command() {
 void _motors_command() {
   #ifdef ALLOW_MOTORS
     #ifdef M1_ON
-      M1_OUTPUT_REG = outputs[M1] * 3;
+      M1_OUTPUT_REG = utils_round_positive(outputs[M1] * MOTOR_VALUE_SCALE_FACTOR);
     #else
       M1_OUTPUT_REG = 0;
     #endif
 
     #ifdef M2_ON
-      M2_OUTPUT_REG = outputs[M2] * 3;
+      M2_OUTPUT_REG = utils_round_positive(outputs[M2] * MOTOR_VALUE_SCALE_FACTOR);
     #else
       M2_OUTPUT_REG = 0;
     #endif
 
     #ifdef M3_ON
-      M3_OUTPUT_REG = outputs[M3] * 3;
+      M3_OUTPUT_REG = utils_round_positive(outputs[M3] * MOTOR_VALUE_SCALE_FACTOR);
     #else
       M3_OUTPUT_REG = 0;
     #endif
 
     #ifdef M4_ON
-      M4_OUTPUT_REG = outputs[M4] * 3;
+      M4_OUTPUT_REG = utils_round_positive(outputs[M4] * MOTOR_VALUE_SCALE_FACTOR);
     #else
       M4_OUTPUT_REG = 0;
     #endif
@@ -106,20 +101,28 @@ void motors_command_all_off() {
   _motors_command(); // skip checks, just turn them off
 }
 
+void motors_initialize_pin(uint8_t pin) {
+  *portConfigRegister(pin) |= PORT_PCR_MUX(4); // set pins to FTM0 mode
+  *portConfigRegister(pin) |= PORT_PCR_PE;     // pull enable
+  *portConfigRegister(pin) &= ~PORT_PCR_PS;    // pull select -> pulldown
+}
+
 void motors_init() {
   zero_outputs();
 
-  // Flex timer0 configuration
-  FTM0_SC = 0x0c;   // TOF=0 TOIE=0 CPWMS=0 CLKS=01 PS=100 (divide by 16)
-  FTM0_MOD = 7500;  // 400Hz PWM signal
+  FTM0_SC = 0x0; // set status/control to zero = disabled
+  FTM0_CNT = 0x0; // reset count to zero
+  FTM0_MOD = REFRESH_RATE_MODULUS;
 
-  // FTM0_C0SC = 0x28;   This appears to not be necessary
+  // enable clock
+  FTM0_SC = FTM_SC_CLKS(0b01)      // use system clock (60 MHz - half of processor speed)
+              | FTM_SC_PS(0b101);  // prescaler - divide by 32
 
   motors_command_all_off();
 
   // PORT Configuration
-  PORTD_PCR5 |= 0x400;
-  PORTD_PCR6 |= 0x400;
-  PORTC_PCR1 |= 0x400;
-  PORTC_PCR2 |= 0x400;
+  motors_initialize_pin(M1_PIN);
+  motors_initialize_pin(M2_PIN);
+  motors_initialize_pin(M3_PIN);
+  motors_initialize_pin(M4_PIN);
 }
