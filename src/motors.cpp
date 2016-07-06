@@ -1,3 +1,6 @@
+// Motors controlled with oneshot125 (ESCs are running SimonK firmware)
+// https://github.com/sim-/tgy/commit/6dbc056a71161593cc8eaf08f8959cf4ea6e4ce6
+
 #include "motors.h"
 #include "flight_controller.h"
 #include "utils.h"
@@ -64,6 +67,9 @@ void motors_command() {
 }
 
 void _motors_command() {
+  FTM0_SC = 0x0; //disable clock
+  FTM0_CNT = 0x0; // reset count
+
   #ifdef ALLOW_MOTORS
     #ifdef M1_ON
       M1_OUTPUT_REG = utils_round_positive(outputs[M1] * MOTOR_VALUE_SCALE_FACTOR);
@@ -94,6 +100,10 @@ void _motors_command() {
     M3_OUTPUT_REG = 0;
     M4_OUTPUT_REG = 0;
   #endif
+
+  // enable clock
+  FTM0_SC = FTM_SC_CLKS(0b01)      // use system clock (60 MHz - half of processor speed)
+              | FTM_SC_PS(0b101);  // prescaler - divide by 32
 }
 
 void motors_command_all_off() {
@@ -112,11 +122,7 @@ void motors_init() {
 
   FTM0_SC = 0x0; // set status/control to zero = disabled
   FTM0_CNT = 0x0; // reset count to zero
-  FTM0_MOD = REFRESH_RATE_MODULUS;
-
-  // enable clock
-  FTM0_SC = FTM_SC_CLKS(0b01)      // use system clock (60 MHz - half of processor speed)
-              | FTM_SC_PS(0b101);  // prescaler - divide by 32
+  FTM0_MOD = 0xFFFF; // max modulus (we never want to reach this)
 
   motors_command_all_off();
 
