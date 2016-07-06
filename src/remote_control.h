@@ -12,7 +12,7 @@
 #define RC_YAW_SENS 100.0
 
 #define  RC_THROTTLE_MIN    1070.0
-#define  RC_THROTTLE_MAX    1600.0 // 1864 is max motor input
+#define  RC_THROTTLE_MAX    1675.0 // 1864 is max motor input
 
 #define  RC_CH1  0
 #define  RC_CH2  1

@@ -11,6 +11,10 @@ export const graphTypes = {
     requestCode: serialCodes.REQUEST_GYRO_ACC,
     dataPoints: ['accelAngles.y', 'gyroAngles.y', 'angles.y']
   },
+  'gyros': {
+    requestCode: serialCodes.REQUEST_GYRO_ACC,
+    dataPoints: ['rates.x', 'rates.y', 'rates.z']
+  },
   'motors': {
     requestCode: serialCodes.REQUEST_MOTORS,
     dataPoints: ['m1', 'm2', 'm3', 'm4']
@@ -28,7 +32,7 @@ export const graphTypes = {
 
 export class LineGraphStore {
   @observable data = []
-  @observable type = 'angleYFusion'
+  @observable type = 'gyros'
   @observable paused = false
   sampleCount = 200
 

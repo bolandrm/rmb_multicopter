@@ -52,13 +52,22 @@ void imu_read_accel_raws() {
 }
 
 static void process_gyro() {
-  rates.x = (gyro_raws.x - GYRO_X_OFFSET) / GYRO_SENS;
-  rates.y = (gyro_raws.y - GYRO_Y_OFFSET) / GYRO_SENS;
-  rates.z = (gyro_raws.z - GYRO_Z_OFFSET) / GYRO_SENS;
+  float new_rate_x = (float)(gyro_raws.x - GYRO_X_OFFSET) / GYRO_SENS;
+  float new_rate_y = (float)(gyro_raws.y - GYRO_Y_OFFSET) / GYRO_SENS;
+  float new_rate_z = (float)(gyro_raws.z - GYRO_Z_OFFSET) / GYRO_SENS;
+
+  float gyro_dt = (float)(micros() - gyro_update_timer) / 1000000;
+
+  uint8_t f_cut = 80; // Hz
+  float rc = 1.0f / (2.0f * (float)M_PI * f_cut);
+
+  rates.x = rates.x + gyro_dt / (rc + gyro_dt) * (new_rate_x - rates.x);
+  rates.y = rates.y + gyro_dt / (rc + gyro_dt) * (new_rate_y - rates.y);
+  rates.z = rates.z + gyro_dt / (rc + gyro_dt) * (new_rate_z - rates.z);
 
   // Integration of gyro rates to get the angles for debugging only
-  gyro_angles.x += rates.x * (float)(micros() - gyro_update_timer) / 1000000;
-  gyro_angles.y += rates.y * (float)(micros() - gyro_update_timer) / 1000000;
+  gyro_angles.x += rates.x * gyro_dt;
+  gyro_angles.y += rates.y * gyro_dt;
 
   gyro_update_timer = micros();
 }

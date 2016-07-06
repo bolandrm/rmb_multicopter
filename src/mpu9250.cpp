@@ -119,7 +119,7 @@ void mpu9250_init() {
   mpu9250_write_reg(MPUREG_INT_ENABLE, 0x01);     // Enable data ready interrupt
 
   // FS & DLPF   FS=1000º/s, DLPF = 42Hz (low pass filter)
-  mpu9250_write_reg(MPUREG_CONFIG, BITS_DLPF_CFG_42HZ);
+  mpu9250_write_reg(MPUREG_CONFIG, BITS_DLPF_CFG_188HZ);
   mpu9250_write_reg(MPUREG_GYRO_CONFIG, BITS_FS_1000DPS);  // Gyro scale 1000º/s
   mpu9250_write_reg(MPUREG_ACCEL_CONFIG, 0x08);   // Accel scale +-4g
 

@@ -45,7 +45,7 @@ void debugger_indicate_emergency(const char *reason) {
 }
 
 void text_debug() {
-  serial_printf("\033[2J\033[1;1H");
+  // serial_printf("\033[2J\033[1;1H");
 
   // serial_printf("pid_rate_kp: %8.3f", CONFIG.data.pids[PID_RATE_X].kp);
   // serial_printf("\t pid_rate_ki: %8.3f", pid(PID_RATE_X)->ki);
@@ -102,7 +102,6 @@ void text_debug() {
 
   serial_printf("battery pin voltage: %8.3f", battery_monitor_pin_voltage);
   serial_printlnf("\t battery voltage: %8.3f", battery_monitor_battery_voltage);
-
 }
 
 void debugger_print() {
