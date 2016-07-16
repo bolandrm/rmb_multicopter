@@ -16,9 +16,9 @@ bool min_throttle();
 uint16_t gyro_freeze_counter = 0;
 float last_gyro_value = 0.0;
 bool emergency_stopped = false;
-uint8_t safety_mode = UNARMED;
-uint8_t flight_mode = RATE;
-// uint8_t flight_mode = STABILIZE;
+fc_safety_mode_t safety_mode = FC_UNARMED;
+fc_flight_mode_t flight_mode = FC_RATE_MODE;
+
 bool on_ground = true;
 
 void fc_init() {
@@ -26,7 +26,7 @@ void fc_init() {
   motors_init();
 }
 
-int8_t fc_mode() {
+fc_flight_mode_t fc_mode() {
   return flight_mode;
 }
 
@@ -60,7 +60,7 @@ void compute_pids() {
   pid(PID_ANGLE_Y)->input = imu_angles().y;
   pid(PID_RATE_Z)->input = imu_rates().z;
 
-  if (flight_mode == STABILIZE) {
+  if (flight_mode == FC_ANGLE_MODE) {
     pid(PID_ANGLE_X)->setpoint = rc_get(RC_ROLL);
     pid(PID_ANGLE_Y)->setpoint = rc_get(RC_PITCH);
 
@@ -135,17 +135,13 @@ bool min_throttle() {
 }
 
 void fc_arm() {
-  safety_mode = ARMED;
+  safety_mode = FC_ARMED;
 }
 
 void fc_disarm() {
-  safety_mode = UNARMED;
+  safety_mode = FC_UNARMED;
 }
 
-uint8_t fc_armed() {
-  if (safety_mode == ARMED) {
-    return 1;
-  } else {
-    return 0;
-  }
+bool fc_armed() {
+  return safety_mode == FC_ARMED;
 }

@@ -15,6 +15,10 @@ export const graphTypes = {
     requestCode: serialCodes.REQUEST_GYRO_ACC,
     dataPoints: ['rates.x', 'rates.y', 'rates.z']
   },
+  'angles': {
+    requestCode: serialCodes.REQUEST_GYRO_ACC,
+    dataPoints: ['angles.x', 'angles.y']
+  },
   'motors': {
     requestCode: serialCodes.REQUEST_MOTORS,
     dataPoints: ['m1', 'm2', 'm3', 'm4']
@@ -22,17 +26,17 @@ export const graphTypes = {
   'ratePidOutput': {
     requestCode: serialCodes.REQUEST_RATE_PIDS,
     dataPoints: [
-      'pidRateX.output',
-      'pidRateX.pTerm',
-      'pidRateX.iTerm',
-      'pidRateX.dTerm'
+      'pidRateY.output',
+      'pidRateY.pTerm',
+      'pidRateY.iTerm',
+      'pidRateY.dTerm'
     ]
   }
 }
 
 export class LineGraphStore {
   @observable data = []
-  @observable type = 'gyros'
+  @observable type = 'ratePidOutput'
   @observable paused = false
   sampleCount = 200
 

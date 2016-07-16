@@ -96,6 +96,8 @@ class SerialReader {
               console.log(`unhandled code ${this.code}`);
           }
 
+
+
           this.dataReceived(this.code, response);
 
         } else {

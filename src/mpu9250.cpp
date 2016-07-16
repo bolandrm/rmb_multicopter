@@ -61,9 +61,9 @@ void calibrate_gyro() {
 
   for(;;) {
     serial_printlnf("Gyro calibrated:");
-    serial_printlnf("x avg: %f", gyro_sums.x / 10000);
-    serial_printlnf("y avg: %f", gyro_sums.y / 10000);
-    serial_printlnf("z avg: %f", gyro_sums.z / 10000);
+    serial_printlnf("x offset: %f", gyro_sums.x / 10000);
+    serial_printlnf("y offset: %f", gyro_sums.y / 10000);
+    serial_printlnf("z offset: %f", gyro_sums.z / 10000);
     serial_printlnf("--------------");
     delay(5000);
   }
@@ -86,9 +86,9 @@ void calibrate_accel() {
 
   for(;;) {
     serial_printlnf("Accel calibrated:");
-    serial_printlnf("x avg: %f", accel_sums.x / 10000);
-    serial_printlnf("y avg: %f", accel_sums.y / 10000);
-    serial_printlnf("z avg: %f", accel_sums.z / 10000);
+    serial_printlnf("x offset: %f", accel_sums.x / 10000);
+    serial_printlnf("y offset: %f", accel_sums.y / 10000);
+    serial_printlnf("z offset: %f", (accel_sums.z / 10000) - MPU_ACCEL_4G_SENS);
     serial_printlnf("--------------");
     delay(5000);
   }
