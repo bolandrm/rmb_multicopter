@@ -1,6 +1,7 @@
 #include "imu.h"
 #include "MedianFilter.h"
 #include "utils.h"
+#include "quaternion_filters.h"
 
 static axis_float_t gyro_angles;
 static axis_float_t accel_angles;
@@ -82,13 +83,19 @@ static void combine() {
   float dt = (float) (micros() - combination_update_timer) / 1000000.0;
   combination_update_timer = micros();
 
-  accel_angles.x = atan2(accel_filtered.y, accel_filtered.z) * RAD_TO_DEG;
-  accel_angles.y = atan2(-1 * accel_filtered.x,
-    sqrt(accel_filtered.y * accel_filtered.y + accel_filtered.z * accel_filtered.z)
-  ) * RAD_TO_DEG;
+  // accel_angles.x = atan2(accel_filtered.y, accel_filtered.z) * RAD_TO_DEG;
+  // accel_angles.y = atan2(-1 * accel_filtered.x,
+  //   sqrt(accel_filtered.y * accel_filtered.y + accel_filtered.z * accel_filtered.z)
+  // ) * RAD_TO_DEG;
+  //
+  // angles.x = GYRO_PART * (angles.x + (rates.x * dt)) + ACC_PART * accel_angles.x;
+  // angles.y = GYRO_PART * (angles.y + (rates.y * dt)) + ACC_PART * accel_angles.y;
 
-  angles.x = GYRO_PART * (angles.x + (rates.x * dt)) + ACC_PART * accel_angles.x;
-  angles.y = GYRO_PART * (angles.y + (rates.y * dt)) + ACC_PART * accel_angles.y;
+  madgwick_quaternion_update(
+    &angles, dt,
+    accel_filtered.x, accel_filtered.y, accel_filtered.z,
+    rates.x * DEG_TO_RAD, rates.y * DEG_TO_RAD, rates.z * DEG_TO_RAD
+  );
 }
 
 void imu_benchmark() {

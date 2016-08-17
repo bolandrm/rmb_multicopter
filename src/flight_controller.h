@@ -1,6 +1,6 @@
 #pragma once
 
-#define ANGLE_SAFETY_STOP true
+#define ANGLE_SAFETY_STOP false
 #define SAFE_ANGLE 60.0
 
 typedef enum {

@@ -11,7 +11,7 @@
 #include "config.h"
 #include "watchdog.h"
 #include "battery_monitor.h"
-
+#include "logger.h"
 #include "utils.h"
 
 void setup() {
@@ -24,6 +24,7 @@ void setup() {
   fc_init();
   debugger_leds_init();
   battery_monitor_init();
+  // logger_init();
   watchdog_enable();
 }
 

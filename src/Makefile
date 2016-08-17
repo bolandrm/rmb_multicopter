@@ -3,7 +3,7 @@ USER_LIB_PATH = ./libraries
 OBJDIR        = ./.build-$(BOARD_TAG)
 
 BOARD_TAG    = teensy31
-ARDUINO_LIBS = i2c_t3 MedianFilter EEPROM
+ARDUINO_LIBS = i2c_t3 MedianFilter EEPROM SPI SD
 
 F_CPU=120000000
 
