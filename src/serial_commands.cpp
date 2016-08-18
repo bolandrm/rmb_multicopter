@@ -40,18 +40,18 @@ static uint16_t data_received_length;
 static uint8_t data_buffer[200];
 
 int generic_serial_available() {
-  //return usb_serial_available();
-  return serial_available();
+  return usb_serial_available();
+  //return serial_available();
 }
 
 int generic_serial_getchar() {
-  //return usb_serial_getchar();
-  return serial_getchar();
+  return usb_serial_getchar();
+  //return serial_getchar();
 }
 
 void generic_serial_putchar(uint32_t c) {
-  //usb_serial_putchar(c);
-  serial_putchar(c);
+  usb_serial_putchar(c);
+  //serial_putchar(c);
 }
 
 void serial_commands_process() {

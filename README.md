@@ -4,12 +4,22 @@ This is my WIP custom arduino quadcopter firmware.
 
 ### Media:
 
-- [First Successful Test Flight](https://www.youtube.com/watch?v=e4rH2S3EOmw&feature=youtu.be)
-- [Talk Describing Code](https://www.youtube.com/watch?v=CHSYgLfhwUo&t=1947)
+- [Flight Clips](https://www.youtube.com/watch?v=sWmG4tUAae0&feature=youtu.be)
+- [(OLD) First Successful Test Flight](https://www.youtube.com/watch?v=e4rH2S3EOmw&feature=youtu.be)
+
+### Talks:
+
+- [Talk Describing Code @ Pittsburgh Code & Supply Meetup](https://www.youtube.com/watch?v=CHSYgLfhwUo&t=1947)
+- [Slides from talk @ Abstractions conference](http://www.slideshare.net/ryanboland18/abstractions-quadpdf-65109511)
 
 ### Blog posts:
 
 - [Reading Remote Control Receiver Values with Arduino](https://ryanboland.com/blog/reading-rc-receiver-values/)
+
+### Similar projects:
+
+- [Phoenix Flight Controller](https://github.com/cTn-dev/Phoenix-FlightController)
+- [BlueCopter](https://github.com/baselsw/BlueCopter)
 
 ## Hardware
 

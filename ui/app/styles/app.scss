@@ -232,3 +232,81 @@ button:focus {
     stroke-opacity: 0.75;
   }
 }
+
+.tuning-tab {
+  .motor-chart-2d {
+    margin-left: 75px;
+  }
+
+  .top-segment {
+    margin-bottom: 50px;
+    display: flex;
+    align-items: center;
+  }
+
+  .fc-data {
+    flex: 1;
+  }
+
+  .flight-stat {
+    float: left;
+    text-align: center;
+    width: 25%;
+
+    & > .callout-text {
+      font-size: 34px;
+      font-weight: bold;
+      &.uppercase { text-transform: uppercase; }
+    }
+
+    &.armed > .callout-text { color: red; }
+    &.unarmed > .callout-text { color: green; }
+  }
+
+  $size: 150px;
+
+  .teapot {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-left: 50px;
+    height: $size;
+    width: $size;
+    transform-style: preserve-3d;
+
+    .side {
+      height: inherit;
+      width: inherit;
+      position: absolute;
+    }
+
+    .front {
+      background-color: gray;
+      transform: translate3d(0, 0, $size/2);
+    }
+
+    .back {
+      background-color: gray;
+      transform: rotateY(180deg) translate3d(0, 0, $size/2);
+    }
+
+    .left {
+      background-color: blue;
+      transform: rotateY(-90deg) translate3d(0, 0, $size/2);
+    }
+
+    .right {
+      background-color: blue;
+      transform: rotateY(90deg) translate3d(0, 0, $size/2);
+    }
+
+    .top {
+      background-color: darken(red, 10%);
+      transform: rotateX(90deg) translate3d(0, 0, $size/2);
+    }
+
+    .bottom {
+      background-color: darken(red, 10%);
+      transform: rotateX(-90deg) translate3d(0, 0, $size/2);
+    }
+  }
+}

@@ -36,7 +36,7 @@ export const graphTypes = {
 
 export class LineGraphStore {
   @observable data = []
-  @observable type = 'ratePidOutput'
+  @observable type = 'angleXFusion'
   @observable paused = false
   sampleCount = 200
 
